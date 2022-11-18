@@ -1,6 +1,4 @@
-function NavigationBar(){
-    return(
-        <div>this is a navbar</div>
-    )
+function NavigationBar() {
+  return <div>this is aaaa navbar</div>;
 }
-export default NavigationBar
+export default NavigationBar;
