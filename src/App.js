@@ -1,23 +1,76 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import AddCattle from "./Components/AddCattle/AddCattle";
+import AnimalDetail from "./Components/AnimalDetail/AnimalDetail";
+import CattleList from "./Components/CattleList/CattleList";
+import CattleShed from "./Components/CattleShed/CattleShed";
+import NavigationBar from "./Components/NavigationBar/NavigationBar";
+import HomePage from "./Pages/HomePage";
 
 function App() {
+  const [cattle, setCattle] = useState([]);
+
+  function getCattle() {
+    axios
+      .get()
+      .then((response) => setCattle(response.data))
+      .catch(() => console.log("Something went wrong"));
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <NavigationBar />
+      </div>
+      <div>
+        <Routes>
+          <Route
+            path="/"
+            element={<HomePage />}
+          />
+          <Route
+            path="/gado"
+            element={
+              <CattleList
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/curral"
+            element={
+              <CattleShed
+                cattle={cattle}
+                setCattle={setCattle}
+                //getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/cadastrarAnimal"
+            element={
+              <AddCattle
+                cattle={cattle}
+                setCattle={setCattle}
+                //getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/gado/:_id"
+            element={
+              <AnimalDetail
+                cattle={cattle}
+                setCattle={setCattle}
+                //getCattle={getCattle()}
+              />
+            }
+          />
+        </Routes>
+      </div>
     </div>
   );
 }
