@@ -12,7 +12,7 @@ import HomePage from "./Pages/HomePage";
 function App() {
   const [cattle, setCattle] = useState([]);
 
-  function getCattle() {
+  function getCattle() {  
     axios
       .get()
       .then((response) => setCattle(response.data))
@@ -44,30 +44,17 @@ function App() {
             element={
               <CattleShed
                 cattle={cattle}
-                setCattle={setCattle}
-                //getCattle={getCattle}
+                getCattle={getCattle}
               />
             }
           />
           <Route
             path="/cadastrarAnimal"
-            element={
-              <AddCattle
-                cattle={cattle}
-                setCattle={setCattle}
-                //getCattle={getCattle}
-              />
-            }
+            element={<AddCattle getCattle={getCattle} />}
           />
           <Route
             path="/gado/:_id"
-            element={
-              <AnimalDetail
-                cattle={cattle}
-                setCattle={setCattle}
-                //getCattle={getCattle()}
-              />
-            }
+            element={<AnimalDetail />}
           />
         </Routes>
       </div>

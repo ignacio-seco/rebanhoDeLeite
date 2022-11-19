@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
-import {calculateAge} from "../../helpers/CalculateAge";
+import { calculateAge } from "../../helpers/CalculateAge";
 import "./CattleList.css";
 
-function CattleList({cattle, getCattle}) {
-  useEffect(getCattle,[]);
+function CattleList({ cattle, getCattle }) {
+  useEffect(getCattle, []);
 
   const renderCattle = cattle.map((e) => {
     return (
@@ -15,7 +15,7 @@ function CattleList({cattle, getCattle}) {
         key={e._id}
       >
         <div className="imageHolder">
-          <Link to={`./${e._reg}`}>
+          <Link to={`./${e._id}`}>
             <img
               src={e.imagem_url}
               alt={e.nome}
@@ -24,8 +24,13 @@ function CattleList({cattle, getCattle}) {
         </div>
         <Card style={{ width: "18rem" }}>
           <ListGroup variant="flush">
-            <ListGroup.Item className="BoldStyle">{e.brinco}</ListGroup.Item>
-            <ListGroup.Item className="BoldStyle">{e.nome}</ListGroup.Item>
+            <ListGroup.Item>
+              <span className="BoldStyle">Brinco</span> {e.brinco}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <span className="BoldStyle">nome</span>
+              {e.nome}
+            </ListGroup.Item>
             <ListGroup.Item>{calculateAge(e.nascimento)}</ListGroup.Item>
           </ListGroup>
         </Card>
