@@ -12,7 +12,7 @@ import HomePage from "./Pages/HomePage";
 function App() {
   const [cattle, setCattle] = useState([]);
 
-  function getCattle() {  
+  function getCattle() {
     axios
       .get()
       .then((response) => setCattle(response.data))

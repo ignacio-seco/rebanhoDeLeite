@@ -8,35 +8,37 @@ import "./CattleList.css";
 function CattleList({ cattle, getCattle }) {
   useEffect(getCattle, []);
 
-  const renderCattle = cattle.map((e) => {
-    return (
-      <div
-        className="BeerCard"
-        key={e._id}
-      >
-        <div className="imageHolder">
-          <Link to={`./${e._id}`}>
-            <img
-              src={e.imagem_url}
-              alt={e.nome}
-            />
-          </Link>
+  const renderCattle = cattle
+    .sort((a, b) => Number(a.brinco) - Number(b.brinco))
+    .map((e) => {
+      return (
+        <div
+          className="BeerCard"
+          key={e._id}
+        >
+          <div className="imageHolder">
+            <Link to={`./${e._id}`}>
+              <img
+                src={e.imagem_url}
+                alt={e.nome}
+              />
+            </Link>
+          </div>
+          <Card style={{ width: "18rem" }}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <span className="BoldStyle">Brinco</span> {e.brinco}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <span className="BoldStyle">nome</span>
+                {e.nome}
+              </ListGroup.Item>
+              <ListGroup.Item>{calculateAge(e.nascimento)}</ListGroup.Item>
+            </ListGroup>
+          </Card>
         </div>
-        <Card style={{ width: "18rem" }}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <span className="BoldStyle">Brinco</span> {e.brinco}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <span className="BoldStyle">nome</span>
-              {e.nome}
-            </ListGroup.Item>
-            <ListGroup.Item>{calculateAge(e.nascimento)}</ListGroup.Item>
-          </ListGroup>
-        </Card>
-      </div>
-    );
-  });
+      );
+    });
   return <div>{renderCattle}</div>;
 }
 export default CattleList;
