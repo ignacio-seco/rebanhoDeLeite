@@ -4,15 +4,15 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AddCattle from "./Components/AddCattle/AddCattle";
 import AnimalDetail from "./Components/AnimalDetail/AnimalDetail";
-import CattleList from "./Components/CattleList/CattleList";
-import CattleShed from "./Components/CattleShed/CattleShed";
 import NavigationBar from "./Components/NavigationBar/NavigationBar";
 import HomePage from "./Pages/HomePage";
+import CattleHerdPage from "./Pages/CattleHerdPage";
+import CattleShedPage from "./Pages/CattleShedPage";
 
 function App() {
   const [cattle, setCattle] = useState([]);
 
-  function getCattle() {
+  const getCattle = () => {
     axios
       .get()
       .then((response) => setCattle(response.data))
@@ -35,7 +35,7 @@ function App() {
           <Route
             path="/gado"
             element={
-              <CattleList
+              <CattleHerdPage
                 cattle={cattle}
                 getCattle={getCattle}
               />
@@ -44,7 +44,7 @@ function App() {
           <Route
             path="/curral"
             element={
-              <CattleShed
+              <CattleShedPage
                 cattle={cattle}
                 getCattle={getCattle}
               />
