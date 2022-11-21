@@ -1,7 +1,78 @@
-function CattleShed(){
-    return (<div>
-        <h1>this is where we will se the cattle that are on corral</h1>
-    </div>)
-}
+import { useEffect, useMemo, useState } from "react";
+import { Container, Form } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
+import { Link } from "react-router-dom";
+import { calculateAge, stringEqualizer } from "../../helpers/CalculateAge";
+import "./CattleShed.css";
 
-export default CattleShed
+function CattleShed({ cattle, getCattle }) {
+  let search ="";
+  useEffect(getCattle,[])
+  console.log(cattle.length)
+
+
+
+  
+  let searchCattle = () => { return cattle
+      .filter(
+        (e) =>
+          e.brinco.indexOf(search) !== -1 ||
+          stringEqualizer(e.nome).indexOf(stringEqualizer(search)) !== -1
+      ).filter((e)=>e.noCurral)
+      .sort((a, b) => Number(a.brinco) - Number(b.brinco))
+      .map((e) => {
+        return (
+          <Container
+            className="BeerCard"
+            key={e._id}
+          >
+            <div className="imageHolder">
+              <Link to={`../gado/${e._id}`}>
+                <img
+                  src={e.imagem_url}
+                  alt={e.nome}
+                />
+              </Link>
+            </div>
+            <Card style={{ width: "18rem", marginLeft: "0px" }}>
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <span className="BoldStyle">Brinco: </span> {e.brinco}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <span className="BoldStyle">nome: </span>
+                  {e.nome}
+                </ListGroup.Item>
+                <ListGroup.Item>{calculateAge(e.nascimento)}</ListGroup.Item>
+              </ListGroup>
+            </Card>
+          </Container>
+        );
+      })}
+  const [showCattle, setShowCattle] = useState(searchCattle);
+  useEffect(()=>{setShowCattle(searchCattle)},[search])
+  useMemo(()=>{setShowCattle(searchCattle)},[cattle.length]) // isso fez o gado continuar sendo recarregado quando a página recebe um refresh
+
+
+
+  return (
+    <div>
+      <Container>
+        <Form.Control
+          type="search"
+          placeholder="Search"
+          className="me-2"
+          defaultValue={search}
+          aria-label="Search"
+          onChange={(e) => {
+            search = e.currentTarget.value;
+            setShowCattle(searchCattle);
+          }}
+        />
+      </Container>
+      {showCattle}
+    </div>
+  );
+}
+export default CattleShed;

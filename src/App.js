@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AddCattle from "./Components/AddCattle/AddCattle";
@@ -19,9 +19,11 @@ function App() {
       .catch(() => console.log("Something went wrong"));
   }
 
+  useEffect(getCattle, []);
+
   return (
     <div className="App">
-      <div>
+      <div className="sticky-top">
         <NavigationBar />
       </div>
       <div>
@@ -44,30 +46,17 @@ function App() {
             element={
               <CattleShed
                 cattle={cattle}
-                setCattle={setCattle}
-                //getCattle={getCattle}
+                getCattle={getCattle}
               />
             }
           />
           <Route
             path="/cadastrarAnimal"
-            element={
-              <AddCattle
-                cattle={cattle}
-                setCattle={setCattle}
-                //getCattle={getCattle}
-              />
-            }
+            element={<AddCattle getCattle={getCattle} />}
           />
           <Route
             path="/gado/:_id"
-            element={
-              <AnimalDetail
-                cattle={cattle}
-                setCattle={setCattle}
-                //getCattle={getCattle()}
-              />
-            }
+            element={<AnimalDetail />}
           />
         </Routes>
       </div>
