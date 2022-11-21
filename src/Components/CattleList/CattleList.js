@@ -17,7 +17,7 @@ function CattleList({cattle, getCattle, cowFilterFn}) {
             cow.brinco.indexOf(search) !== -1 ||
             stringEqualizer(cow.nome).indexOf(stringEqualizer(search)) !== -1)
             .sort((a, b) => Number(a.brinco) - Number(b.brinco))
-        : cattle;
+        : cattle.sort((a, b) => Number(a.brinco) - Number(b.brinco));
     
     if (cowFilterFn){
       filteredCattle = filteredCattle.filter(cowFilterFn)
