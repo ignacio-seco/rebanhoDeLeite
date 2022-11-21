@@ -2,7 +2,6 @@
 
 export default function CattleShedPage({ cattle, getCattle }) {
     const cowFilter = cow => {
-        console.log(cow)
         return cow.noCurral === true;
     }
     
