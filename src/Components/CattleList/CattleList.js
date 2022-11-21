@@ -16,8 +16,7 @@ function CattleList({ cattle, getCattle }) {
       .filter(
         (e) =>
           e.brinco.indexOf(search) !== -1 ||
-          stringEqualizer(e.nome).indexOf(stringEqualizer(search)) !== -1
-      )
+          stringEqualizer(e.nome).indexOf(stringEqualizer(search)) !== -1)
       .sort((a, b) => Number(a.brinco) - Number(b.brinco))
       .map((e) => {
         return (
@@ -53,9 +52,9 @@ function CattleList({ cattle, getCattle }) {
   useEffect(() => {
     setShowCattle(searchCattle);
   }, [search]);
-  useMemo(() => {
-    setShowCattle(searchCattle);
-  }, [cattle.length]); // isso fez o gado continuar sendo recarregado quando a página recebe um refresh
+     useMemo(() => {
+      setShowCattle(searchCattle);
+    }, [cattle.length]);// isso fez o gado continuar sendo recarregado quando a página recebe um refresh
 
   return (
     <div className="justify-content-center">
