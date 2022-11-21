@@ -100,8 +100,8 @@ function AddCattle() {
             type="radio"
             variant={0 % 2 ? "outline-success" : "outline-danger"}
             name="sexo"
-            value="macho"
-            checked={radioValue === "macho"}
+            value="MACHO"
+            checked={radioValue === "MACHO"}
             onChange={(e) => {
               setRadioValue(e.currentTarget.value);
             }}
@@ -113,8 +113,8 @@ function AddCattle() {
             type="radio"
             variant={1 % 2 ? "outline-success" : "outline-danger"}
             name="sexo"
-            value="femea"
-            checked={radioValue === "femea"}
+            value="FEMEA"
+            checked={radioValue === "FEMEA"}
             onChange={(e) => {
               setRadioValue(e.currentTarget.value);
             }}
@@ -131,7 +131,7 @@ function AddCattle() {
             onChange={handleChange}
           />
         </Form.Group>
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3 ">
           <Form.Label>Brinco (opcional)</Form.Label>
           <Form.Control
             type="number"

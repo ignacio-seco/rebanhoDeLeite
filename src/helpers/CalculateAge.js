@@ -16,3 +16,13 @@ export function calculateAge(date) {
     return age;
   }
 }
+
+export function stringEqualizer(string) {
+  return string
+    .toLowerCase()
+    .replaceAll(/[àáãâäª]/g, "a")
+    .replaceAll(/[éèêë]/g, "e")
+    .replaceAll(/[íìïî]/g, "i")
+    .replaceAll(/[õòóöô]/g, "o")
+    .replaceAll(/[úùü]/g, "u");
+}

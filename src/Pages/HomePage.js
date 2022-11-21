@@ -7,8 +7,6 @@ import NewBeerPic from "../assets/newAnimal.webp";
 import { Link } from "react-router-dom";
 
 function HomePage() {
-
-
   const cardImageStyle = { width: "auto", height: "25vh" };
 
   return (
