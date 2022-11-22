@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { calculateAge, stringEqualizer } from "../../helpers/CalculateAge";
 import "./CattleList.css";
 
-function CattleList({ cattle, getCattle, cowFilterFn, linkToDetails }) {
+function CattleList({ cattle, getCattle, cowFilterFn }) {
   let [search, setSearch] = useState("");
 
   useEffect(getCattle, []);
@@ -41,7 +41,7 @@ function CattleList({ cattle, getCattle, cowFilterFn, linkToDetails }) {
         <Col key={cow._id}>
           <Container className="justify-content-center BeerCard my-3">
             <div className="imageHolder">
-              <Link to={linkToDetails(cow._id)}>
+              <Link to={ `/gado/${(cow._id)}` }>
                 <img
                   src={cow.imagem_url}
                   alt={cow.nome}
