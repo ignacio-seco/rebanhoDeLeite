@@ -14,10 +14,10 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
   const cattleSize = () => {
     if (cowFilterFn) {
       return cattle
-        .filter((cow) => !(cow.morreu||cow.vendida))
+        .filter((cow) => !(cow.morreu || cow.vendida))
         .filter(cowFilterFn).length;
     }
-    return cattle.filter((cow) => !(cow.morreu||cow.vendida)).length;
+    return cattle.filter((cow) => !(cow.morreu || cow.vendida)).length;
   };
 
   const renderCattle = () => {
@@ -29,7 +29,7 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
         )
       : cattle;
     filteredCattle = filteredCattle
-      .filter((cow) => !(cow.morreu||cow.vendida))
+      .filter((cow) => !(cow.morreu || cow.vendida))
       .sort((a, b) => Number(a.brinco) - Number(b.brinco));
 
     if (cowFilterFn) {
@@ -70,21 +70,21 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
 
   return (
     <div className="justify-content-center">
-        <Container className="sticky-top">
-          <Form.Control
-            type="search"
-            placeholder="Digite o nome ou nº de brinco"
-            className="mb-4"
-            defaultValue=""
-            aria-label="Search"
-            onChange={(e) => setSearch(e.currentTarget.value)}
-          />
-        </Container>
-        <h3 style={{ textAlign: "center" }}>
-          {cowFilterFn
-            ? `${cattleSize()} animais no curral`
-            : `Seu rebanho de ${cattleSize()} Animais`}
-        </h3>
+      <Container className="sticky-top">
+        <Form.Control
+          type="search"
+          placeholder="Digite o nome ou nº de brinco"
+          className="mb-4"
+          defaultValue=""
+          aria-label="Search"
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
+      </Container>
+      <h3 style={{ textAlign: "center" }}>
+        {cowFilterFn
+          ? `${cattleSize()} animais no curral`
+          : `Seu rebanho de ${cattleSize()} Animais`}
+      </h3>
 
       <Row
         xs={1}

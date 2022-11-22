@@ -4,17 +4,17 @@ import Table from "react-bootstrap/Table";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../helpers/CalculateAge";
 
-export default function Perdas({ cattle, getCattle }) {
+export default function Vendas({ cattle, getCattle }) {
   useEffect(getCattle, []);
   const sortedCattle = () => {
     return cattle
-      .filter((cow) => cow.morreu)
-      .sort((a, b) => Number(a.brinco) - Number(b.brinco));
+      .filter((cow) => cow.vendida)
+      .sort((a, b) => Number(a.dtVenda) - Number(b.dtVenda));
   };
 
   return (
     <div style={{ width: "100%", height: "90vh", overflow: "auto" }}>
-      <h2 style={{ textAlign: "center" }}>Perda de rebanho</h2>
+      <h2 style={{ textAlign: "center" }}>Cabeças vendidas</h2>
 
       <Container>
         <Table
@@ -30,9 +30,10 @@ export default function Perdas({ cattle, getCattle }) {
               <th>Brinco</th>
               <th>Nome</th>
               <th>Sexo</th>
-              <th>Data da morte</th>
-              <th>Causa da morte</th>
-              <th>Último peso</th>
+              <th>Data da venda</th>
+              <th>Valor da venda</th>
+              <th>Comprador</th>
+              <th>Último peso registrado</th>
               <th>Data pesagem</th>
             </tr>
           </thead>
@@ -45,8 +46,9 @@ export default function Perdas({ cattle, getCattle }) {
                     <Link to={`/gado/${cow._id}`}>{cow.nome}</Link>
                   </td>
                   <td>{cow.sexo}</td>
-                  <td>{cow.dtMorte ? formatDate(cow.dtMorte) : `-`}</td>
-                  <td>{cow.causaMorte}</td>
+                  <td>{cow.dtVenda ? formatDate(cow.dtVenda) : `-`}</td>
+                  <td>{cow.valorVenda}</td>
+                  <td>{cow.comprador}</td>
                   <td>
                     {cow.pesagem.length > 0
                       ? cow.pesagem[cow.pesagem.length - 1].peso

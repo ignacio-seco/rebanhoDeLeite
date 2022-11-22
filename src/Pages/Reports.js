@@ -56,7 +56,7 @@ function Reports() {
           </Link>
         </Col>
         <Col>
-          <Link to="/curral">
+          <Link to={`/relatorios/vendas`}>
             <Card>
               <Card.Img
                 style={cardImageStyle}

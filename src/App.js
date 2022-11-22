@@ -11,6 +11,7 @@ import CattleShedPage from "./Pages/CattleShedPage";
 import Reports from "./Pages/Reports";
 import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
 import Perdas from "./Pages/Relatorios/Perdas";
+import Vendas from "./Pages/Relatorios/Vendas";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -85,6 +86,15 @@ function App() {
             path="/relatorios/perdas"
             element={
               <Perdas
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/vendas"
+            element={
+              <Vendas
                 cattle={cattle}
                 getCattle={getCattle}
               />
