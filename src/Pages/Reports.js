@@ -39,7 +39,7 @@ function Reports() {
           </Link>
         </Col>
         <Col>
-          <Link to={`/gado`}>
+          <Link to={`/relatorios/perdas`}>
             <Card>
               <Card.Img
                 style={cardImageStyle}

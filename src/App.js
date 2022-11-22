@@ -10,6 +10,7 @@ import CattleHerdPage from "./Pages/CattleHerdPage";
 import CattleShedPage from "./Pages/CattleShedPage";
 import Reports from "./Pages/Reports";
 import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
+import Perdas from "./Pages/Relatorios/Perdas";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -75,6 +76,15 @@ function App() {
             path="/relatorios/rebanhodetalhado"
             element={
               <RebanhoDetalhado
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/perdas"
+            element={
+              <Perdas
                 cattle={cattle}
                 getCattle={getCattle}
               />
