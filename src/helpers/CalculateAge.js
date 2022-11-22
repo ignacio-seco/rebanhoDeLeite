@@ -26,3 +26,8 @@ export function stringEqualizer(string) {
     .replaceAll(/[õòóöô]/g, "o")
     .replaceAll(/[úùü]/g, "u");
 }
+
+export function formatDate(dt){
+  const newDt = new Date(dt)
+   return `${newDt.getDate()}/${newDt.getMonth()+1}/${newDt.getFullYear()}`; 
+ }
