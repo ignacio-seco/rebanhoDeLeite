@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -10,6 +10,15 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
   let [search, setSearch] = useState("");
 
   useEffect(getCattle, []);
+
+  const cattleSize = () => {
+    if (cowFilterFn) {
+      return cattle
+        .filter((cow) => !cow.morreu || !cow.vendida)
+        .filter(cowFilterFn).length;
+    }
+    return cattle.filter((cow) => !cow.morreu || !cow.vendida).length;
+  };
 
   const renderCattle = () => {
     let filteredCattle = search
@@ -72,12 +81,17 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
             onChange={(e) => setSearch(e.currentTarget.value)}
           />
         </Container>
+        <h3 style={{ textAlign: "center" }}>
+          {cowFilterFn
+            ? `${cattleSize()} animais no curral`
+            : `Seu rebanho de ${cattleSize()} Animais`}
+        </h3>
       </div>
       <Row
         xs={1}
         md={2}
         lg={3}
-        xl={3}
+        xl={4}
       >
         {renderCattle()}
       </Row>
