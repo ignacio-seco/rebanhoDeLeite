@@ -8,6 +8,10 @@ import NavigationBar from "./Components/NavigationBar/NavigationBar";
 import HomePage from "./Pages/HomePage";
 import CattleHerdPage from "./Pages/CattleHerdPage";
 import CattleShedPage from "./Pages/CattleShedPage";
+import Reports from "./Pages/Reports";
+import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
+import Perdas from "./Pages/Relatorios/Perdas";
+import Vendas from "./Pages/Relatorios/Vendas";
 import CattleDetailsPage from "./Pages/CattleDetailsPage";
 
 function App() {
@@ -29,7 +33,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div>
+      <div style={{width:"100%", height:"95vh", overflow:"auto"}}>
         <Routes>
           <Route
             path="/"
@@ -60,6 +64,42 @@ function App() {
           <Route
             path="/gado/:_id"
             element={<CattleDetailsPage />}
+          />
+          <Route
+            path="/relatorios"
+            element={
+              <Reports
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/rebanhodetalhado"
+            element={
+              <RebanhoDetalhado
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/perdas"
+            element={
+              <Perdas
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/vendas"
+            element={
+              <Vendas
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
           />
         </Routes>
       </div>

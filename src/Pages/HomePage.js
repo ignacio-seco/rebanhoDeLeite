@@ -1,9 +1,10 @@
 import "./HomePage.css";
 import { Col, Container, Row } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
-import AllBeersPic from "../assets/AllCattlePhoto.jpg";
-import RandomBeersPic from "../assets/curral.webp";
-import NewBeerPic from "../assets/newAnimal.webp";
+import rebanho from "../assets/AllCattlePhoto.jpg";
+import curral from "../assets/curral.webp";
+import novoAnimal from "../assets/newAnimal.webp";
+import relatorios from "../assets/relatorio.webp";
 import { Link } from "react-router-dom";
 
 function HomePage() {
@@ -13,8 +14,8 @@ function HomePage() {
     <Container className="homePageLinks">
       <Row
         xs={1}
-        md={2}
-        lg={3}
+        md={1}
+        lg={1}
         xl={3}
       >
         <Col>
@@ -23,7 +24,7 @@ function HomePage() {
               <Card.Img
                 style={cardImageStyle}
                 variant="top"
-                src={AllBeersPic}
+                src={rebanho}
               />
               <Card.Body>
                 <Card.Title>
@@ -42,7 +43,7 @@ function HomePage() {
               <Card.Img
                 style={cardImageStyle}
                 variant="top"
-                src={RandomBeersPic}
+                src={curral}
               />
               <Card.Body>
                 <Card.Title>
@@ -59,13 +60,30 @@ function HomePage() {
               <Card.Img
                 style={cardImageStyle}
                 variant="top"
-                src={NewBeerPic}
+                src={novoAnimal}
               />
               <Card.Body>
                 <Card.Title>
                   <h1>Novo animal</h1>
                 </Card.Title>
                 <Card.Text>Cadastrar um novo animal no rebanho</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/relatorios">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={relatorios}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Relatórios</h1>
+                </Card.Title>
+                <Card.Text>Visualizar relatórios sobre seu rebanho</Card.Text>
               </Card.Body>
             </Card>
           </Link>
