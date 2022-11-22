@@ -19,8 +19,8 @@ function Reports() {
         lg={1}
         xl={3}
       >
-      <Col>
-          <Link to={`/gado`}>
+        <Col>
+          <Link to={`/relatorios/rebanhodetalhado`}>
             <Card>
               <Card.Img
                 style={cardImageStyle}
@@ -50,9 +50,7 @@ function Reports() {
                 <Card.Title>
                   <h1>Perdas</h1>
                 </Card.Title>
-                <Card.Text>
-                  Animais que se foram...
-                </Card.Text>
+                <Card.Text>Animais que se foram...</Card.Text>
               </Card.Body>
             </Card>
           </Link>

@@ -9,6 +9,7 @@ import HomePage from "./Pages/HomePage";
 import CattleHerdPage from "./Pages/CattleHerdPage";
 import CattleShedPage from "./Pages/CattleShedPage";
 import Reports from "./Pages/Reports";
+import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -29,7 +30,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div>
+      <div style={{width:"100%", height:"95vh", overflow:"auto"}}>
         <Routes>
           <Route
             path="/"
@@ -65,6 +66,15 @@ function App() {
             path="/relatorios"
             element={
               <Reports
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/rebanhodetalhado"
+            element={
+              <RebanhoDetalhado
                 cattle={cattle}
                 getCattle={getCattle}
               />

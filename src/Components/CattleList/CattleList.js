@@ -70,7 +70,6 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
 
   return (
     <div className="justify-content-center">
-      <div style={{ position: "sticky", display: "block" }}>
         <Container className="sticky-top">
           <Form.Control
             type="search"
@@ -86,7 +85,6 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
             ? `${cattleSize()} animais no curral`
             : `Seu rebanho de ${cattleSize()} Animais`}
         </h3>
-      </div>
       <Row
         xs={1}
         md={2}
