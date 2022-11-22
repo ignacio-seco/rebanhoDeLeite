@@ -4,8 +4,10 @@ export default function CattleShedPage({ cattle, getCattle }) {
     const cowFilter = cow => {
         return cow.noCurral === true;
     }
-    
+    const linkToDetails = (element) =>{
+        return `../gado/${element}`
+    }
     return (
-        <CattleList cattle={cattle} getCattle={getCattle} cowFilterFn={ cowFilter } />
+        <CattleList cattle={cattle} getCattle={getCattle} cowFilterFn={ cowFilter } linkToDetails={ linkToDetails } />
     );
 }
