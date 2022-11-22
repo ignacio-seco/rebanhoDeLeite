@@ -8,6 +8,7 @@ import NavigationBar from "./Components/NavigationBar/NavigationBar";
 import HomePage from "./Pages/HomePage";
 import CattleHerdPage from "./Pages/CattleHerdPage";
 import CattleShedPage from "./Pages/CattleShedPage";
+import CattleDetailsPage from "./Pages/CattleDetailsPage";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -58,7 +59,7 @@ function App() {
           />
           <Route
             path="/gado/:_id"
-            element={<AnimalDetail />}
+            element={<CattleDetailsPage />}
           />
         </Routes>
       </div>
