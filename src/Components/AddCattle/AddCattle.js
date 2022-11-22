@@ -7,29 +7,30 @@ import {
   Form,
   ToggleButton,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function AddCattle() {
+  const navigate = useNavigate();
   const [newAnimal, setNewAnimal] = useState({
     imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
     brinco: "",
     sexo: "",
-    nascimento: "",
-    brincoDaMãe: "",
+    dtNascimento: "",
+    brincoDaMae: "",
     nome: "",
     cruzamento: "",
     pasto: "",
-    entradaNoCurral: "",
+    dtEntradaCurral: "",
     noCurral: false,
     saidaDoCurral: "",
     vendida: false,
-    dataDaVenda: "",
+    dtVenda: "",
     morreu: false,
-    dataDaMorte: "",
+    dtMorte: "",
     pesagem: [],
-    dataDePesagem: [],
     historico: [],
-    dataHistorico: [],
   });
+
   const [radioValue, setRadioValue] = useState("");
 
   function handleChange(e) {
@@ -42,33 +43,33 @@ function AddCattle() {
       imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
       brinco: "",
       sexo: "",
-      nascimento: "",
-      brincoDaMãe: "",
+      dtNascimento: "",
+      brincoDaMae: "",
       nome: "",
       cruzamento: "",
       pasto: "",
-      entradaNoCurral: "",
+      dtEntradaCurral: "",
       noCurral: false,
       saidaDoCurral: "",
       vendida: false,
-      dataDaVenda: "",
+      dtVenda: "",
       morreu: false,
-      dataDaMorte: "",
+      dtMorte: "",
       pesagem: [],
-      dataDePesagem: [],
       historico: [],
-      dataHistorico: [],
     };
     if (
       newAnimal.name !== "" &&
       newAnimal.sexo !== "" &&
-      newAnimal.nascimento !== ""
+      newAnimal.dtNascimento !== ""
     ) {
       axios
         .post("https://ironrest.cyclic.app/cattleControl", newAnimal)
         .then((response) => {
           setNewAnimal(cleanForm);
           setRadioValue("");
+          console.log(response);
+          navigate(`../gado/${response.data.ops[0]._id}`);
         });
     } else {
       alert(
@@ -126,8 +127,8 @@ function AddCattle() {
           <Form.Label>Nascimento</Form.Label>
           <Form.Control
             type="date"
-            value={newAnimal.nascimento}
-            name="nascimento"
+            value={newAnimal.dtNascimento}
+            name="dtNascimento"
             onChange={handleChange}
           />
         </Form.Group>
@@ -144,8 +145,8 @@ function AddCattle() {
           <Form.Label>Brinco da mãe (opcional)</Form.Label>
           <Form.Control
             type="number"
-            value={newAnimal.brincoDaMãe}
-            name="brincoDaMãe"
+            value={newAnimal.brincoDaMae}
+            name="brincoDaMae"
             onChange={handleChange}
           />
         </Form.Group>

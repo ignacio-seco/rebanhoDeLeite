@@ -31,7 +31,7 @@ function AnimalDetail() {
   async function handleDelete(e) {
     e.preventDefault();
     await axios.delete(`https://ironrest.cyclic.app/cattleControl/${_id}`);
-    navigate("/gado");
+    navigate(-1);
   }
 
   //Hani, pode apagar o código commitado se quiser, só usei ele para gerar o código dos campos de formulários de forma automatizada.
