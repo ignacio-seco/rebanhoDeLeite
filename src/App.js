@@ -12,6 +12,7 @@ import Reports from "./Pages/Reports";
 import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
 import Perdas from "./Pages/Relatorios/Perdas";
 import Vendas from "./Pages/Relatorios/Vendas";
+import CattleDetailsPage from "./Pages/CattleDetailsPage";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -62,7 +63,7 @@ function App() {
           />
           <Route
             path="/gado/:_id"
-            element={<AnimalDetail />}
+            element={<CattleDetailsPage />}
           />
           <Route
             path="/relatorios"
@@ -101,7 +102,6 @@ function App() {
             }
           />
         </Routes>
-        
       </div>
     </div>
   );
