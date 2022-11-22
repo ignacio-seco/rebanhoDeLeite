@@ -17,9 +17,11 @@ function App() {
       .get()
       .then((response) => setCattle(response.data))
       .catch(() => console.log("Something went wrong"));
-  }
+  };
 
-  useEffect(getCattle, []);
+  useEffect(() => {
+    getCattle();
+  }, []);
 
   return (
     <div className="App">
