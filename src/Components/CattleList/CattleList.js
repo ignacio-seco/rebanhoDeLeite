@@ -41,7 +41,7 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
         <Col key={cow._id}>
           <Container className="justify-content-center BeerCard my-3">
             <div className="imageHolder">
-              <Link to={ `/gado/${(cow._id)}` }>
+              <Link to={`/gado/${cow._id}`}>
                 <img
                   src={cow.imagem_url}
                   alt={cow.nome}
