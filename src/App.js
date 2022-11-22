@@ -8,7 +8,7 @@ import NavigationBar from "./Components/NavigationBar/NavigationBar";
 import HomePage from "./Pages/HomePage";
 import CattleHerdPage from "./Pages/CattleHerdPage";
 import CattleShedPage from "./Pages/CattleShedPage";
-import Reports from "./Components/Reports/Reports";
+import Reports from "./Pages/Reports";
 
 function App() {
   const [cattle, setCattle] = useState([]);
