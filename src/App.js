@@ -14,6 +14,7 @@ import Vendas from "./Pages/Relatorios/Vendas";
 import CattleDetailsPage from "./Pages/CattleDetailsPage";
 import Bezerros from "./Pages/Relatorios/Bezerros";
 import Pastos from "./Pages/Relatorios/Pastos";
+import MilkMonitoring from "./Components/MilkMonitoring/MilkMonitoring";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -115,6 +116,15 @@ function App() {
             path="/relatorios/pastos"
             element={
               <Pastos
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/curral/monitoramentoleite"
+            element={
+              <MilkMonitoring
                 cattle={cattle}
                 getCattle={getCattle}
               />
