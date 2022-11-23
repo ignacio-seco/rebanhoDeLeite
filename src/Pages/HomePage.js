@@ -2,9 +2,9 @@ import "./HomePage.css";
 import { Col, Container, Row } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import rebanho from "../assets/AllCattlePhoto.jpg";
-import curral from "../assets/curral.webp";
-import novoAnimal from "../assets/newAnimal.webp";
-import relatorios from "../assets/relatorio.webp";
+import curral from "../assets/curral.jpg";
+import novoAnimal from "../assets/newAnimal.jpg";
+import relatorios from "../assets/relatorio.jpg";
 import { Link } from "react-router-dom";
 
 function HomePage() {

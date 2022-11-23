@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { Link } from "react-router-dom";
-import { formatDate } from "../../helpers/CalculateAge";
+import { filterMonths, formatDate } from "../../helpers/CalculateAge";
 
 export default function Vendas({ cattle, getCattle }) {
   useEffect(getCattle, []);
   const sortedCattle = () => {
     return cattle
       .filter((cow) => cow.vendida)
-      .sort((a, b) => Number(a.dtVenda) - Number(b.dtVenda));
+      .sort((a, b) => filterMonths(a.dtVenda) - filterMonths(b.dtVenda));
   };
 
   return (

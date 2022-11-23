@@ -3,11 +3,14 @@ import { useState } from "react";
 import {
   Button,
   ButtonGroup,
+  Col,
   Container,
   Form,
+  Row,
   ToggleButton,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { filterMonths, formatDateToDefault } from "../../helpers/CalculateAge";
 
 function AddCattle() {
   const navigate = useNavigate();
@@ -92,6 +95,7 @@ function AddCattle() {
           />
         </Form.Group>
         <ButtonGroup
+          className="d-flex justify-content-around align-itens-center"
           name="sexo"
           value={radioValue}
           onChange={handleChange}
@@ -123,33 +127,64 @@ function AddCattle() {
             Fêmea
           </ToggleButton>
         </ButtonGroup>
-        <Form.Group className="mb-3">
-          <Form.Label>Nascimento</Form.Label>
-          <Form.Control
-            type="date"
-            value={newAnimal.dtNascimento}
-            name="dtNascimento"
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3 ">
-          <Form.Label>Brinco (opcional)</Form.Label>
-          <Form.Control
-            type="number"
-            value={newAnimal.brinco}
-            name="brinco"
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Brinco da mãe (opcional)</Form.Label>
-          <Form.Control
-            type="number"
-            value={newAnimal.brincoDaMae}
-            name="brincoDaMae"
-            onChange={handleChange}
-          />
-        </Form.Group>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Nascimento</Form.Label>
+              <Form.Control
+                type="date"
+                value={newAnimal.dtNascimento}
+                name="dtNascimento"
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Meses de vida</Form.Label>
+              <Form.Control
+                type="number"
+                value={
+                  newAnimal.dtNascimento
+                    ? filterMonths(newAnimal.dtNascimento)
+                    : ""
+                }
+                onChange={(e) => {
+                  let now = new Date(Date.now());
+                  let Monthdif = now.getMonth() - e.target.value;
+                  let newDate = now.setMonth(Monthdif);
+                  let formatedDate = formatDateToDefault(newDate);
+                  setNewAnimal({ ...newAnimal, dtNascimento: formatedDate });
+                  console.log(newAnimal);
+                }}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3 ">
+              <Form.Label>Brinco (opcional)</Form.Label>
+              <Form.Control
+                type="number"
+                value={newAnimal.brinco}
+                name="brinco"
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Brinco da mãe (opcional)</Form.Label>
+              <Form.Control
+                type="number"
+                value={newAnimal.brincoDaMae}
+                name="brincoDaMae"
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
         <Button
           variant="primary"
           type="submit"

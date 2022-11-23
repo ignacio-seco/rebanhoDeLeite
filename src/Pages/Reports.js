@@ -2,8 +2,8 @@ import "./HomePage.css";
 import { Col, Container, Row } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import rebanhoDetalhado from "../assets/detalhes.jpg";
-import perdas from "../assets/dead.webp";
-import vendas from "../assets/Lucro.webp";
+import perdas from "../assets/dead.jpg";
+import vendas from "../assets/Lucro.jpg";
 import bezerros from "../assets/bezerros.jpg";
 import pastos from "../assets/Pasto.jpg";
 import { Link } from "react-router-dom";
@@ -73,7 +73,7 @@ function Reports() {
           </Link>
         </Col>
         <Col>
-          <Link to="/cadastrarAnimal">
+          <Link to="/relatorios/bezerros">
             <Card>
               <Card.Img
                 style={cardImageStyle}
@@ -90,7 +90,7 @@ function Reports() {
           </Link>
         </Col>
         <Col>
-          <Link to="/relatorios">
+          <Link to="/relatorios/pastos">
             <Card>
               <Card.Img
                 style={cardImageStyle}

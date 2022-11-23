@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AddCattle from "./Components/AddCattle/AddCattle";
-import AnimalDetail from "./Components/AnimalDetail/AnimalDetail";
 import NavigationBar from "./Components/NavigationBar/NavigationBar";
 import HomePage from "./Pages/HomePage";
 import CattleHerdPage from "./Pages/CattleHerdPage";
@@ -13,6 +12,8 @@ import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
 import Perdas from "./Pages/Relatorios/Perdas";
 import Vendas from "./Pages/Relatorios/Vendas";
 import CattleDetailsPage from "./Pages/CattleDetailsPage";
+import Bezerros from "./Pages/Relatorios/Bezerros";
+import Pastos from "./Pages/Relatorios/Pastos";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -33,7 +34,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div style={{width:"100%", height:"95vh", overflow:"auto"}}>
+      <div style={{ width: "100%", height: "95vh", overflow: "auto" }}>
         <Routes>
           <Route
             path="/"
@@ -96,6 +97,24 @@ function App() {
             path="/relatorios/vendas"
             element={
               <Vendas
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/bezerros"
+            element={
+              <Bezerros
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/relatorios/pastos"
+            element={
+              <Pastos
                 cattle={cattle}
                 getCattle={getCattle}
               />
