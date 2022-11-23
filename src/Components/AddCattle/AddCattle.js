@@ -21,6 +21,10 @@ function AddCattle() {
     dtNascimento: "",
     brincoDaMae: "",
     nome: "",
+    comprado: false,
+    dtCompra: "",
+    valorCompra: "",
+    vendedor: "",
     dtCruzamento: "",
     pasto: "",
     dtEntradaCurral: "",
@@ -32,6 +36,7 @@ function AddCattle() {
     dtMorte: "",
     pesagem: [],
     historico: [],
+    producaoLeite: [],
   });
 
   const [radioValue, setRadioValue] = useState("");
@@ -49,6 +54,10 @@ function AddCattle() {
       dtNascimento: "",
       brincoDaMae: "",
       nome: "",
+      comprado: false,
+      dtCompra: "",
+      valorCompra: "",
+      vendedor: "",
       dtCruzamento: "",
       pasto: "",
       dtEntradaCurral: "",
@@ -60,6 +69,7 @@ function AddCattle() {
       dtMorte: "",
       pesagem: [],
       historico: [],
+      producaoLeite: [],
     };
     if (
       newAnimal.name !== "" &&
@@ -85,15 +95,99 @@ function AddCattle() {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Nome</Form.Label>
-          <Form.Control
-            type="text"
-            value={newAnimal.nome}
-            name="nome"
-            onChange={handleChange}
-          />
-        </Form.Group>
+        <Row
+          xs={1}
+          md={2}
+          lg={2}
+          xl={2}
+        >
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Nome</Form.Label>
+              <Form.Control
+                type="text"
+                value={newAnimal.nome}
+                name="nome"
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+          <Col
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Form.Check
+              type="checkbox"
+              id="comprado-checkbox"
+              size="lg"
+              name="comprado"
+              className="text-nowrap"
+              checked={newAnimal.comprado}
+              label={`Animal comprado`}
+              onChange={(_) => {
+                setNewAnimal((prevState) => ({
+                  ...prevState,
+                  comprado: !prevState.comprado,
+                  dtCompra: !newAnimal.comprado
+                    ? formatDateToDefault(new Date(Date.now()))
+                    : "",
+                  valorCompra: "",
+                  vendedor: "",
+                }));
+                console.log(newAnimal);
+              }}
+            />
+          </Col>
+        </Row>
+        {newAnimal.comprado && (
+          <Row
+            xs={1}
+            md={3}
+            lg={3}
+            xl={3}
+          >
+            <Col>
+              <Form.Group className="mb-3">
+                <Form.Label>Valor da compra (R$)</Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  step=".01"
+                  value={(
+                    Math.round(newAnimal.valorCompra * 100) / 100
+                  ).toFixed(2)}
+                  name="valorCompra"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mb-3">
+                <Form.Label>Vendedor</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={newAnimal.vendedor}
+                  name="vendedor"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group className="mb-3">
+                <Form.Label>Data da compra</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={newAnimal.dtCompra}
+                  name="dtCompra"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        )}
         <ButtonGroup
           className="d-flex justify-content-around align-itens-center"
           name="sexo"
