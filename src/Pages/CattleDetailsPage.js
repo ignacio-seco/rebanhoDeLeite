@@ -108,15 +108,17 @@ export default function CattleDetailsPage() {
       disabled = true;
       variant = 'outline-success';
       text = 'Confirmar';
-      // text = result ? 'Nova Entrada' : 'Nova Saída';
       marginRightClass = 'me-2'
     } else {
-      if (!lastOccurrence.dtSaidaCurral) {
+      if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
         labelEstadaDatePicker = "Data da nova entrada";
-        if (!cancelBtn && formState.ocorrenciaPastoToAdd) {
-          oneAnimal.estadaCurral[oneAnimal.estadaCurral.indexOf(lastOccurrence)].dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+        text = "Nova Entrada";
+        if (formState.ocorrenciaPastoToAdd) {
+          if(!cancelBtn){
+            oneAnimal.estadaCurral[oneAnimal.estadaCurral.indexOf(lastOccurrence)].dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+          }
           text = "Nova Entrada";
-        } else{
+        } else {
           text = "Nova Saída";
           disabled = false;
         }
@@ -136,6 +138,11 @@ export default function CattleDetailsPage() {
       variant = 'outline-primary';
       marginRightClass = '';
     }
+    
+    setOneAnimal(prevState => ({
+      ...oneAnimal,
+      noCurral: Boolean(oneAnimal.estadaCurral.length)
+    }));
 
     setFormState(prevState => ({
       ...prevState,
@@ -147,7 +154,7 @@ export default function CattleDetailsPage() {
         variant,
         text,
         marginRightClass
-      }
+      },
     }))
   }
   
@@ -252,6 +259,7 @@ export default function CattleDetailsPage() {
                       <Form.Check
                         type="switch"
                         id="sold-switch"
+                        disabled
                         label="No Curral"
                         checked={oneAnimal.noCurral}
                         className="text-nowrap"
@@ -557,7 +565,6 @@ export default function CattleDetailsPage() {
                     </Col>
                   </Row>
               }
-              { oneAnimal.estadaCurral?.length > 0 &&
                   <Row className="mt-3 gy-2 gx-3">
                     <hr/>
                     <Card.Subtitle>Estada no Curral</Card.Subtitle>
@@ -568,6 +575,7 @@ export default function CattleDetailsPage() {
                           <th>#</th>
                           <th>Entrada</th>
                           <th>Saída</th>
+                          <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -576,6 +584,31 @@ export default function CattleDetailsPage() {
                               <td>{oneAnimal.estadaCurral.indexOf(estada) + 1}</td>
                               <td>{ estada.dtEntradaCurral && moment(estada.dtEntradaCurral).format('L') }</td>
                               <td>{ estada.dtSaidaCurral && moment(estada.dtSaidaCurral).format('L') }</td>
+                              <td>
+                                <Button variant="danger"
+                                        onClick={() => {
+                                          const newEstadaCurral = oneAnimal.estadaCurral
+                                              .filter((estada, indexEstada) =>
+                                                index !== indexEstada
+                                          )
+                                          setOneAnimal(prevState => ({
+                                                ...prevState,
+                                                estadaCurral: newEstadaCurral,
+                                                noCurral: Boolean(newEstadaCurral.length)
+                                              })
+                                          )
+                                          setFormState(prevState => ({
+                                            ...prevState,
+                                            btnAdicionarEstada: {
+                                              ...formState.btnAdicionarEstada,
+                                              text: "Nova Entrada"
+                                            }
+                                          }))
+                                        }}
+                                >
+                                Excluir
+                                </Button>
+                              </td>
                             </tr>
                         ) }
                         </tbody>
@@ -619,7 +652,6 @@ export default function CattleDetailsPage() {
                           </FloatingLabel>
                         </Col> }
                   </Row>
-              }
             </fieldset>
           </Form>
         </Card.Body>
