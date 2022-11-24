@@ -5,6 +5,7 @@ import rebanho from "../assets/AllCattlePhoto.jpg";
 import curral from "../assets/curral.jpg";
 import novoAnimal from "../assets/newAnimal.jpg";
 import relatorios from "../assets/relatorio.jpg";
+import monitoramento from "../assets/monitoramento.jpeg";
 import { Link } from "react-router-dom";
 
 function HomePage() {
@@ -84,6 +85,25 @@ function HomePage() {
                   <h1>Relatórios</h1>
                 </Card.Title>
                 <Card.Text>Visualizar relatórios sobre seu rebanho</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/monitoramento">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={monitoramento}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Monitoramentos</h1>
+                </Card.Title>
+                <Card.Text>
+                  Realizar atualização de informações monitoradas do rebanho
+                </Card.Text>
               </Card.Body>
             </Card>
           </Link>
