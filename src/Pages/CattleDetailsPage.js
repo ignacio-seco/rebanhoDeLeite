@@ -666,6 +666,7 @@ export default function CattleDetailsPage() {
                               <td>{ estada.dtSaidaCurral && moment(estada.dtSaidaCurral).format('DD/MM/yyyy') }</td>
                               <td>
                                 <Button variant="danger"
+                                        size="sm"
                                         onClick={() => {
                                           const newEstadaCurral = oneAnimal.estadaCurral
                                               .filter((estada, indexEstada) =>
