@@ -1,11 +1,12 @@
 ﻿import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {Button, Card, Col, Container, FloatingLabel, Form, InputGroup, ListGroup, Row} from "react-bootstrap";
+import {Button, Card, Col, Container, FloatingLabel, Form, InputGroup, ListGroup, Modal, Row} from "react-bootstrap";
 import imgPlaceholder from "../assets/cow2.png";
 import "./CattleDetailsPage.css"
 import Table from "react-bootstrap/Table";
 import moment from "moment";
+import {Prev} from "react-bootstrap/PageItem";
 
 export default function CattleDetailsPage() {
   const { id } = useParams();
@@ -25,6 +26,7 @@ export default function CattleDetailsPage() {
     causaMorte: "",
     dtCruzamento: "",
     estadaCurral: [],
+    historico: []
   });
   
   const [formState, setFormState] = useState({
@@ -44,9 +46,17 @@ export default function CattleDetailsPage() {
       loading: false,
       text: "Salvar Alterações"
     },
-    btnExcluir: {
+    btnCancelarAlteracoes: {
+      text: "Cancelar",
+      disabled: false
+    },
+  });
+  
+  const [modalConfirmaExclusao, setModalConfirmaExclusao] = useState({
+    show: false,
+    btnConfirmar: {
       loading: false,
-      text: "Excluir Animal"
+      text: "Confirmar"
     }
   });
   
@@ -55,17 +65,63 @@ export default function CattleDetailsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/${id}`);
-        setOneAnimal(data);
-        console.log(data);
-
-        ehUltimaOcorrenciaPastoSaida(data);
+        await getOneAnimal();
       } catch (err) {
         console.log(err);
       }
     }
     fetchData();
   }, []);
+  
+  const getOneAnimal = async () => {
+    const { data } = await axios.get(`/${id}`);
+    setOneAnimal(data);
+    console.log(data);
+
+    ehUltimaOcorrenciaPastoSaida(data);
+  }
+
+  async function handleMorreuCheckButtonChange(_) {
+    const morreu = !oneAnimal.morreu;
+    const causaMorte = morreu ? oneAnimal.causaMorte : "";
+
+    setOneAnimal((prevState) => ({
+      ...prevState,
+      morreu,
+      causaMorte
+    }));
+    
+    try {
+      let data = {...oneAnimal, morreu, causaMorte};
+      delete data._id;
+      await axios.put(`/${id}`, data);
+    } catch(e) {
+      console.log(e)
+    }
+  }
+
+  async function handleVendaCheckButtonChange(_) {
+    const vendida = !oneAnimal.vendida;
+    const dtVenda = vendida ? oneAnimal.dtVenda : "";
+    const valorVenda = vendida ? oneAnimal.valorVenda : "";
+    const comprador = vendida ? oneAnimal.comprador : "";
+    
+    setOneAnimal((prevState) => ({
+      ...prevState,
+      dtVenda,
+      valorVenda,
+      comprador,
+      vendida,
+    }));
+
+    try {
+      let data = {...oneAnimal, vendida, dtVenda, valorVenda, comprador };
+      delete data._id;
+      await axios.put(`/${id}`, data);
+    } catch(e) {
+      console.log(e)
+    }
+  }
   
   function ehUltimaOcorrenciaPastoSaida(animal){
     const lastOccurrence = animal.estadaCurral 
@@ -108,15 +164,17 @@ export default function CattleDetailsPage() {
       disabled = true;
       variant = 'outline-success';
       text = 'Confirmar';
-      // text = result ? 'Nova Entrada' : 'Nova Saída';
       marginRightClass = 'me-2'
     } else {
-      if (!lastOccurrence.dtSaidaCurral) {
+      if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
         labelEstadaDatePicker = "Data da nova entrada";
-        if (!cancelBtn && formState.ocorrenciaPastoToAdd) {
-          oneAnimal.estadaCurral[oneAnimal.estadaCurral.indexOf(lastOccurrence)].dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+        text = "Nova Entrada";
+        if (formState.ocorrenciaPastoToAdd) {
+          if(!cancelBtn){
+            oneAnimal.estadaCurral[oneAnimal.estadaCurral.indexOf(lastOccurrence)].dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+          }
           text = "Nova Entrada";
-        } else{
+        } else {
           text = "Nova Saída";
           disabled = false;
         }
@@ -136,6 +194,12 @@ export default function CattleDetailsPage() {
       variant = 'outline-primary';
       marginRightClass = '';
     }
+    
+    setOneAnimal(prevState => ({
+      ...prevState,
+      noCurral: Boolean(oneAnimal.estadaCurral.length &&
+          !oneAnimal.estadaCurral[oneAnimal.estadaCurral.length - 1].dtSaidaCurral)
+    }));
 
     setFormState(prevState => ({
       ...prevState,
@@ -147,7 +211,7 @@ export default function CattleDetailsPage() {
         variant,
         text,
         marginRightClass
-      }
+      },
     }))
   }
   
@@ -186,29 +250,32 @@ export default function CattleDetailsPage() {
     }
   }
 
-  async function handleBtnExcluirClick(e) {
+  async function handleBtnModalConfirmarExclusao(e) {
     e.preventDefault();
-    setFormState(prevState => (
+    setModalConfirmaExclusao(prevState => (
         {
-          ...prevState, btnExcluir: {
-            text: "Excluindo...",
-            loading: true
+          ...prevState,
+          btnConfirmar: {
+            loading: true,
+            text: "Excluindo..."
           }
         }));
     try {
       await axios.delete(`/${id}`);
+      navigate(-1);
     } catch (e) {
       console.log(e)
     } finally {
-      setFormState(prevState => ({
-        ...prevState,
-        btnExcluir: {
-          text: "Excluir Animal",
-          loading: false
-        }
-      }));
+      setModalConfirmaExclusao(prevState => (
+          {
+            ...prevState,
+            show: false,
+            btnConfirmar: {
+              loading: false,
+              text: "Confirmar"
+            }
+          }));
     }
-    navigate(-1);
   }
 
   return (
@@ -226,12 +293,11 @@ export default function CattleDetailsPage() {
           <Container className="d-flex justify-content-between p-0">
             <Card.Title>Informações principais</Card.Title>
             <Button variant="danger" 
-                    disabled={formState.btnExcluir.loading}
                     className="text-nowrap" 
                     style={{maxHeight: 40}}
-                    onClick={handleBtnExcluirClick}
+                    onClick={() => setModalConfirmaExclusao({...modalConfirmaExclusao, show: true})}
             >
-              { formState.btnExcluir.text }
+              Excluir Animal
             </Button>
           </Container>
           <Form>
@@ -252,6 +318,7 @@ export default function CattleDetailsPage() {
                       <Form.Check
                         type="switch"
                         id="sold-switch"
+                        disabled
                         label="No Curral"
                         checked={oneAnimal.noCurral}
                         className="text-nowrap"
@@ -270,12 +337,7 @@ export default function CattleDetailsPage() {
                         label="Morreu"
                         checked={oneAnimal.morreu}
                         className="text-nowrap"
-                        onChange={(_) =>
-                          setOneAnimal((prevState) => ({
-                            ...prevState,
-                            ...(prevState.morreu && { causaMorte: "" }),
-                            morreu: !prevState.morreu,
-                          }))
+                        onChange={handleMorreuCheckButtonChange
                         }
                       />
                     </Col>
@@ -286,14 +348,7 @@ export default function CattleDetailsPage() {
                         label="Vendido"
                         checked={oneAnimal.vendida}
                         className="text-nowrap"
-                        onChange={(_) =>
-                            setOneAnimal((prevState) => ({
-                              ...prevState,
-                              ...(prevState.vendida && {dtVenda: ""}),
-                              ...(prevState.vendida && {valorVenda: ""}),
-                              ...(prevState.vendida && {comprador: ""}),
-                              vendida: !prevState.vendida,
-                            }))
+                        onChange={handleVendaCheckButtonChange
                         }
                       />
                     </Col>
@@ -314,13 +369,40 @@ export default function CattleDetailsPage() {
                   >
                     Editar Detalhes
                   </Button>
-                  <Button variant="success" 
-                          disabled={formState.btnSalvarDetalhes.loading}
-                          className={`${ formState.btnEditarDetalhes.show ? 'd-none' : '' }`}
-                          onClick={handleBtnSalvarAlteracoesClick}
-                  >
-                    { formState.btnSalvarDetalhes.text }
-                  </Button>
+                  <Container className={
+                    `${ formState.btnEditarDetalhes.show 
+                        ? 'd-none' : 
+                        'd-flex justify-content-end' }`
+                  }>
+                    <Button variant="success"
+                            className="me-3"
+                            disabled={formState.btnSalvarDetalhes.loading}
+                            onClick={handleBtnSalvarAlteracoesClick}
+                    >
+                      { formState.btnSalvarDetalhes.text }
+                    </Button>
+                    <Button variant="outline-danger"
+                            onClick={ async () => {
+                              setFormState(prev => ({ ...prev, 
+                                btnCancelarAlteracoes: { text: "Cancelando...", disabled: true }  }))
+                              try {
+                                await getOneAnimal();
+                              } catch (e){
+                                console.log(e)
+                              } finally {
+                                setFormState(prevState => ({
+                                  ...prevState,
+                                  btnEditarDetalhes: {
+                                    show: true
+                                  },
+                                  btnCancelarAlteracoes: { text: "Cancelar", disabled: false }
+                                }));
+                              }
+                            }}
+                    >
+                      Cancelar
+                    </Button>
+                  </Container>
                 </Container>
                 <Card.Subtitle>Dados do animal</Card.Subtitle>
               </Col>
@@ -484,6 +566,7 @@ export default function CattleDetailsPage() {
                       <Form.Control
                           id="causa-morte"
                           as="textarea"
+                          placeholder="Não informada"
                           rows={3}
                           value={oneAnimal.causaMorte}
                           onChange={e => setOneAnimal(prevState =>
@@ -557,7 +640,6 @@ export default function CattleDetailsPage() {
                     </Col>
                   </Row>
               }
-              { oneAnimal.estadaCurral?.length > 0 &&
                   <Row className="mt-3 gy-2 gx-3">
                     <hr/>
                     <Card.Subtitle>Estada no Curral</Card.Subtitle>
@@ -568,14 +650,45 @@ export default function CattleDetailsPage() {
                           <th>#</th>
                           <th>Entrada</th>
                           <th>Saída</th>
+                          <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        { oneAnimal.estadaCurral.map((estada, index) =>
+                        { oneAnimal.estadaCurral.length <= 0 && 
+                            <tr>
+                              <td colSpan={4} className="text-center">Não existem ocorrências cadastradas.</td>
+                            </tr> 
+                        }
+                        { oneAnimal.estadaCurral.length > 0 && oneAnimal.estadaCurral.map((estada, index) =>
                             <tr key={index}>
                               <td>{oneAnimal.estadaCurral.indexOf(estada) + 1}</td>
-                              <td>{ estada.dtEntradaCurral && moment(estada.dtEntradaCurral).format('L') }</td>
-                              <td>{ estada.dtSaidaCurral && moment(estada.dtSaidaCurral).format('L') }</td>
+                              <td>{ estada.dtEntradaCurral && moment(estada.dtEntradaCurral).format('DD/MM/yyyy') }</td>
+                              <td>{ estada.dtSaidaCurral && moment(estada.dtSaidaCurral).format('DD/MM/yyyy') }</td>
+                              <td>
+                                <Button variant="danger"
+                                        onClick={() => {
+                                          const newEstadaCurral = oneAnimal.estadaCurral
+                                              .filter((estada, indexEstada) =>
+                                                index !== indexEstada
+                                          )
+                                          setOneAnimal(prevState => ({
+                                                ...prevState,
+                                                estadaCurral: newEstadaCurral,
+                                                noCurral: false
+                                              })
+                                          )
+                                          setFormState(prevState => ({
+                                            ...prevState,
+                                            btnAdicionarEstada: {
+                                              ...formState.btnAdicionarEstada,
+                                              text: "Nova Entrada"
+                                            }
+                                          }))
+                                        }}
+                                >
+                                Excluir
+                                </Button>
+                              </td>
                             </tr>
                         ) }
                         </tbody>
@@ -619,11 +732,28 @@ export default function CattleDetailsPage() {
                           </FloatingLabel>
                         </Col> }
                   </Row>
-              }
             </fieldset>
           </Form>
         </Card.Body>
       </Card>
+
+      <Modal show={modalConfirmaExclusao.show} onHide={() => setModalConfirmaExclusao({ ...modalConfirmaExclusao, show: false })}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmação</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Você deseja realmente excluir o registro deste animal?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setModalConfirmaExclusao({ ...modalConfirmaExclusao, show: false })}>
+            Cancelar
+          </Button>
+          <Button variant="danger" 
+                  disabled={modalConfirmaExclusao.btnConfirmar.loading}
+                  onClick={handleBtnModalConfirmarExclusao}>
+            { modalConfirmaExclusao.btnConfirmar.text}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      
     </Container>
   );
 }
