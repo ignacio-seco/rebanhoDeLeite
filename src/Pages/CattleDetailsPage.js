@@ -43,6 +43,10 @@ export default function CattleDetailsPage() {
     btnSalvarDetalhes: {
       loading: false,
       text: "Salvar Alterações"
+    },
+    btnExcluir: {
+      loading: false,
+      text: "Excluir Animal"
     }
   });
   
@@ -62,12 +66,6 @@ export default function CattleDetailsPage() {
     }
     fetchData();
   }, []);
-
-  async function handleDelete(e) {
-    e.preventDefault();
-    await axios.delete(`/${id}`);
-    navigate(-1);
-  }
   
   function ehUltimaOcorrenciaPastoSaida(animal){
     const lastOccurrence = animal.estadaCurral 
@@ -153,7 +151,8 @@ export default function CattleDetailsPage() {
     }))
   }
   
-  function handleBtnEditarDetalhesClick(){
+  function handleBtnEditarDetalhesClick(e){
+    e.preventDefault();
     setFormState(prevState => ({
       ...prevState,
       btnEditarDetalhes: { show: false }
@@ -187,6 +186,31 @@ export default function CattleDetailsPage() {
     }
   }
 
+  async function handleBtnExcluirClick(e) {
+    e.preventDefault();
+    setFormState(prevState => (
+        {
+          ...prevState, btnExcluir: {
+            text: "Excluindo...",
+            loading: true
+          }
+        }));
+    try {
+      await axios.delete(`/${id}`);
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setFormState(prevState => ({
+        ...prevState,
+        btnExcluir: {
+          text: "Excluir Animal",
+          loading: false
+        }
+      }));
+    }
+    navigate(-1);
+  }
+
   return (
     <Container>
       <Card className="my-5">
@@ -199,7 +223,17 @@ export default function CattleDetailsPage() {
           </Container>
         </Card.Header>
         <Card.Body>
-          <Card.Title>Informações principais</Card.Title>
+          <Container className="d-flex justify-content-between p-0">
+            <Card.Title>Informações principais</Card.Title>
+            <Button variant="danger" 
+                    disabled={formState.btnExcluir.loading}
+                    className="text-nowrap" 
+                    style={{maxHeight: 40}}
+                    onClick={handleBtnExcluirClick}
+            >
+              { formState.btnExcluir.text }
+            </Button>
+          </Container>
           <Form>
             <Row className="py-3">
               <Col xs="4">
@@ -581,7 +615,6 @@ export default function CattleDetailsPage() {
                                       }
                                     }))
                                 }
-
                             />
                           </FloatingLabel>
                         </Col> }
