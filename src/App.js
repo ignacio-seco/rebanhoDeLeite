@@ -64,7 +64,7 @@ function App() {
             element={<AddCattle getCattle={getCattle} />}
           />
           <Route
-            path="/gado/:_id"
+            path="/gado/:id"
             element={<CattleDetailsPage />}
           />
           <Route
