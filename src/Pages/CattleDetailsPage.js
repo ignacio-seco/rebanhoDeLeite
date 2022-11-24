@@ -312,7 +312,7 @@ export default function CattleDetailsPage() {
                 </Container>
               </Col>
               <Col className="ps-xl-4 align-self-center">
-                <fieldset>
+                <fieldset disabled={!formState.btnEditarDetalhes.show}>
                   <Row>
                     <Col>
                       <Form.Check
@@ -666,6 +666,7 @@ export default function CattleDetailsPage() {
                               <td>{ estada.dtSaidaCurral && moment(estada.dtSaidaCurral).format('DD/MM/yyyy') }</td>
                               <td>
                                 <Button variant="danger"
+                                        size="sm"
                                         onClick={() => {
                                           const newEstadaCurral = oneAnimal.estadaCurral
                                               .filter((estada, indexEstada) =>
