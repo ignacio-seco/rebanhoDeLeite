@@ -14,7 +14,9 @@ import Vendas from "./Pages/Relatorios/Vendas";
 import CattleDetailsPage from "./Pages/CattleDetailsPage";
 import Bezerros from "./Pages/Relatorios/Bezerros";
 import Pastos from "./Pages/Relatorios/Pastos";
-import MilkMonitoring from "./Components/MilkMonitoring/MilkMonitoring";
+import MilkMonitoring from "./Pages/Monitoramentos/MilkMonitoring";
+import Monitoring from "./Pages/Monitoring";
+import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -35,7 +37,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div style={{ width: "100%", height: "95vh", overflow: "auto" }}>
+      <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
         <Routes>
           <Route
             path="/"
@@ -122,9 +124,22 @@ function App() {
             }
           />
           <Route
-            path="/curral/monitoramentoleite"
+            path="/monitoramento"
+            element={<Monitoring />}
+          />
+          <Route
+            path="/monitoramento/monitoramentoleite"
             element={
               <MilkMonitoring
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/monitoramento/monitoramentopeso"
+            element={
+              <WeightMonitor
                 cattle={cattle}
                 getCattle={getCattle}
               />

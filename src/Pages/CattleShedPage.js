@@ -19,7 +19,7 @@ export default function CattleShedPage({ cattle, getCattle }) {
           justifyContent: "center",
         }}
       >
-        <Link to="./monitoramentoleite">
+        <Link to="/monitoramento/monitoramentoleite">
           <Button>Realizar monitoramento de produção de leite</Button>
         </Link>
       </div>

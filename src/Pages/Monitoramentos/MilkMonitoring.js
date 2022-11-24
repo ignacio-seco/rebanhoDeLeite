@@ -1,44 +1,47 @@
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import {
   calculateAge,
   filterMonths,
   formatDate,
   formatDateToDefault,
+  stringEqualizer,
 } from "../../helpers/CalculateAge";
 
 export default function MilkMonitoring({ cattle, getCattle }) {
-  useEffect(getCattle, [cattle.length]);
-  let filterToMonitor = (data) => {
-    return data.filter(
+  useEffect(getCattle, []);
+  let [search, setSearch] = useState("");
+
+
+  function postIt(id, object) {
+    delete object._id;
+    axios
+      .put(`https://ironrest.cyclic.app/cattleControl/${id}`, object)
+      .then(setSearch(""))
+      .then(getCattle)
+      .catch((err) => alert(err));
+  }
+
+  function renderTable() {
+    let filteredData = cattle.filter(
       (cow) =>
         !(cow.morreu || cow.vendida) &&
         cow.noCurral &&
         cow.sexo === "FEMEA" &&
-        cow.producaoLeite[cow.producaoLeite.length - 1].dtVerificacao !==
-          formatDateToDefault(new Date(Date.now())) &&
+        (cow.producaoLeite.length > 0
+          ? cow.producaoLeite[cow.producaoLeite.length - 1].dtVerificacao !==
+            formatDateToDefault(new Date(Date.now()))
+          : true) &&
         filterMonths(cow.dtNascimento) > 11
-    );
-  };
-  let [filteredData, setFilteredData] = useState(filterToMonitor(cattle));
-  useMemo(() => {
-    setFilteredData(filterToMonitor(cattle));
-  }, [cattle.length]);
-
-  function postIt(id, object, originArray, index) {
-    let newArray = [...originArray];
-    delete object._id;
-    axios
-      .put(`https://ironrest.cyclic.app/cattleControl/${id}`, object)
-      .then(originArray[index])
-      .then(newArray.splice(index, 1))
-      .then(setFilteredData(newArray))
-      .catch((err) => alert(err));
-  }
-
-  function renderTable(data) {
-    let milkTable = data.map((cow, i) => {
+    ).sort((a, b) => Number(a.brinco) - Number(b.brinco));
+  ;
+  search && (filteredData = filteredData.filter(
+    (cow) =>
+      cow.brinco.indexOf(search) !== -1 ||
+      stringEqualizer(cow.nome).indexOf(stringEqualizer(search)) !== -1
+  ))
+    return filteredData.map((cow, i) => {
       return (
         <tr key={i}>
           <td>{cow.brinco}</td>
@@ -74,10 +77,11 @@ export default function MilkMonitoring({ cattle, getCattle }) {
                       },
                     ],
                   };
+                  console.log(e);
                   e.target[0].value = "";
                   let newAnimal = filteredData[i];
                   let id = newAnimal._id;
-                  postIt(id, newAnimal, filteredData, i);
+                  postIt(id, newAnimal);
                 }
                 console.log(filteredData);
               }}
@@ -100,10 +104,20 @@ export default function MilkMonitoring({ cattle, getCattle }) {
         </tr>
       );
     });
-    return milkTable;
   }
 
   return (
+    <div>
+    <Container className="sticky-top">
+        <Form.Control
+          type="search"
+          placeholder="Digite o nome ou nº de brinco"
+          className="mb-4"
+          value={search}
+          aria-label="Search"
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
+      </Container>
     <Container>
       <Table
         striped
@@ -112,7 +126,7 @@ export default function MilkMonitoring({ cattle, getCattle }) {
       >
         <thead
           className="sticky-top"
-          style={{ backgroundColor: "white" }}
+          style={{ backgroundColor: "white", top:"2.4em" }}
         >
           <tr>
             <th>Brinco</th>
@@ -120,11 +134,12 @@ export default function MilkMonitoring({ cattle, getCattle }) {
             <th>Idade</th>
             <th>Entrada no curral</th>
             <th>Tempo no curral</th>
-            <th>Litragem Monitorada</th>
+            <th>Litros monitoramento</th>
           </tr>
         </thead>
-        <tbody>{renderTable(filteredData)}</tbody>
+        <tbody>{renderTable()}</tbody>
       </Table>
     </Container>
+    </div>
   );
 }
