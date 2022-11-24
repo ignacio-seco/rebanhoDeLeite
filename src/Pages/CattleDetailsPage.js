@@ -39,6 +39,10 @@ export default function CattleDetailsPage() {
     labelEstadaDatePicker: "",
     btnEditarDetalhes:{
       show: true,
+    },    
+    btnSalvarDetalhes: {
+      loading: false,
+      text: "Salvar Alterações"
     }
   });
   
@@ -155,12 +159,32 @@ export default function CattleDetailsPage() {
       btnEditarDetalhes: { show: false }
     }));
   }
-  
-  function handleBtnSalvarAlteracoesClick(){
-    setFormState(prevState => ({
-      ...prevState,
-      btnEditarDetalhes: { show: true }
-    }));
+
+  async function handleBtnSalvarAlteracoesClick() {
+    setFormState(prevState => (
+        {
+          ...prevState, btnSalvarDetalhes: {
+            text: "Salvando...",
+            loading: true
+          }
+        }));
+
+    try {
+      let data = {...oneAnimal};
+      delete data._id;
+      await axios.put(`/${id}`, data);
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setFormState(prevState => ({
+        ...prevState,
+        btnEditarDetalhes: {show: true},
+        btnSalvarDetalhes: {
+          text: "Salvar Alterações",
+          loading: false
+        }
+      }));
+    }
   }
 
   return (
@@ -170,7 +194,7 @@ export default function CattleDetailsPage() {
           <Container className="d-flex justify-content-between align-items-baseline">
             <span>{oneAnimal.nome}</span>
             <span className="font-monospace text-muted float-sm-end d-none d-sm-inline-block">
-            #{oneAnimal.id}
+            #{oneAnimal._id}
           </span>
           </Container>
         </Card.Header>
@@ -257,10 +281,11 @@ export default function CattleDetailsPage() {
                     Editar Detalhes
                   </Button>
                   <Button variant="success" 
+                          disabled={formState.btnSalvarDetalhes.loading}
                           className={`${ formState.btnEditarDetalhes.show ? 'd-none' : '' }`}
                           onClick={handleBtnSalvarAlteracoesClick}
                   >
-                    Salvar Alterações
+                    { formState.btnSalvarDetalhes.text }
                   </Button>
                 </Container>
                 <Card.Subtitle>Dados do animal</Card.Subtitle>
