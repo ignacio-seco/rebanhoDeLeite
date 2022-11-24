@@ -312,7 +312,7 @@ export default function CattleDetailsPage() {
                 </Container>
               </Col>
               <Col className="ps-xl-4 align-self-center">
-                <fieldset>
+                <fieldset disabled={!formState.btnEditarDetalhes.show}>
                   <Row>
                     <Col>
                       <Form.Check
