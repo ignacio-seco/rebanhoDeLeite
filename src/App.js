@@ -38,7 +38,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div className="py-4" style={{ width: "100%", overflow: "auto" }}>
+      <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
         <Routes>
           <Route
             path="/"
