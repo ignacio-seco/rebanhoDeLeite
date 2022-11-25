@@ -30,3 +30,7 @@
     cursor: pointer;
 }
 
+.presentation-page .card {
+    height: 100%;
+}
+

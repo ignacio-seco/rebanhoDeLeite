@@ -18,7 +18,7 @@ function HomePage() {
         md={2}
         lg={3}
         xl={4}
-        className="g-4"
+        className="presentation-page g-4"
       >
         <Col>
           <Link to={`/gado`}>
