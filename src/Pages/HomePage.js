@@ -9,15 +9,16 @@ import monitoramento from "../assets/monitoramento.jpeg";
 import { Link } from "react-router-dom";
 
 function HomePage() {
-  const cardImageStyle = { width: "auto", height: "25vh" };
+  const cardImageStyle = { width: "auto" };
 
   return (
-    <Container className="homePageLinks">
+    <Container>
       <Row
         xs={1}
-        md={1}
-        lg={1}
-        xl={3}
+        md={2}
+        lg={3}
+        xl={4}
+        className="presentation-page g-4"
       >
         <Col>
           <Link to={`/gado`}>
@@ -29,7 +30,7 @@ function HomePage() {
               />
               <Card.Body>
                 <Card.Title>
-                  <h1>Seu Rebanho</h1>
+                  <h3>Seu Rebanho</h3>
                 </Card.Title>
                 <Card.Text>
                   Aqui você checa e altera dados do seu rebanho atual
@@ -48,7 +49,7 @@ function HomePage() {
               />
               <Card.Body>
                 <Card.Title>
-                  <h1>Curral</h1>
+                  <h3>Curral</h3>
                 </Card.Title>
                 <Card.Text>Checar e alterar o gado do curral</Card.Text>
               </Card.Body>
@@ -65,7 +66,7 @@ function HomePage() {
               />
               <Card.Body>
                 <Card.Title>
-                  <h1>Novo animal</h1>
+                  <h3>Novo animal</h3>
                 </Card.Title>
                 <Card.Text>Cadastrar um novo animal no rebanho</Card.Text>
               </Card.Body>
@@ -82,7 +83,7 @@ function HomePage() {
               />
               <Card.Body>
                 <Card.Title>
-                  <h1>Relatórios</h1>
+                  <h3>Relatórios</h3>
                 </Card.Title>
                 <Card.Text>Visualizar relatórios sobre seu rebanho</Card.Text>
               </Card.Body>
@@ -99,7 +100,7 @@ function HomePage() {
               />
               <Card.Body>
                 <Card.Title>
-                  <h1>Monitoramentos</h1>
+                  <h3>Monitoramentos</h3>
                 </Card.Title>
                 <Card.Text>
                   Realizar atualização de informações monitoradas do rebanho

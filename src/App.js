@@ -17,6 +17,7 @@ import Pastos from "./Pages/Relatorios/Pastos";
 import MilkMonitoring from "./Pages/Monitoramentos/MilkMonitoring";
 import Monitoring from "./Pages/Monitoring";
 import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
+import Notification from "./Components/Notification";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -37,7 +38,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
+      <div className="py-4" style={{ width: "100%", overflow: "auto" }}>
         <Routes>
           <Route
             path="/"

@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { filterMonths, formatDateToDefault } from "../../helpers/CalculateAge";
+import Notification from "../Notification";
 
 function AddCattle() {
   const navigate = useNavigate();
@@ -33,7 +34,6 @@ function AddCattle() {
     dtCompra: "",
     valorCompra: "",
     vendedor: "",
-    producaoLeite: [],
     morreu: false,
     dtMorte: "",
     causaMorte: "",
@@ -47,6 +47,14 @@ function AddCattle() {
   });
 
   const [radioValue, setRadioValue] = useState("");
+  const [notification, setNotification] = useState({
+    show: false,
+    type: "",
+    title: "",
+    text: "",
+    delay: 2000
+  });
+  const setNotificationShow = value => setNotification({ ...notification, show: value  });
 
   function handleChange(e) {
     setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
@@ -73,7 +81,6 @@ function AddCattle() {
       dtCompra: "",
       valorCompra: "",
       vendedor: "",
-      producaoLeite: [],
       morreu: false,
       dtMorte: "",
       causaMorte: "",
@@ -85,11 +92,7 @@ function AddCattle() {
         },
       ],
     };
-    if (
-      newAnimal.name !== "" &&
-      newAnimal.sexo !== "" &&
-      newAnimal.dtNascimento !== ""
-    ) {
+    if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
       axios
         .post("https://ironrest.cyclic.app/cattleControl", newAnimal)
         .then((response) => {
@@ -99,10 +102,13 @@ function AddCattle() {
           navigate(`../gado/${response.data.ops[0]._id}`);
         });
     } else {
-      alert(
-        `É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal`
-      );
-      return;
+      setNotification({
+        show: true,
+        type: "danger",
+        title: "Erro",
+        text: "É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal",
+        delay: 7000
+      });
     }
   }
 
@@ -301,6 +307,12 @@ function AddCattle() {
           Cadastrar Animal
         </Button>
       </Form>
+      <Notification show={notification.show}
+                    setShow={setNotificationShow}
+                    type={notification.type}
+                    title={notification.title}
+                    delay={notification.delay}
+                    text={notification.text}/>
     </Container>
   );
 }
