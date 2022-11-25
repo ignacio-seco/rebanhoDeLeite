@@ -115,7 +115,7 @@ export default function CattleDetailsPage() {
   };
 
   async function handleMorreuCheckButtonChange(_) {
-    const morreu = !oneAnimal.morreu;
+    let morreu = !oneAnimal.morreu;
     const causaMorte = morreu ? oneAnimal.causaMorte : "";
 
     setOneAnimal((prevState) => ({
@@ -129,12 +129,24 @@ export default function CattleDetailsPage() {
       delete data._id;
       await axios.put(`/${id}`, data);
     } catch (e) {
-      console.log(e);
+      morreu = !morreu;
+      setOneAnimal((prevState) => ({
+        ...prevState,
+        morreu,
+        causaMorte: morreu ? oneAnimal.causaMorte : ""
+      }));
+      setNotification({
+        type: "danger",
+        title: "Erro",
+        text: `Não foi possível registrar as alterações. Tente mais tarde.`,
+        show: true,
+      });
+      console.error(e);
     }
   }
 
   async function handleVendaCheckButtonChange(_) {
-    const vendida = !oneAnimal.vendida;
+    let vendida = !oneAnimal.vendida;
     const dtVenda = vendida ? oneAnimal.dtVenda : "";
     const valorVenda = vendida ? oneAnimal.valorVenda : "";
     const comprador = vendida ? oneAnimal.comprador : "";
@@ -152,7 +164,21 @@ export default function CattleDetailsPage() {
       delete data._id;
       await axios.put(`/${id}`, data);
     } catch (e) {
-      console.log(e);
+      vendida = !vendida;
+      setOneAnimal((prevState) => ({
+        ...prevState,
+        dtVenda: vendida ? oneAnimal.dtVenda : "",
+        valorVenda: vendida ? oneAnimal.valorVenda : "",
+        comprador: vendida ? oneAnimal.comprador : "",
+        vendida,
+      }));
+      setNotification({
+        type: "danger",
+        title: "Erro",
+        text: `Não foi possível registrar as alterações. Tente mais tarde.`,
+        show: true,
+      });
+      console.error(e);
     }
   }
 
