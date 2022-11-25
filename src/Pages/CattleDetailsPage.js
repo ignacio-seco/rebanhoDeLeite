@@ -149,7 +149,7 @@ export default function CattleDetailsPage() {
         ? animal.estadaCurral[animal.estadaCurral.length - 1]
         : null
     
-    const result = Boolean(lastOccurrence?.dtSaidaCurral);
+    const result = Boolean(lastOccurrence?.dtSaidaCurral || !animal.estadaCurral.length);
 
     let txtBtnAdicionarEstada = result
         ? "Nova Entrada"
