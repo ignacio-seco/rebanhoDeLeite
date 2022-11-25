@@ -24,3 +24,9 @@
     justify-items: center;
 }
 
+.col a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
