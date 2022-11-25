@@ -41,9 +41,18 @@ export default function CattleDetailsPage() {
     estadaCurral: [],
     historico: [],
     pesagem: [],
+    producaoLeite: [],
   });
 
   const [formState, setFormState] = useState({
+    ocorrenciaLeiteToAdd: { qtdLitros: "", dtVerificacao: "" },
+    btnAdicionarLitragem: {
+      clicked: false,
+      disabled: false,
+      text: "Nova Litragem",
+      variant: "outline-primary",
+      marginRightClass: "",
+    },
     ocorrenciaPesoToAdd: { dtPesagem: "", peso: "" },
     btnAdicionarPesagem: {
       clicked: false,
@@ -133,7 +142,7 @@ export default function CattleDetailsPage() {
       setOneAnimal((prevState) => ({
         ...prevState,
         morreu,
-        causaMorte: morreu ? oneAnimal.causaMorte : ""
+        causaMorte: morreu ? oneAnimal.causaMorte : "",
       }));
       setNotification({
         type: "danger",
@@ -315,6 +324,57 @@ export default function CattleDetailsPage() {
       ...prevState,
       ocorrenciaPesoToAdd: { dtPesagem: "", peso: "" },
       btnAdicionarPesagem: {
+        clicked,
+        disabled,
+        variant,
+        text,
+        marginRightClass,
+      },
+    }));
+  }
+
+  function handleAddLitragemBtnClick(cancelBtn = false) {
+    let { clicked, disabled, variant, text, marginRightClass } =
+      formState.btnAdicionarLitragem;
+
+    if (!clicked) {
+      clicked = true;
+      disabled = true;
+      variant = "outline-success";
+      text = "Confirmar";
+      marginRightClass = "me-2";
+    } else {
+      if (
+        !cancelBtn &&
+        formState.ocorrenciaLeiteToAdd.dtVerificacao &&
+        formState.ocorrenciaLeiteToAdd.qtdLitros
+      ) {
+        oneAnimal.producaoLeite.push(formState.ocorrenciaLeiteToAdd);
+        setOneAnimal({
+          ...oneAnimal,
+          pesagem: oneAnimal.producaoLeite.sort(
+            (a, b) =>
+              new Date(a.dtVerificacao).getTime() -
+              new Date(b.dtVerificacao).getTime()
+          ),
+        });
+        text = "Nova litragem";
+      } else if (!cancelBtn) {
+        alert(
+          "É necessário preencher os litros e a data da monitoração para cadastrar novo registro"
+        );
+      } else {
+        text = "Nova litragem";
+        disabled = false;
+      }
+      clicked = false;
+      variant = "outline-primary";
+      marginRightClass = "";
+    }
+    setFormState((prevState) => ({
+      ...prevState,
+      ocorrenciaLeiteToAdd: { dtVerificacao: "", qtdLitros: "" },
+      btnAdicionarLitragem: {
         clicked,
         disabled,
         variant,
@@ -1144,7 +1204,173 @@ export default function CattleDetailsPage() {
                   </Col>
                 )}
               </Row>
-              <Row>
+              {/*Formulário de Litragem*/}
+
+              {oneAnimal.sexo === "FEMEA" && (
+                <Row className="mt-3 gy-2 gx-3">
+                  <hr />
+                  <Card.Subtitle>Produção de leite</Card.Subtitle>
+                  <Col xs={12}>
+                    <Table>
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Litragem</th>
+                          <th>Data da verificação</th>
+                          <th>Idade na verificação</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {oneAnimal.producaoLeite.length <= 0 && (
+                          <tr>
+                            <td
+                              colSpan={4}
+                              className="text-center"
+                            >
+                              Não existem ocorrências cadastradas.
+                            </td>
+                          </tr>
+                        )}
+                        {oneAnimal.producaoLeite.length > 0 &&
+                          oneAnimal.producaoLeite.map((elemento, index) => (
+                            <tr key={index}>
+                              <td>
+                                {oneAnimal.producaoLeite.indexOf(elemento) + 1}
+                              </td>
+                              <td>{elemento.qtdLitros}</td>
+                              <td>
+                                {moment(elemento.dtVerificacao).format(
+                                  "DD/MM/yyyy"
+                                )}
+                              </td>
+                              <td>
+                                {calculateMonths(
+                                  oneAnimal.dtNascimento,
+                                  elemento.dtVerificacao
+                                )}
+                              </td>
+                              <td>
+                                <Button
+                                  variant="danger"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newLitragem =
+                                      oneAnimal.producaoLeite.filter(
+                                        (elemento, indexelemento) =>
+                                          index !== indexelemento
+                                      );
+                                    setOneAnimal((prevState) => ({
+                                      ...prevState,
+                                      pesagem: newLitragem,
+                                    }));
+                                  }}
+                                >
+                                  Excluir
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </Col>
+                  <Col
+                    xs={12}
+                    md={4}
+                    className="align-self-center"
+                  >
+                    <Button
+                      disabled={formState.btnAdicionarLitragem.disabled}
+                      variant={formState.btnAdicionarLitragem.variant}
+                      className={
+                        formState.btnAdicionarLitragem.marginRightClass
+                      }
+                      onClick={() => handleAddLitragemBtnClick()}
+                    >
+                      {formState.btnAdicionarLitragem.text}
+                    </Button>
+                    {formState.btnAdicionarLitragem.clicked && (
+                      <Button
+                        variant="outline-danger"
+                        onClick={(e) => handleAddLitragemBtnClick(true)}
+                      >
+                        Cancelar
+                      </Button>
+                    )}
+                  </Col>
+                  {formState.btnAdicionarLitragem.clicked && (
+                    <Col
+                      xs={12}
+                      md={4}
+                    >
+                      <FloatingLabel
+                        controlId="floating-entrada-curral"
+                        label={"Data da Verificação"}
+                      >
+                        <Form.Control
+                          type="date"
+                          placeholder="Data da Verificação"
+                          defaultValue=""
+                          onChange={(e) =>
+                            setFormState((prevState) => ({
+                              ...prevState,
+                              ocorrenciaLeiteToAdd: {
+                                ...prevState.ocorrenciaLeiteToAdd,
+                                dtVerificacao: e.target.value,
+                              },
+                              btnAdicionarLitragem: {
+                                ...prevState.btnAdicionarLitragem,
+                                disabled:
+                                  !e.target.value &&
+                                  prevState.btnAdicionarLitragem.clicked,
+                              },
+                            }))
+                          }
+                        />
+                      </FloatingLabel>
+                    </Col>
+                  )}
+                  {formState.btnAdicionarLitragem.clicked && (
+                    <Col
+                      xs={12}
+                      md={4}
+                    >
+                      <FloatingLabel
+                        controlId="floating-entrada-curral"
+                        label={"Litros"}
+                      >
+                        <Form.Control
+                          type="number"
+                          step=".01"
+                          placeholder="Litros"
+                          defaultValue=""
+                          onChange={(e) =>
+                            setFormState((prevState) => ({
+                              ...prevState,
+                              ocorrenciaLeiteToAdd: {
+                                ...prevState.ocorrenciaLeiteToAdd,
+                                qtdLitros: e.target.value,
+                              },
+                              btnAdicionarLitragem: {
+                                ...prevState.btnAdicionarLitragem,
+                                disabled:
+                                  !e.target.value &&
+                                  prevState.btnAdicionarLitragem.clicked,
+                              },
+                            }))
+                          }
+                        />
+                      </FloatingLabel>
+                    </Col>
+                  )}
+                </Row>
+              )}
+              <Row
+                xs={1}
+                md={1}
+                lg={2}
+                xl={2}
+              >
                 <Col>
                   <Charts
                     chartTitle="Evolução do peso"
@@ -1154,6 +1380,21 @@ export default function CattleDetailsPage() {
                     lineColor="red"
                   />
                 </Col>
+                {oneAnimal.sexo === "FEMEA" && (
+                  <Col>
+                    <Charts
+                      chartTitle="Produção de leite"
+                      dataTitle={oneAnimal.nome}
+                      chartLabels={oneAnimal.producaoLeite.map(
+                        (e) => e.dtVerificacao
+                      )}
+                      chartData={oneAnimal.producaoLeite.map(
+                        (e) => e.qtdLitros
+                      )}
+                      lineColor="blue"
+                    />
+                  </Col>
+                )}
               </Row>
 
               {/*<Row className="mt-3 gy-2 gx-3">*/}
