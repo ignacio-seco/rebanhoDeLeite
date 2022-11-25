@@ -1,12 +1,23 @@
 ﻿import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {Button, Card, Col, Container, FloatingLabel, Form, InputGroup, ListGroup, Modal, Row} from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  FloatingLabel,
+  Form,
+  InputGroup,
+  Modal,
+  Row,
+  Toast
+} from "react-bootstrap";
 import imgPlaceholder from "../assets/cow2.png";
 import "./CattleDetailsPage.css"
 import Table from "react-bootstrap/Table";
 import moment from "moment";
-import {Prev} from "react-bootstrap/PageItem";
+import Notification from "../Components/Notification";
 
 export default function CattleDetailsPage() {
   const { id } = useParams();
@@ -59,6 +70,16 @@ export default function CattleDetailsPage() {
       text: "Confirmar"
     }
   });
+  
+  const [notification, setNotification] = useState({
+    show: false,
+    type: "",
+    title: "",
+    text: "",
+    delay: 2000
+  });
+  
+  const setNotificationShow = value => setNotification({ ...notification, show: value  });
   
   const navigate = useNavigate();
 
@@ -155,8 +176,6 @@ export default function CattleDetailsPage() {
 
   function handleAddEstadaBtnClick(cancelBtn = false) {
     let { clicked, disabled, variant, text, marginRightClass} = formState.btnAdicionarEstada;
-    let labelEstadaDatePicker = formState.labelEstadaDatePicker;
-
     const { lastOccurrence } = ehUltimaOcorrenciaPastoSaida(oneAnimal);
 
     if (!clicked) {
@@ -167,7 +186,6 @@ export default function CattleDetailsPage() {
       marginRightClass = 'me-2'
     } else {
       if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
-        labelEstadaDatePicker = "Data da nova entrada";
         text = "Nova Entrada";
         if (formState.ocorrenciaPastoToAdd) {
           if(!cancelBtn){
@@ -179,7 +197,6 @@ export default function CattleDetailsPage() {
           disabled = false;
         }
       } else {
-        labelEstadaDatePicker = "Data da nova saída";
         if (!cancelBtn && formState.ocorrenciaPastoToAdd) {
           oneAnimal.estadaCurral.push({
             dtEntradaCurral: formState.ocorrenciaPastoToAdd
@@ -204,7 +221,6 @@ export default function CattleDetailsPage() {
     setFormState(prevState => ({
       ...prevState,
       ocorrenciaPastoToAdd: "",
-      labelEstadaDatePicker,
       btnAdicionarEstada: {
         clicked,
         disabled,
@@ -236,8 +252,20 @@ export default function CattleDetailsPage() {
       let data = {...oneAnimal};
       delete data._id;
       await axios.put(`/${id}`, data);
+      setNotification({
+        type: "success",
+        title: "Sucesso",
+        text: "Suas alterações foram salvas!",
+        show: true
+      });
     } catch (e) {
-      console.log(e)
+      setNotification({
+        type: "danger",
+        title: "Erro",
+        text: `Não foi possível salvar as alterações. Tente mais tarde.`,
+        show: true
+      });
+      console.error(e)
     } finally {
       setFormState(prevState => ({
         ...prevState,
@@ -264,7 +292,13 @@ export default function CattleDetailsPage() {
       await axios.delete(`/${id}`);
       navigate(-1);
     } catch (e) {
-      console.log(e)
+      setNotification({
+        type: "danger",
+        title: "Erro",
+        text: `Não foi possível remover o animal. Tente mais tarde.`,
+        show: true
+      });
+      console.error(e)
     } finally {
       setModalConfirmaExclusao(prevState => (
           {
@@ -733,10 +767,21 @@ export default function CattleDetailsPage() {
                           </FloatingLabel>
                         </Col> }
                   </Row>
+                  {/*<Row className="mt-3 gy-2 gx-3">*/}
+                  {/*  <hr/>*/}
+                  {/*  <Card.Subtitle>Histórico</Card.Subtitle>*/}
+                  {/*</Row>*/}
             </fieldset>
           </Form>
         </Card.Body>
       </Card>
+      
+      <Notification show={notification.show} 
+                    setShow={setNotificationShow} 
+                    type={notification.type} 
+                    title={notification.title}
+                    delay={notification.delay}
+                    text={notification.text} />
 
       <Modal show={modalConfirmaExclusao.show} onHide={() => setModalConfirmaExclusao({ ...modalConfirmaExclusao, show: false })}>
         <Modal.Header closeButton>
@@ -753,8 +798,7 @@ export default function CattleDetailsPage() {
             { modalConfirmaExclusao.btnConfirmar.text}
           </Button>
         </Modal.Footer>
-      </Modal>
-      
+      </Modal>      
     </Container>
   );
 }

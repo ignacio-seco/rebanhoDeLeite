@@ -15,6 +15,7 @@ import CattleDetailsPage from "./Pages/CattleDetailsPage";
 import Bezerros from "./Pages/Relatorios/Bezerros";
 import Pastos from "./Pages/Relatorios/Pastos";
 import MilkMonitoring from "./Components/MilkMonitoring/MilkMonitoring";
+import Notification from "./Components/Notification";
 
 function App() {
   const [cattle, setCattle] = useState([]);
@@ -35,7 +36,7 @@ function App() {
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div style={{ width: "100%", height: "95vh", overflow: "auto" }}>
+      <div style={{ width: "100%", overflow: "auto" }}>
         <Routes>
           <Route
             path="/"
