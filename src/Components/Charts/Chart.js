@@ -4,24 +4,26 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
 
-export function Charts({chartTitle,dataTitle,chartLabels,chartData,lineColor}){
+export function Charts({chartTitle,dataTitle,chartLabels,chartData,lineColor, barColor, type}){
 const options = {
   responsive: true,
   plugins: {
@@ -44,11 +46,11 @@ const data = {
       label: dataTitle,
       data: chartData,
       borderColor: lineColor,
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      backgroundColor: barColor,
     },
   ],
 };
 
-
-  return <Line options={options} data={data} />;
+if(type==="line"){return <Line options={options} data={data} />}
+else {return <Bar options={options} data={data} />}
 }

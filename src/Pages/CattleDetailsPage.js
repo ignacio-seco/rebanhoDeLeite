@@ -352,7 +352,7 @@ export default function CattleDetailsPage() {
         oneAnimal.producaoLeite.push(formState.ocorrenciaLeiteToAdd);
         setOneAnimal({
           ...oneAnimal,
-          pesagem: oneAnimal.producaoLeite.sort(
+          producaoLeite: oneAnimal.producaoLeite.sort(
             (a, b) =>
               new Date(a.dtVerificacao).getTime() -
               new Date(b.dtVerificacao).getTime()
@@ -1262,7 +1262,7 @@ export default function CattleDetailsPage() {
                                       );
                                     setOneAnimal((prevState) => ({
                                       ...prevState,
-                                      pesagem: newLitragem,
+                                      producaoLeite: newLitragem,
                                     }));
                                   }}
                                 >
@@ -1378,6 +1378,8 @@ export default function CattleDetailsPage() {
                     chartLabels={oneAnimal.pesagem.map((e) => e.dtPesagem)}
                     chartData={oneAnimal.pesagem.map((e) => e.peso)}
                     lineColor="red"
+                    barColor="rgba(255, 99, 132, 0.5)"
+                    type="line"
                   />
                 </Col>
                 {oneAnimal.sexo === "FEMEA" && (
@@ -1391,7 +1393,9 @@ export default function CattleDetailsPage() {
                       chartData={oneAnimal.producaoLeite.map(
                         (e) => e.qtdLitros
                       )}
-                      lineColor="blue"
+                      lineColor="black"
+                      barColor="rgba(106, 121, 247, 0.5)"
+                      type="bar"
                     />
                   </Col>
                 )}
