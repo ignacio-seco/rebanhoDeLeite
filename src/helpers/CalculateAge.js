@@ -54,3 +54,23 @@ export function formatDateToDefault(dt) {
       : newDt.getMonth() + 1
   }-${newDt.getDate() < 10 ? `0${newDt.getDate()}` : newDt.getDate()}`;
 }
+export function calculateMonths(initialDate, finalDate) {
+  if (initialDate === "") {
+    return "sem dados de nascimento";
+  } else {
+    let dob = new Date(initialDate);
+    let sob = new Date (finalDate)
+    let month_diff = sob.getTime() - dob.getTime();
+    let age_dt = new Date(month_diff);
+    let year = Math.abs(age_dt.getUTCFullYear() - 1970);
+    let month = age_dt.getUTCMonth();
+    let months = year * 12 + month;
+    let age;
+    if (months === 1) {
+      age = `${months} mês`;
+    } else {
+      age = `${months} meses`;
+    }
+    return age;
+  }
+}
