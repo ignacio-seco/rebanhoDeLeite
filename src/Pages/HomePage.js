@@ -12,7 +12,7 @@ function HomePage() {
   const cardImageStyle = { width: "auto" };
 
   return (
-    <Container>
+    <Container className="mt-4">
       <Row
         xs={1}
         md={2}
