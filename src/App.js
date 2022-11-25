@@ -14,7 +14,9 @@ import Vendas from "./Pages/Relatorios/Vendas";
 import CattleDetailsPage from "./Pages/CattleDetailsPage";
 import Bezerros from "./Pages/Relatorios/Bezerros";
 import Pastos from "./Pages/Relatorios/Pastos";
-import MilkMonitoring from "./Components/MilkMonitoring/MilkMonitoring";
+import MilkMonitoring from "./Pages/Monitoramentos/MilkMonitoring";
+import Monitoring from "./Pages/Monitoring";
+import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
 import Notification from "./Components/Notification";
 
 function App() {
@@ -123,9 +125,22 @@ function App() {
             }
           />
           <Route
-            path="/curral/monitoramentoleite"
+            path="/monitoramento"
+            element={<Monitoring />}
+          />
+          <Route
+            path="/monitoramento/monitoramentoleite"
             element={
               <MilkMonitoring
+                cattle={cattle}
+                getCattle={getCattle}
+              />
+            }
+          />
+          <Route
+            path="/monitoramento/monitoramentopeso"
+            element={
+              <WeightMonitor
                 cattle={cattle}
                 getCattle={getCattle}
               />

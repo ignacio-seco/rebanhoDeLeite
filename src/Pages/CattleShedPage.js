@@ -1,4 +1,4 @@
-﻿import { Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CattleList from "../Components/CattleList/CattleList";
 
@@ -19,7 +19,7 @@ export default function CattleShedPage({ cattle, getCattle }) {
           justifyContent: "center",
         }}
       >
-        <Link to="./monitoramentoleite">
+        <Link to="/monitoramento/monitoramentoleite">
           <Button>Realizar monitoramento de produção de leite</Button>
         </Link>
       </div>
