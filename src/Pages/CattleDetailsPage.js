@@ -1,6 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   Button,
   Card,
@@ -12,73 +12,100 @@ import {
   Modal,
   Row,
   Toast,
-} from "react-bootstrap";
-import imgPlaceholder from "../assets/cow2.png";
-import "./CattleDetailsPage.css";
-import Table from "react-bootstrap/Table";
-import moment from "moment";
-import Notification from "../Components/Notification";
-import { Charts } from "../Components/Charts/Chart";
-import { calculateAge, calculateMonths } from "../helpers/CalculateAge";
+} from 'react-bootstrap';
+import imgPlaceholder from '../assets/cow2.png';
+import './CattleDetailsPage.css';
+import Table from 'react-bootstrap/Table';
+import moment from 'moment';
+import Notification from '../Components/Notification';
+import { Charts } from '../Components/Charts/Chart';
+import {
+  calculateAge,
+  calculateMonths,
+  formatDateToDefault,
+} from '../helpers/CalculateAge';
 
-export default function CattleDetailsPage() {
+export default function CattleDetailsPage({
+  cattle,
+  getCattle,
+  pasturesArray,
+}) {
   const { id } = useParams();
+  useEffect(getCattle, [cattle.length]);
 
-  const [oneAnimal, setOneAnimal] = useState({
-    sexo: "",
-    brinco: "",
-    brincoDaMae: "",
-    morreu: false,
-    noCurral: false,
-    pasto: "",
-    vendida: false,
-    valorVenda: null,
-    dtVenda: "",
-    comprador: "",
-    dtNascimento: "",
-    causaMorte: "",
-    dtCruzamento: "",
+  let [oneAnimal, setOneAnimal] = useState({
+    brinco: '',
+    brincoDaMae: '',
+    causaMorte: '',
+    comprado: false,
+    comprador: '',
+    dtCompra: '',
+    dtCruzamento: '',
+    dtMorte: '',
+    dtNascimento: '',
+    dtVenda: '',
     estadaCurral: [],
     historico: [],
+    imagem_url: 'https://pngimg.com/uploads/cow/cow_PNG50576.png',
+    morreu: false,
+    noCurral: false,
+    nome: '',
+    pasto: '',
     pesagem: [],
     producaoLeite: [],
+    sexo: '',
+    valorCompra: '',
+    valorVenda: '',
+    vendedor: '',
+    vendida: false,
   });
 
   const [formState, setFormState] = useState({
-    ocorrenciaLeiteToAdd: { qtdLitros: "", dtVerificacao: "" },
+    ocorrenciaHistoricoToAdd: {
+      descricao: '',
+      dtHistorico: formatDateToDefault(new Date(Date.now())),
+    },
+    btnAdicionarHistorico: {
+      clicked: false,
+      disabled: false,
+      text: 'Nova observação',
+      variant: 'outline-primary',
+      marginRightClass: '',
+    },
+    ocorrenciaLeiteToAdd: { qtdLitros: '', dtVerificacao: '' },
     btnAdicionarLitragem: {
       clicked: false,
       disabled: false,
-      text: "Nova Litragem",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: 'Nova Litragem',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    ocorrenciaPesoToAdd: { dtPesagem: "", peso: "" },
+    ocorrenciaPesoToAdd: { dtPesagem: '', peso: '' },
     btnAdicionarPesagem: {
       clicked: false,
       disabled: false,
-      text: "Nova Pesagem",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: 'Nova Pesagem',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    ocorrenciaPastoToAdd: "",
+    ocorrenciaPastoToAdd: '',
     btnAdicionarEstada: {
       clicked: false,
       disabled: false,
-      text: "",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: '',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    labelEstadaDatePicker: "",
+    labelEstadaDatePicker: '',
     btnEditarDetalhes: {
       show: true,
     },
     btnSalvarDetalhes: {
       loading: false,
-      text: "Salvar Alterações",
+      text: 'Salvar Alterações',
     },
     btnCancelarAlteracoes: {
-      text: "Cancelar",
+      text: 'Cancelar',
       disabled: false,
     },
   });
@@ -87,15 +114,15 @@ export default function CattleDetailsPage() {
     show: false,
     btnConfirmar: {
       loading: false,
-      text: "Confirmar",
+      text: 'Confirmar',
     },
   });
 
   const [notification, setNotification] = useState({
     show: false,
-    type: "",
-    title: "",
-    text: "",
+    type: '',
+    title: '',
+    text: '',
     delay: 2000,
   });
 
@@ -125,7 +152,7 @@ export default function CattleDetailsPage() {
 
   async function handleMorreuCheckButtonChange(_) {
     let morreu = !oneAnimal.morreu;
-    const causaMorte = morreu ? oneAnimal.causaMorte : "";
+    const causaMorte = morreu ? oneAnimal.causaMorte : '';
 
     setOneAnimal((prevState) => ({
       ...prevState,
@@ -142,11 +169,11 @@ export default function CattleDetailsPage() {
       setOneAnimal((prevState) => ({
         ...prevState,
         morreu,
-        causaMorte: morreu ? oneAnimal.causaMorte : "",
+        causaMorte: morreu ? oneAnimal.causaMorte : '',
       }));
       setNotification({
-        type: "danger",
-        title: "Erro",
+        type: 'danger',
+        title: 'Erro',
         text: `Não foi possível registrar as alterações. Tente mais tarde.`,
         show: true,
       });
@@ -156,9 +183,9 @@ export default function CattleDetailsPage() {
 
   async function handleVendaCheckButtonChange(_) {
     let vendida = !oneAnimal.vendida;
-    const dtVenda = vendida ? oneAnimal.dtVenda : "";
-    const valorVenda = vendida ? oneAnimal.valorVenda : "";
-    const comprador = vendida ? oneAnimal.comprador : "";
+    const dtVenda = vendida ? oneAnimal.dtVenda : '';
+    const valorVenda = vendida ? oneAnimal.valorVenda : '';
+    const comprador = vendida ? oneAnimal.comprador : '';
 
     setOneAnimal((prevState) => ({
       ...prevState,
@@ -176,14 +203,14 @@ export default function CattleDetailsPage() {
       vendida = !vendida;
       setOneAnimal((prevState) => ({
         ...prevState,
-        dtVenda: vendida ? oneAnimal.dtVenda : "",
-        valorVenda: vendida ? oneAnimal.valorVenda : "",
-        comprador: vendida ? oneAnimal.comprador : "",
+        dtVenda: vendida ? oneAnimal.dtVenda : '',
+        valorVenda: vendida ? oneAnimal.valorVenda : '',
+        comprador: vendida ? oneAnimal.comprador : '',
         vendida,
       }));
       setNotification({
-        type: "danger",
-        title: "Erro",
+        type: 'danger',
+        title: 'Erro',
         text: `Não foi possível registrar as alterações. Tente mais tarde.`,
         show: true,
       });
@@ -200,18 +227,18 @@ export default function CattleDetailsPage() {
       lastOccurrence?.dtSaidaCurral || !animal.estadaCurral.length
     );
 
-    let txtBtnAdicionarEstada = result ? "Nova Entrada" : "Nova Saída";
+    let txtBtnAdicionarEstada = result ? 'Nova Entrada' : 'Nova Saída';
 
     let txtLabelEstadaDatePicker = result
-      ? "Data da nova entrada"
-      : "Data da nova saída";
+      ? 'Data da nova entrada'
+      : 'Data da nova saída';
 
     setFormState((prevState) => ({
       ...prevState,
       labelEstadaDatePicker: txtLabelEstadaDatePicker,
       btnAdicionarEstada: {
         text: txtBtnAdicionarEstada,
-        variant: "outline-primary",
+        variant: 'outline-primary',
       },
     }));
 
@@ -229,21 +256,22 @@ export default function CattleDetailsPage() {
     if (!clicked) {
       clicked = true;
       disabled = true;
-      variant = "outline-success";
-      text = "Confirmar";
-      marginRightClass = "me-2";
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
     } else {
       if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
-        text = "Nova Entrada";
+        text = 'Nova Entrada';
         if (formState.ocorrenciaPastoToAdd) {
           if (!cancelBtn) {
             oneAnimal.estadaCurral[
               oneAnimal.estadaCurral.indexOf(lastOccurrence)
             ].dtSaidaCurral = formState.ocorrenciaPastoToAdd;
           }
-          text = "Nova Entrada";
+          handleBtnSalvarAlteracoesClick();
+          text = 'Nova Entrada';
         } else {
-          text = "Nova Saída";
+          text = 'Nova Saída';
           disabled = false;
         }
       } else {
@@ -251,15 +279,16 @@ export default function CattleDetailsPage() {
           oneAnimal.estadaCurral.push({
             dtEntradaCurral: formState.ocorrenciaPastoToAdd,
           });
-          text = "Nova Saída";
+          handleBtnSalvarAlteracoesClick();
+          text = 'Nova Saída';
         } else {
-          text = "Nova Entrada";
+          text = 'Nova Entrada';
           disabled = false;
         }
       }
       clicked = false;
-      variant = "outline-primary";
-      marginRightClass = "";
+      variant = 'outline-primary';
+      marginRightClass = '';
     }
 
     setOneAnimal((prevState) => ({
@@ -273,7 +302,7 @@ export default function CattleDetailsPage() {
 
     setFormState((prevState) => ({
       ...prevState,
-      ocorrenciaPastoToAdd: "",
+      ocorrenciaPastoToAdd: '',
       btnAdicionarEstada: {
         clicked,
         disabled,
@@ -290,9 +319,9 @@ export default function CattleDetailsPage() {
     if (!clicked) {
       clicked = true;
       disabled = true;
-      variant = "outline-success";
-      text = "Confirmar";
-      marginRightClass = "me-2";
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
     } else {
       if (
         !cancelBtn &&
@@ -307,22 +336,23 @@ export default function CattleDetailsPage() {
               new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
           ),
         });
-        text = "Nova pesagem";
+        handleBtnSalvarAlteracoesClick();
+        text = 'Nova pesagem';
       } else if (!cancelBtn) {
         alert(
-          "É necessário preencher o peso e a data da pesagem para cadastrar novo registro"
+          'É necessário preencher o peso e a data da pesagem para cadastrar novo registro'
         );
       } else {
-        text = "Nova pesagem";
+        text = 'Nova pesagem';
         disabled = false;
       }
       clicked = false;
-      variant = "outline-primary";
-      marginRightClass = "";
+      variant = 'outline-primary';
+      marginRightClass = '';
     }
     setFormState((prevState) => ({
       ...prevState,
-      ocorrenciaPesoToAdd: { dtPesagem: "", peso: "" },
+      ocorrenciaPesoToAdd: { dtPesagem: '', peso: '' },
       btnAdicionarPesagem: {
         clicked,
         disabled,
@@ -340,9 +370,9 @@ export default function CattleDetailsPage() {
     if (!clicked) {
       clicked = true;
       disabled = true;
-      variant = "outline-success";
-      text = "Confirmar";
-      marginRightClass = "me-2";
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
     } else {
       if (
         !cancelBtn &&
@@ -358,22 +388,23 @@ export default function CattleDetailsPage() {
               new Date(b.dtVerificacao).getTime()
           ),
         });
-        text = "Nova litragem";
+        handleBtnSalvarAlteracoesClick();
+        text = 'Nova litragem';
       } else if (!cancelBtn) {
         alert(
-          "É necessário preencher os litros e a data da monitoração para cadastrar novo registro"
+          'É necessário preencher os litros e a data da monitoração para cadastrar novo registro'
         );
       } else {
-        text = "Nova litragem";
+        text = 'Nova litragem';
         disabled = false;
       }
       clicked = false;
-      variant = "outline-primary";
-      marginRightClass = "";
+      variant = 'outline-primary';
+      marginRightClass = '';
     }
     setFormState((prevState) => ({
       ...prevState,
-      ocorrenciaLeiteToAdd: { dtVerificacao: "", qtdLitros: "" },
+      ocorrenciaLeiteToAdd: { dtVerificacao: '', qtdLitros: '' },
       btnAdicionarLitragem: {
         clicked,
         disabled,
@@ -384,6 +415,60 @@ export default function CattleDetailsPage() {
     }));
   }
 
+  function handleAddHistoricoBtnClick(cancelBtn = false) {
+    let { clicked, disabled, variant, text, marginRightClass } =
+      formState.btnAdicionarHistorico;
+
+    if (!clicked) {
+      clicked = true;
+      disabled = true;
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
+    } else {
+      if (
+        !cancelBtn &&
+        formState.ocorrenciaHistoricoToAdd.dtHistorico &&
+        formState.ocorrenciaHistoricoToAdd.descricao
+      ) {
+        oneAnimal.historico.push(formState.ocorrenciaHistoricoToAdd);
+        setOneAnimal({
+          ...oneAnimal,
+          historico: oneAnimal.historico.sort(
+            (a, b) =>
+              new Date(a.dtHistorico).getTime() -
+              new Date(b.dtHistorico).getTime()
+          ),
+        });
+        handleBtnSalvarAlteracoesClick();
+        text = 'Nova observação';
+      } else if (!cancelBtn) {
+        alert(
+          'É necessário preencher a descrição e a data da observação para cadastrar novo registro'
+        );
+      } else {
+        text = 'Nova observação';
+        disabled = false;
+      }
+      clicked = false;
+      variant = 'outline-primary';
+      marginRightClass = '';
+    }
+    setFormState((prevState) => ({
+      ...prevState,
+      ocorrenciaHistoricoToAdd: {
+        dtHistorico: formatDateToDefault(new Date(Date.now())),
+        descricao: '',
+      },
+      btnAdicionarHistorico: {
+        clicked,
+        disabled,
+        variant,
+        text,
+        marginRightClass,
+      },
+    }));
+  }
   function handleBtnEditarDetalhesClick(e) {
     e.preventDefault();
     setFormState((prevState) => ({
@@ -396,7 +481,7 @@ export default function CattleDetailsPage() {
     setFormState((prevState) => ({
       ...prevState,
       btnSalvarDetalhes: {
-        text: "Salvando...",
+        text: 'Salvando...',
         loading: true,
       },
     }));
@@ -412,15 +497,15 @@ export default function CattleDetailsPage() {
       delete data._id;
       await axios.put(`/${id}`, data);
       setNotification({
-        type: "success",
-        title: "Sucesso",
-        text: "Suas alterações foram salvas!",
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
         show: true,
       });
     } catch (e) {
       setNotification({
-        type: "danger",
-        title: "Erro",
+        type: 'danger',
+        title: 'Erro',
         text: `Não foi possível salvar as alterações. Tente mais tarde.`,
         show: true,
       });
@@ -430,7 +515,7 @@ export default function CattleDetailsPage() {
         ...prevState,
         btnEditarDetalhes: { show: true },
         btnSalvarDetalhes: {
-          text: "Salvar Alterações",
+          text: 'Salvar Alterações',
           loading: false,
         },
       }));
@@ -443,7 +528,7 @@ export default function CattleDetailsPage() {
       ...prevState,
       btnConfirmar: {
         loading: true,
-        text: "Excluindo...",
+        text: 'Excluindo...',
       },
     }));
     try {
@@ -451,8 +536,8 @@ export default function CattleDetailsPage() {
       navigate(-1);
     } catch (e) {
       setNotification({
-        type: "danger",
-        title: "Erro",
+        type: 'danger',
+        title: 'Erro',
         text: `Não foi possível remover o animal. Tente mais tarde.`,
         show: true,
       });
@@ -463,7 +548,7 @@ export default function CattleDetailsPage() {
         show: false,
         btnConfirmar: {
           loading: false,
-          text: "Confirmar",
+          text: 'Confirmar',
         },
       }));
     }
@@ -561,7 +646,7 @@ export default function CattleDetailsPage() {
                   <Button
                     variant="primary"
                     className={`${
-                      !formState.btnEditarDetalhes.show ? "d-none" : ""
+                      !formState.btnEditarDetalhes.show ? 'd-none' : ''
                     }`}
                     onClick={handleBtnEditarDetalhesClick}
                   >
@@ -570,8 +655,8 @@ export default function CattleDetailsPage() {
                   <Container
                     className={`${
                       formState.btnEditarDetalhes.show
-                        ? "d-none"
-                        : "d-flex justify-content-end"
+                        ? 'd-none'
+                        : 'd-flex justify-content-end'
                     }`}
                   >
                     <Button
@@ -588,7 +673,7 @@ export default function CattleDetailsPage() {
                         setFormState((prev) => ({
                           ...prev,
                           btnCancelarAlteracoes: {
-                            text: "Cancelando...",
+                            text: 'Cancelando...',
                             disabled: true,
                           },
                         }));
@@ -603,7 +688,7 @@ export default function CattleDetailsPage() {
                               show: true,
                             },
                             btnCancelarAlteracoes: {
-                              text: "Cancelar",
+                              text: 'Cancelar',
                               disabled: false,
                             },
                           }));
@@ -617,13 +702,13 @@ export default function CattleDetailsPage() {
                 <Card.Subtitle>Dados do animal</Card.Subtitle>
               </Col>
             </Row>
-            <fieldset disabled={formState.btnEditarDetalhes.show}>
-              <Row className="gy-2 gx-3">
-                <Col
-                  xs={{ span: 12, order: 1 }}
-                  md={6}
-                  className="pt-2"
-                >
+            <Row className="gy-2 gx-3">
+              <Col
+                xs={{ span: 12, order: 1 }}
+                md={6}
+                className="pt-2"
+              >
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Form.Group>
                     <Form.Label className="me-3">Sexo:</Form.Label>
                     <Form.Check
@@ -632,11 +717,11 @@ export default function CattleDetailsPage() {
                       name="genderGroup"
                       type="radio"
                       id={`inline-radio-gender-1`}
-                      checked={oneAnimal.sexo === "MACHO"}
+                      checked={oneAnimal.sexo === 'MACHO'}
                       onChange={(_) =>
                         setOneAnimal((prevState) => ({
                           ...prevState,
-                          sexo: "MACHO",
+                          sexo: 'MACHO',
                         }))
                       }
                     />
@@ -646,20 +731,22 @@ export default function CattleDetailsPage() {
                       name="genderGroup"
                       type="radio"
                       id={`inline-radio-gender-2`}
-                      checked={oneAnimal.sexo === "FEMEA"}
+                      checked={oneAnimal.sexo === 'FEMEA'}
                       onChange={(_) =>
                         setOneAnimal((prevState) => ({
                           ...prevState,
-                          sexo: "FEMEA",
+                          sexo: 'FEMEA',
                         }))
                       }
                     />
                   </Form.Group>
-                </Col>
-                <Col
-                  xs={{ order: 2 }}
-                  md={6}
-                >
+                </fieldset>
+              </Col>
+              <Col
+                xs={{ order: 2 }}
+                md={6}
+              >
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Form.Group as={Row}>
                     <Form.Label
                       column
@@ -684,11 +771,13 @@ export default function CattleDetailsPage() {
                       />
                     </Col>
                   </Form.Group>
-                </Col>
-                <Col
-                  xs={{ span: 12, order: 4 }}
-                  md={{ span: 6, order: 3 }}
-                >
+                </fieldset>
+              </Col>
+              <Col
+                xs={{ span: 12, order: 4 }}
+                md={{ span: 6, order: 3 }}
+              >
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Form.Group as={Row}>
                     <Form.Label
                       column
@@ -713,11 +802,13 @@ export default function CattleDetailsPage() {
                       />
                     </Col>
                   </Form.Group>
-                </Col>
-                <Col
-                  xs={{ span: 12, order: 3 }}
-                  md={{ span: 6, order: 4 }}
-                >
+                </fieldset>
+              </Col>
+              <Col
+                xs={{ span: 12, order: 3 }}
+                md={{ span: 6, order: 4 }}
+              >
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Form.Group as={Row}>
                     <Form.Label
                       column
@@ -742,11 +833,13 @@ export default function CattleDetailsPage() {
                       />
                     </Col>
                   </Form.Group>
-                </Col>
-                <Col
-                  xs={{ span: 12, order: 5 }}
-                  md={6}
-                >
+                </fieldset>
+              </Col>
+              <Col
+                xs={{ span: 12, order: 5 }}
+                md={6}
+              >
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Form.Group as={Row}>
                     <Form.Label
                       column
@@ -770,41 +863,82 @@ export default function CattleDetailsPage() {
                       />
                     </Col>
                   </Form.Group>
-                </Col>
-                <Col
-                  xs={{ span: 12, order: 5 }}
-                  md={6}
-                >
-                  <Form.Group as={Row}>
-                    <Form.Label
-                      column
-                      xs={4}
-                      htmlFor="pasto"
+                </fieldset>
+              </Col>
+              <Col
+                xs={{ span: 12, order: 1 }}
+                md={6}
+              >
+                <Form.Group as={Row}>
+                  <Form.Label
+                    column
+                    xs={4}
+                    htmlFor="pasto"
+                  >
+                    Pasto:
+                  </Form.Label>
+                  <Col xs={8}>
+                    <Form.Select
+                      aria-label="Pastos da propriedade"
+                      onChange={(e) => {
+                        let data = { ...oneAnimal, pasto: e.target.value };
+                        delete data._id;
+                        axios.put(`/${id}`, data)
+                        .then(getOneAnimal())
+                        .then(()=>{setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Novo pasto registrado para o animal',
+        show: true,
+      })})
+                        .catch((err)=>{setNotification({
+        type: 'danger',
+        title: 'Erro',
+        text: `Não foi possível alterar o pasto do animal. Tente mais tarde.`,
+        show: true,
+      })});
+                      }}
+                      defaultValue={oneAnimal.pasto}
                     >
-                      Pasto:
-                    </Form.Label>
-                    <Col xs={8}>
-                      <Form.Control
-                        type="text"
-                        id="pasto"
-                        placeholder="Não informado"
-                        value={oneAnimal.pasto}
-                        onChange={(e) =>
-                          setOneAnimal((prevState) => ({
-                            ...prevState,
-                            pasto: e.target.value,
-                          }))
-                        }
-                      />
-                    </Col>
-                  </Form.Group>
-                </Col>
-              </Row>
-              {oneAnimal.morreu && (
-                <Form.Group
-                  as={Row}
-                  className="mt-3"
+                      {pasturesArray.map((p, i) => (
+                        <option key={i}>{p}</option>
+                      ))}
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            {!formState.btnEditarDetalhes.show && (
+              <Form.Group
+                as={Row}
+                className="mt-3"
+              >
+                <Form.Label
+                  column
+                  xs={4}
+                  md={3}
+                  htmlFor="nome"
                 >
+                  Nome:
+                </Form.Label>
+                <Col>
+                  <Form.Control
+                    id="nome"
+                    type="text"
+                    value={oneAnimal.nome}
+                    onChange={(e) =>
+                      setOneAnimal((prevState) => ({
+                        ...prevState,
+                        nome: e.target.value,
+                      }))
+                    }
+                  />
+                </Col>
+              </Form.Group>
+            )}
+            {oneAnimal.morreu && (
+              <Form.Group className="mt-3">
+                <Row>
                   <Form.Label
                     column
                     xs={4}
@@ -828,9 +962,21 @@ export default function CattleDetailsPage() {
                       }
                     />
                   </Col>
-                </Form.Group>
-              )}
-              {oneAnimal.vendida && (
+                </Row>
+                <Row>
+                  <Col>
+                    <Button
+                      className="mt-2"
+                      onClick={handleBtnSalvarAlteracoesClick}
+                    >
+                      Salvar informação
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+            )}
+            {oneAnimal.vendida && (
+              <div>
                 <Row className="mt-3 gy-2 gx-3">
                   <hr />
                   <Card.Subtitle>Dados da venda</Card.Subtitle>
@@ -926,11 +1072,22 @@ export default function CattleDetailsPage() {
                     </Form.Group>
                   </Col>
                 </Row>
-              )}
-              <Row className="mt-3 gy-2 gx-3">
-                <hr />
-                <Card.Subtitle>Estada no Curral</Card.Subtitle>
-                <Col xs={12}>
+                <Row>
+                  <Button
+                    className="mt-2"
+                    onClick={handleBtnSalvarAlteracoesClick}
+                  >
+                    Salvar informação
+                  </Button>
+                </Row>
+              </div>
+            )}
+            <Row className="mt-3 gy-2 gx-3">
+              <hr />
+
+              <Card.Subtitle>Estada no Curral</Card.Subtitle>
+              <Col xs={12}>
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Table>
                     <thead>
                       <tr>
@@ -960,13 +1117,13 @@ export default function CattleDetailsPage() {
                             <td>
                               {estada.dtEntradaCurral &&
                                 moment(estada.dtEntradaCurral).format(
-                                  "DD/MM/yyyy"
+                                  'DD/MM/yyyy'
                                 )}
                             </td>
                             <td>
                               {estada.dtSaidaCurral &&
                                 moment(estada.dtSaidaCurral).format(
-                                  "DD/MM/yyyy"
+                                  'DD/MM/yyyy'
                                 )}
                             </td>
                             <td>
@@ -988,7 +1145,7 @@ export default function CattleDetailsPage() {
                                     ...prevState,
                                     btnAdicionarEstada: {
                                       ...formState.btnAdicionarEstada,
-                                      text: "Nova Entrada",
+                                      text: 'Nova Entrada',
                                     },
                                   }));
                                 }}
@@ -1000,72 +1157,74 @@ export default function CattleDetailsPage() {
                         ))}
                     </tbody>
                   </Table>
-                </Col>
+                </fieldset>
+              </Col>
+              <Col
+                xs={12}
+                md={4}
+                className="align-self-center"
+              >
+                <Button
+                  disabled={formState.btnAdicionarEstada.disabled}
+                  variant={formState.btnAdicionarEstada.variant}
+                  className={formState.btnAdicionarEstada.marginRightClass}
+                  onClick={() => handleAddEstadaBtnClick()}
+                >
+                  {formState.btnAdicionarEstada.text}
+                </Button>
+                {formState.btnAdicionarEstada.clicked && (
+                  <Button
+                    variant="outline-danger"
+                    onClick={(e) => handleAddEstadaBtnClick(true)}
+                  >
+                    Cancelar
+                  </Button>
+                )}
+              </Col>
+              {formState.btnAdicionarEstada.clicked && (
                 <Col
                   xs={12}
                   md={4}
-                  className="align-self-center"
                 >
-                  <Button
-                    disabled={formState.btnAdicionarEstada.disabled}
-                    variant={formState.btnAdicionarEstada.variant}
-                    className={formState.btnAdicionarEstada.marginRightClass}
-                    onClick={() => handleAddEstadaBtnClick()}
+                  <FloatingLabel
+                    controlId="floating-entrada-curral"
+                    label={formState.labelEstadaDatePicker}
                   >
-                    {formState.btnAdicionarEstada.text}
-                  </Button>
-                  {formState.btnAdicionarEstada.clicked && (
-                    <Button
-                      variant="outline-danger"
-                      onClick={(e) => handleAddEstadaBtnClick(true)}
-                    >
-                      Cancelar
-                    </Button>
-                  )}
+                    <Form.Control
+                      type="date"
+                      placeholder="Data de entrada"
+                      defaultValue=""
+                      onChange={(e) =>
+                        setFormState((prevState) => ({
+                          ...prevState,
+                          ocorrenciaPastoToAdd: e.target.value,
+                          btnAdicionarEstada: {
+                            ...prevState.btnAdicionarEstada,
+                            disabled:
+                              !e.target.value &&
+                              prevState.btnAdicionarEstada.clicked,
+                          },
+                        }))
+                      }
+                    />
+                  </FloatingLabel>
                 </Col>
-                {formState.btnAdicionarEstada.clicked && (
-                  <Col
-                    xs={12}
-                    md={4}
-                  >
-                    <FloatingLabel
-                      controlId="floating-entrada-curral"
-                      label={formState.labelEstadaDatePicker}
-                    >
-                      <Form.Control
-                        type="date"
-                        placeholder="Data de entrada"
-                        defaultValue=""
-                        onChange={(e) =>
-                          setFormState((prevState) => ({
-                            ...prevState,
-                            ocorrenciaPastoToAdd: e.target.value,
-                            btnAdicionarEstada: {
-                              ...prevState.btnAdicionarEstada,
-                              disabled:
-                                !e.target.value &&
-                                prevState.btnAdicionarEstada.clicked,
-                            },
-                          }))
-                        }
-                      />
-                    </FloatingLabel>
-                  </Col>
-                )}
-              </Row>
-              <Row className="mt-3 gy-2 gx-3">
-                <hr />
-                <Card.Subtitle>Peso</Card.Subtitle>
-                <Col xs={12}>
+              )}
+            </Row>
+            {/*Formulário da pesagem*/}
+            <Row className="mt-3 gy-2 gx-3">
+              <hr />
+              <Card.Subtitle>Peso</Card.Subtitle>
+              <Col xs={12}>
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
                   <Table>
                     <thead>
                       <tr>
-                        <th>#</th>
-                        <th>Peso</th>
-                        <th>Data da pesagem</th>
-                        <th>Meses na pesagem</th>
-                        <th></th>
-                        <th></th>
+                        <th style={{ width: '10%' }}>#</th>
+                        <th style={{ width: '14%' }}>Peso</th>
+                        <th style={{ width: '28%' }}>Data da pesagem</th>
+                        <th style={{ width: '28%' }}>Meses na pesagem</th>
+                        <th style={{ width: '20%' }}></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1085,7 +1244,7 @@ export default function CattleDetailsPage() {
                             <td>{oneAnimal.pesagem.indexOf(elemento) + 1}</td>
                             <td>{elemento.peso}</td>
                             <td>
-                              {moment(elemento.dtPesagem).format("DD/MM/yyyy")}
+                              {moment(elemento.dtPesagem).format('DD/MM/yyyy')}
                             </td>
                             <td>
                               {calculateMonths(
@@ -1115,108 +1274,110 @@ export default function CattleDetailsPage() {
                         ))}
                     </tbody>
                   </Table>
-                </Col>
+                </fieldset>
+              </Col>
+              <Col
+                xs={12}
+                md={4}
+                className="align-self-center"
+              >
+                <Button
+                  disabled={formState.btnAdicionarPesagem.disabled}
+                  variant={formState.btnAdicionarPesagem.variant}
+                  className={formState.btnAdicionarPesagem.marginRightClass}
+                  onClick={() => handleAddPesagemBtnClick()}
+                >
+                  {formState.btnAdicionarPesagem.text}
+                </Button>
+                {formState.btnAdicionarPesagem.clicked && (
+                  <Button
+                    variant="outline-danger"
+                    onClick={(e) => handleAddPesagemBtnClick(true)}
+                  >
+                    Cancelar
+                  </Button>
+                )}
+              </Col>
+              {formState.btnAdicionarPesagem.clicked && (
                 <Col
                   xs={12}
                   md={4}
-                  className="align-self-center"
                 >
-                  <Button
-                    disabled={formState.btnAdicionarPesagem.disabled}
-                    variant={formState.btnAdicionarPesagem.variant}
-                    className={formState.btnAdicionarPesagem.marginRightClass}
-                    onClick={() => handleAddPesagemBtnClick()}
+                  <FloatingLabel
+                    controlId="floating-entrada-curral"
+                    label={'Data da Pesagem'}
                   >
-                    {formState.btnAdicionarPesagem.text}
-                  </Button>
-                  {formState.btnAdicionarPesagem.clicked && (
-                    <Button
-                      variant="outline-danger"
-                      onClick={(e) => handleAddPesagemBtnClick(true)}
-                    >
-                      Cancelar
-                    </Button>
-                  )}
+                    <Form.Control
+                      type="date"
+                      placeholder="Data da pesagem"
+                      defaultValue=""
+                      onChange={(e) =>
+                        setFormState((prevState) => ({
+                          ...prevState,
+                          ocorrenciaPesoToAdd: {
+                            ...prevState.ocorrenciaPesoToAdd,
+                            dtPesagem: e.target.value,
+                          },
+                          btnAdicionarPesagem: {
+                            ...prevState.btnAdicionarPesagem,
+                            disabled:
+                              !e.target.value &&
+                              prevState.btnAdicionarPesagem.clicked,
+                          },
+                        }))
+                      }
+                    />
+                  </FloatingLabel>
                 </Col>
-                {formState.btnAdicionarPesagem.clicked && (
-                  <Col
-                    xs={12}
-                    md={4}
+              )}
+              {formState.btnAdicionarPesagem.clicked && (
+                <Col
+                  xs={12}
+                  md={4}
+                >
+                  <FloatingLabel
+                    controlId="floating-entrada-curral"
+                    label={'Peso'}
                   >
-                    <FloatingLabel
-                      controlId="floating-entrada-curral"
-                      label={"Data da Pesagem"}
-                    >
-                      <Form.Control
-                        type="date"
-                        placeholder="Data da pesagem"
-                        defaultValue=""
-                        onChange={(e) =>
-                          setFormState((prevState) => ({
-                            ...prevState,
-                            ocorrenciaPesoToAdd: {
-                              ...prevState.ocorrenciaPesoToAdd,
-                              dtPesagem: e.target.value,
-                            },
-                            btnAdicionarPesagem: {
-                              ...prevState.btnAdicionarPesagem,
-                              disabled:
-                                !e.target.value &&
-                                prevState.btnAdicionarPesagem.clicked,
-                            },
-                          }))
-                        }
-                      />
-                    </FloatingLabel>
-                  </Col>
-                )}
-                {formState.btnAdicionarPesagem.clicked && (
-                  <Col
-                    xs={12}
-                    md={4}
-                  >
-                    <FloatingLabel
-                      controlId="floating-entrada-curral"
-                      label={"Peso"}
-                    >
-                      <Form.Control
-                        type="number"
-                        step=".01"
-                        placeholder="Peso"
-                        defaultValue=""
-                        onChange={(e) =>
-                          setFormState((prevState) => ({
-                            ...prevState,
-                            ocorrenciaPesoToAdd: {
-                              ...prevState.ocorrenciaPesoToAdd,
-                              peso: e.target.value,
-                            },
-                            btnAdicionarPesagem: {
-                              ...prevState.btnAdicionarPesagem,
-                              disabled:
-                                !e.target.value &&
-                                prevState.btnAdicionarPesagem.clicked,
-                            },
-                          }))
-                        }
-                      />
-                    </FloatingLabel>
-                  </Col>
-                )}
-              </Row>
-              {/*Formulário de Litragem*/}
+                    <Form.Control
+                      type="number"
+                      step=".01"
+                      placeholder="Peso"
+                      defaultValue=""
+                      onChange={(e) =>
+                        setFormState((prevState) => ({
+                          ...prevState,
+                          ocorrenciaPesoToAdd: {
+                            ...prevState.ocorrenciaPesoToAdd,
+                            peso: e.target.value,
+                          },
+                          btnAdicionarPesagem: {
+                            ...prevState.btnAdicionarPesagem,
+                            disabled:
+                              !e.target.value &&
+                              prevState.btnAdicionarPesagem.clicked,
+                          },
+                        }))
+                      }
+                    />
+                  </FloatingLabel>
+                </Col>
+              )}
+            </Row>
+            {/*Formulário de Litragem*/}
 
-              {oneAnimal.sexo === "FEMEA" && (
-                <Row className="mt-3 gy-2 gx-3">
-                  <hr />
-                  <Card.Subtitle>Produção de leite</Card.Subtitle>
-                  <Col xs={12}>
+            {oneAnimal.sexo === 'FEMEA' && (
+              <Row className="mt-3 gy-2 gx-3">
+                <hr />
+                <Card.Subtitle>Produção de leite</Card.Subtitle>
+                <Col xs={12}>
+                  <fieldset disabled={formState.btnEditarDetalhes.show}>
                     <Table>
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Litragem</th>
-                          <th>Data da verificação</th>
+                          <th>Litros</th>
+                          <th>Data</th>
                           <th>Idade na verificação</th>
                           <th></th>
                         </tr>
@@ -1241,7 +1402,7 @@ export default function CattleDetailsPage() {
                               <td>{elemento.qtdLitros}</td>
                               <td>
                                 {moment(elemento.dtVerificacao).format(
-                                  "DD/MM/yyyy"
+                                  'DD/MM/yyyy'
                                 )}
                               </td>
                               <td>
@@ -1273,139 +1434,283 @@ export default function CattleDetailsPage() {
                           ))}
                       </tbody>
                     </Table>
-                  </Col>
+                  </fieldset>
+                </Col>
+                <Col
+                  xs={12}
+                  md={4}
+                  className="align-self-center"
+                >
+                  <Button
+                    disabled={formState.btnAdicionarLitragem.disabled}
+                    variant={formState.btnAdicionarLitragem.variant}
+                    className={formState.btnAdicionarLitragem.marginRightClass}
+                    onClick={() => handleAddLitragemBtnClick()}
+                  >
+                    {formState.btnAdicionarLitragem.text}
+                  </Button>
+                  {formState.btnAdicionarLitragem.clicked && (
+                    <Button
+                      variant="outline-danger"
+                      onClick={(e) => handleAddLitragemBtnClick(true)}
+                    >
+                      Cancelar
+                    </Button>
+                  )}
+                </Col>
+                {formState.btnAdicionarLitragem.clicked && (
                   <Col
                     xs={12}
                     md={4}
-                    className="align-self-center"
                   >
-                    <Button
-                      disabled={formState.btnAdicionarLitragem.disabled}
-                      variant={formState.btnAdicionarLitragem.variant}
-                      className={
-                        formState.btnAdicionarLitragem.marginRightClass
-                      }
-                      onClick={() => handleAddLitragemBtnClick()}
+                    <FloatingLabel
+                      controlId="floating-entrada-curral"
+                      label={'Data da Verificação'}
                     >
-                      {formState.btnAdicionarLitragem.text}
-                    </Button>
-                    {formState.btnAdicionarLitragem.clicked && (
-                      <Button
-                        variant="outline-danger"
-                        onClick={(e) => handleAddLitragemBtnClick(true)}
-                      >
-                        Cancelar
-                      </Button>
-                    )}
+                      <Form.Control
+                        type="date"
+                        placeholder="Data da Verificação"
+                        defaultValue=""
+                        onChange={(e) =>
+                          setFormState((prevState) => ({
+                            ...prevState,
+                            ocorrenciaLeiteToAdd: {
+                              ...prevState.ocorrenciaLeiteToAdd,
+                              dtVerificacao: e.target.value,
+                            },
+                            btnAdicionarLitragem: {
+                              ...prevState.btnAdicionarLitragem,
+                              disabled:
+                                !e.target.value &&
+                                prevState.btnAdicionarLitragem.clicked,
+                            },
+                          }))
+                        }
+                      />
+                    </FloatingLabel>
                   </Col>
-                  {formState.btnAdicionarLitragem.clicked && (
-                    <Col
-                      xs={12}
-                      md={4}
+                )}
+                {formState.btnAdicionarLitragem.clicked && (
+                  <Col
+                    xs={12}
+                    md={4}
+                  >
+                    <FloatingLabel
+                      controlId="floating-entrada-curral"
+                      label={'Litros'}
                     >
-                      <FloatingLabel
-                        controlId="floating-entrada-curral"
-                        label={"Data da Verificação"}
-                      >
-                        <Form.Control
-                          type="date"
-                          placeholder="Data da Verificação"
-                          defaultValue=""
-                          onChange={(e) =>
-                            setFormState((prevState) => ({
-                              ...prevState,
-                              ocorrenciaLeiteToAdd: {
-                                ...prevState.ocorrenciaLeiteToAdd,
-                                dtVerificacao: e.target.value,
-                              },
-                              btnAdicionarLitragem: {
-                                ...prevState.btnAdicionarLitragem,
-                                disabled:
-                                  !e.target.value &&
-                                  prevState.btnAdicionarLitragem.clicked,
-                              },
-                            }))
-                          }
-                        />
-                      </FloatingLabel>
-                    </Col>
-                  )}
-                  {formState.btnAdicionarLitragem.clicked && (
-                    <Col
-                      xs={12}
-                      md={4}
-                    >
-                      <FloatingLabel
-                        controlId="floating-entrada-curral"
-                        label={"Litros"}
-                      >
-                        <Form.Control
-                          type="number"
-                          step=".01"
-                          placeholder="Litros"
-                          defaultValue=""
-                          onChange={(e) =>
-                            setFormState((prevState) => ({
-                              ...prevState,
-                              ocorrenciaLeiteToAdd: {
-                                ...prevState.ocorrenciaLeiteToAdd,
-                                qtdLitros: e.target.value,
-                              },
-                              btnAdicionarLitragem: {
-                                ...prevState.btnAdicionarLitragem,
-                                disabled:
-                                  !e.target.value &&
-                                  prevState.btnAdicionarLitragem.clicked,
-                              },
-                            }))
-                          }
-                        />
-                      </FloatingLabel>
-                    </Col>
-                  )}
-                </Row>
-              )}
-              <Row
-                xs={1}
-                md={1}
-                lg={2}
-                xl={2}
-              >
-                <Col>
-                  <Charts
-                    chartTitle="Evolução do peso"
-                    dataTitle={oneAnimal.nome}
-                    chartLabels={oneAnimal.pesagem.map((e) => e.dtPesagem)}
-                    chartData={oneAnimal.pesagem.map((e) => e.peso)}
-                    lineColor="red"
-                    barColor="rgba(255, 99, 132, 0.5)"
-                    type="line"
-                  />
-                </Col>
-                {oneAnimal.sexo === "FEMEA" && (
-                  <Col>
-                    <Charts
-                      chartTitle="Produção de leite"
-                      dataTitle={oneAnimal.nome}
-                      chartLabels={oneAnimal.producaoLeite.map(
-                        (e) => e.dtVerificacao
-                      )}
-                      chartData={oneAnimal.producaoLeite.map(
-                        (e) => e.qtdLitros
-                      )}
-                      lineColor="black"
-                      barColor="rgba(106, 121, 247, 0.5)"
-                      type="bar"
-                    />
+                      <Form.Control
+                        type="number"
+                        step=".01"
+                        placeholder="Litros"
+                        defaultValue=""
+                        onChange={(e) =>
+                          setFormState((prevState) => ({
+                            ...prevState,
+                            ocorrenciaLeiteToAdd: {
+                              ...prevState.ocorrenciaLeiteToAdd,
+                              qtdLitros: e.target.value,
+                            },
+                            btnAdicionarLitragem: {
+                              ...prevState.btnAdicionarLitragem,
+                              disabled:
+                                !e.target.value &&
+                                prevState.btnAdicionarLitragem.clicked,
+                            },
+                          }))
+                        }
+                      />
+                    </FloatingLabel>
                   </Col>
                 )}
               </Row>
+            )}
+            <Row
+              xs={1}
+              md={1}
+              lg={2}
+              xl={2}
+            >
+              <Col>
+                <Charts
+                  chartTitle="Evolução do peso"
+                  dataTitle={oneAnimal.nome}
+                  chartLabels={oneAnimal.pesagem.map((e) => e.dtPesagem)}
+                  chartData={oneAnimal.pesagem.map((e) => e.peso)}
+                  lineColor="red"
+                  barColor="rgba(255, 99, 132, 0.5)"
+                  type="line"
+                />
+              </Col>
+              {oneAnimal.sexo === 'FEMEA' && (
+                <Col>
+                  <Charts
+                    chartTitle="Produção de leite"
+                    dataTitle={oneAnimal.nome}
+                    chartLabels={oneAnimal.producaoLeite.map(
+                      (e) => e.dtVerificacao
+                    )}
+                    chartData={oneAnimal.producaoLeite.map((e) => e.qtdLitros)}
+                    lineColor="black"
+                    barColor="rgba(106, 121, 247, 0.5)"
+                    type="bar"
+                  />
+                </Col>
+              )}
+            </Row>
+            {/*Formulário de observações*/}
+            <Row className="mt-3 gy-2 gx-3">
+              <hr />
+              <Card.Subtitle>Observações do animal</Card.Subtitle>
+              <Col xs={12}>
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th style={{ width: '10%' }}>#</th>
+                        <th style={{ width: '20%' }}>Data da observação</th>
+                        <th style={{ width: '50%' }}>Relato</th>
+                        <th style={{ width: '20%' }}></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {oneAnimal.historico.length <= 0 && (
+                        <tr>
+                          <td
+                            colSpan={4}
+                            className="text-center"
+                          >
+                            Não existem ocorrências cadastradas.
+                          </td>
+                        </tr>
+                      )}
+                      {oneAnimal.historico.length > 0 &&
+                        oneAnimal.historico.map((elemento, index) => (
+                          <tr key={index}>
+                            <td>{oneAnimal.historico.indexOf(elemento) + 1}</td>
+                            <td>
+                              {moment(elemento.dtHistorico).format(
+                                'DD/MM/yyyy'
+                              )}
+                            </td>
+                            <td>{elemento.descricao}</td>
+                            <td>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => {
+                                  const newHistorico =
+                                    oneAnimal.historico.filter(
+                                      (elemento, indexelemento) =>
+                                        index !== indexelemento
+                                    );
+                                  setOneAnimal((prevState) => ({
+                                    ...prevState,
+                                    historico: newHistorico,
+                                  }));
+                                }}
+                              >
+                                Excluir
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
+                </fieldset>
+              </Col>
+              <Col
+                xs={12}
+                md={4}
+                className="align-self-center"
+              >
+                <Button
+                  disabled={formState.btnAdicionarHistorico.disabled}
+                  variant={formState.btnAdicionarHistorico.variant}
+                  className={formState.btnAdicionarHistorico.marginRightClass}
+                  onClick={() => handleAddHistoricoBtnClick()}
+                >
+                  {formState.btnAdicionarHistorico.text}
+                </Button>
+                {formState.btnAdicionarHistorico.clicked && (
+                  <Button
+                    variant="outline-danger"
+                    onClick={(e) => handleAddHistoricoBtnClick(true)}
+                  >
+                    Cancelar
+                  </Button>
+                )}
+              </Col>
+              {formState.btnAdicionarHistorico.clicked && (
+                <Col
+                  xs={12}
+                  md={4}
+                >
+                  <FloatingLabel
+                    controlId="floating-entrada-curral"
+                    label={'Data da Observação'}
+                  >
+                    <Form.Control
+                      type="date"
+                      placeholder="Data da Observação"
+                      defaultValue={formatDateToDefault(new Date(Date.now()))}
+                      onChange={(e) =>
+                        setFormState((prevState) => ({
+                          ...prevState,
+                          ocorrenciaHistoricoToAdd: {
+                            ...prevState.ocorrenciaHistoricoToAdd,
+                            dtHistorico: e.target.value,
+                          },
+                          btnAdicionarHistorico: {
+                            ...prevState.btnAdicionarHistorico,
+                            disabled:
+                              !e.target.value &&
+                              prevState.btnAdicionarHistorico.clicked,
+                          },
+                        }))
+                      }
+                    />
+                  </FloatingLabel>
+                </Col>
+              )}
+            </Row>
+            {formState.btnAdicionarHistorico.clicked && (
+              <Row>
+                <Col>
+                  <FloatingLabel
+                    controlId="floating-entrada-curral"
+                    label={'Observação'}
+                  >
+                    <Form.Control
+                      type="textarea"
+                      rows={3}
+                      placeholder="observação"
+                      defaultValue=""
+                      onChange={(e) =>
+                        setFormState((prevState) => ({
+                          ...prevState,
+                          ocorrenciaHistoricoToAdd: {
+                            ...prevState.ocorrenciaHistoricoToAdd,
+                            descricao: e.target.value,
+                          },
+                          btnAdicionarHistorico: {
+                            ...prevState.btnAdicionarHistorico,
+                            disabled:
+                              !e.target.value &&
+                              prevState.btnAdicionarHistorico.clicked,
+                          },
+                        }))
+                      }
+                    />
+                  </FloatingLabel>
+                </Col>
+              </Row>
+            )}
 
-              {/*<Row className="mt-3 gy-2 gx-3">*/}
-              {/*  <hr/>*/}
-              {/*  <Card.Subtitle>Histórico</Card.Subtitle>*/}
-              {/*</Row>*/}
-            </fieldset>
+            {/*<Row className="mt-3 gy-2 gx-3">*/}
+            {/*  <hr/>*/}
+            {/*  <Card.Subtitle>Histórico</Card.Subtitle>*/}
+            {/*</Row>*/}
           </Form>
         </Card.Body>
       </Card>
