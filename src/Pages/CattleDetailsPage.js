@@ -152,16 +152,19 @@ export default function CattleDetailsPage({
 
   async function handleMorreuCheckButtonChange(_) {
     let morreu = !oneAnimal.morreu;
-    const causaMorte = morreu ? oneAnimal.causaMorte : '';
+
 
     setOneAnimal((prevState) => ({
       ...prevState,
-      morreu,
-      causaMorte,
+      morreu:!oneAnimal.morreu,
+      causaMorte:"",
+      dtMorte:(oneAnimal.dtMorte ? "" : formatDateToDefault(new Date(Date.now())))
     }));
 
     try {
-      let data = { ...oneAnimal, morreu, causaMorte };
+      let data = { ...oneAnimal, morreu:!oneAnimal.morreu,
+        causaMorte:"",
+        dtMorte:(oneAnimal.dtMorte ? "" : formatDateToDefault(new Date(Date.now())))};
       delete data._id;
       await axios.put(`/${id}`, data);
     } catch (e) {
@@ -170,6 +173,7 @@ export default function CattleDetailsPage({
         ...prevState,
         morreu,
         causaMorte: morreu ? oneAnimal.causaMorte : '',
+        dtMorte: morreu ? oneAnimal.dtMorte : '',
       }));
       setNotification({
         type: 'danger',
@@ -938,6 +942,29 @@ export default function CattleDetailsPage({
             )}
             {oneAnimal.morreu && (
               <Form.Group className="mt-3">
+              <Row className="mb-2">
+              <Form.Label
+                    column
+                    xs={4}
+                    md={3}
+                    htmlFor="causa-morte"
+                  >
+                    Data da morte:
+                  </Form.Label>
+                  <Col>
+                  <Form.Control
+                      id="data-morte"
+                      type="date"
+                      value={oneAnimal.dtMorte}
+                      onChange={(e) =>
+                        setOneAnimal((prevState) => ({
+                          ...prevState,
+                          dtMorte: e.target.value,
+                        }))
+                      }
+                    />
+                  </Col>
+                </Row>
                 <Row>
                   <Form.Label
                     column
