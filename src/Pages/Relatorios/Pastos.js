@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import { Container, Form, FormLabel } from "react-bootstrap";
 import ReportsTable from "../../Components/Reports/ReportsTable";
 
-export default function Pastos({ cattle, getCattle }) {
+export default function Pastos({ cattle, getCattle, pasturesArray}) {
   const [pasture, setPasture] = useState("");
-  useEffect(getCattle, []);
-  let pasturesArray = [];
-  cattle.forEach(
-    (cow) =>
-      pasturesArray.indexOf(cow.pasto) === -1 && pasturesArray.push(cow.pasto)
-  );
+  useEffect(getCattle, [cattle.length]);
 
   const sortedCattle = (searchedPasture) => {
     return cattle
@@ -30,11 +25,12 @@ export default function Pastos({ cattle, getCattle }) {
             ? `Animais sem pasto atribuído: ${sortedCattle(pasture).length}`
             : `Animais no pasto ${pasture}: ${sortedCattle(pasture).length}`}
         </h5>
+        <FormLabel>Selecione um pasto</FormLabel>
         <Form.Select
           aria-label="Pastos da propriedade"
           onChange={(e) => setPasture(e.currentTarget.value)}
+          value=""
         >
-          <option>Selecione um pasto</option>
           {pasturesArray.map((p, i) => (
             <option key={i}>{p}</option>
           ))}

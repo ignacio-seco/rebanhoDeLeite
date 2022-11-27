@@ -6,15 +6,16 @@ import monitoramentoPeso from "../assets/MonitoramentoPeso.jpg";
 import { Link } from "react-router-dom";
 
 function Monitoring() {
-  const cardImageStyle = { width: "auto", height: "25vh" };
+  const cardImageStyle = { width: "auto" };
 
   return (
-    <Container className="homePageLinks">
+    <Container className="mt-4">
       <Row
         xs={1}
-        md={1}
-        lg={1}
-        xl={2}
+        md={2}
+        lg={3}
+        xl={4}
+        className="presentation-page g-4"
       >
         <Col>
           <Link to={`/monitoramento/monitoramentoleite`}>
