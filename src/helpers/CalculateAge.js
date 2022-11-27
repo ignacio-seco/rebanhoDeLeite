@@ -30,7 +30,11 @@ export function stringEqualizer(string) {
 
 export function formatDate(dt) {
   const newDt = new Date(dt);
-  return `${newDt.getDate()}/${newDt.getMonth() + 1}/${newDt.getFullYear()}`;
+  let day
+  if((newDt.getDate()+1)<10){day=`0${newDt.getDate()+1}`} else {day=`${newDt.getDate()+1}`};
+  let month
+  if((newDt.getMonth()+1)<10){month=`0${newDt.getMonth()+1}`} else {month=`${newDt.getMonth()+1}`};
+  return `${day}/${month}/${newDt.getFullYear()}`;
 }
 
 export function filterMonths(date) {
