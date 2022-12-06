@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useState } from "react";
+import axios from 'axios';
+import { useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -8,53 +8,26 @@ import {
   Form,
   Row,
   ToggleButton,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { filterMonths, formatDateToDefault } from "../../helpers/CalculateAge";
-import Notification from "../Notification";
+} from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { filterMonths, formatDateToDefault } from '../../helpers/CalculateAge';
+import { animalSchema } from '../../Models/animalModels';
+import Notification from '../Notification';
 
-function AddCattle() {
+function AddCattle({ getCattle, property }) {
   const navigate = useNavigate();
-  const [newAnimal, setNewAnimal] = useState({
-    imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
-    brinco: "",
-    sexo: "",
-    dtNascimento: "",
-    brincoDaMae: "",
-    nome: "",
-    dtCruzamento: "",
-    pasto: "",
-    noCurral: false,
-    estadaCurral: [],
-    vendida: false,
-    dtVenda: "",
-    valorVenda: "",
-    comprador: "",
-    comprado: false,
-    dtCompra: "",
-    valorCompra: "",
-    vendedor: "",
-    morreu: false,
-    dtMorte: "",
-    causaMorte: "",
-    pesagem: [],
-    historico: [
-      {
-        descricao: "Animal registrado no aplicativo",
-        dtHistorico: formatDateToDefault(new Date(Date.now())),
-      },
-    ],
-  });
+  const [newAnimal, setNewAnimal] = useState({ ...animalSchema });
 
-  const [radioValue, setRadioValue] = useState("");
+  const [radioValue, setRadioValue] = useState('');
   const [notification, setNotification] = useState({
     show: false,
-    type: "",
-    title: "",
-    text: "",
-    delay: 2000
+    type: '',
+    title: '',
+    text: '',
+    delay: 2000,
   });
-  const setNotificationShow = value => setNotification({ ...notification, show: value  });
+  const setNotificationShow = (value) =>
+    setNotification({ ...notification, show: value });
 
   function handleChange(e) {
     setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
@@ -62,54 +35,33 @@ function AddCattle() {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    const cleanForm = {
-      imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
-      brinco: "",
-      sexo: "",
-      dtNascimento: "",
-      brincoDaMae: "",
-      nome: "",
-      dtCruzamento: "",
-      pasto: "",
-      noCurral: false,
-      estadaCurral: [],
-      vendida: false,
-      dtVenda: "",
-      valorVenda: "",
-      comprador: "",
-      comprado: false,
-      dtCompra: "",
-      valorCompra: "",
-      vendedor: "",
-      morreu: false,
-      dtMorte: "",
-      causaMorte: "",
-      pesagem: [],
-      historico: [
-        {
-          descricao: "Animal registrado no aplicativo",
-          dtHistorico: formatDateToDefault(new Date(Date.now())),
-        },
-      ],
-    };
-    if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
-      axios
-        .post("https://ironrest.cyclic.app/cattleControl", newAnimal)
-        .then((response) => {
+    const cleanForm = { ...animalSchema };
+    async function updating() {
+      try {
+        if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
+          await getCattle();
+          await axios.put(
+            'http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f',
+            { ...property, rebanho: [...property.rebanho, newAnimal] }
+          );
           setNewAnimal(cleanForm);
-          setRadioValue("");
-          console.log(response);
-          navigate(`../gado/${response.data.ops[0]._id}`);
-        });
-    } else {
-      setNotification({
-        show: true,
-        type: "danger",
-        title: "Erro",
-        text: "É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal",
-        delay: 7000
-      });
+          setRadioValue('');
+          console.log(property);
+          navigate(`/`);
+        } else {
+          setNotification({
+            show: true,
+            type: 'danger',
+            title: 'Erro',
+            text: 'É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal',
+            delay: 7000,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
+    updating();
   }
 
   return (
@@ -134,9 +86,9 @@ function AddCattle() {
           </Col>
           <Col
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Form.Check
@@ -153,9 +105,9 @@ function AddCattle() {
                   comprado: !prevState.comprado,
                   dtCompra: !newAnimal.comprado
                     ? formatDateToDefault(new Date(Date.now()))
-                    : "",
-                  valorCompra: "",
-                  vendedor: "",
+                    : '',
+                  valorCompra: '',
+                  vendedor: '',
                 }));
                 console.log(newAnimal);
               }}
@@ -217,10 +169,10 @@ function AddCattle() {
           <ToggleButton
             id={`radio-0`}
             type="radio"
-            variant={0 % 2 ? "outline-success" : "outline-danger"}
+            variant={0 % 2 ? 'outline-success' : 'outline-danger'}
             name="sexo"
             value="MACHO"
-            checked={radioValue === "MACHO"}
+            checked={radioValue === 'MACHO'}
             onChange={(e) => {
               setRadioValue(e.currentTarget.value);
             }}
@@ -230,10 +182,10 @@ function AddCattle() {
           <ToggleButton
             id={`radio-1`}
             type="radio"
-            variant={1 % 2 ? "outline-success" : "outline-danger"}
+            variant={1 % 2 ? 'outline-success' : 'outline-danger'}
             name="sexo"
             value="FEMEA"
-            checked={radioValue === "FEMEA"}
+            checked={radioValue === 'FEMEA'}
             onChange={(e) => {
               setRadioValue(e.currentTarget.value);
             }}
@@ -261,10 +213,10 @@ function AddCattle() {
                 value={
                   newAnimal.dtNascimento
                     ? filterMonths(newAnimal.dtNascimento)
-                    : ""
+                    : ''
                 }
                 onChange={(e) => {
-                  let now = new Date(Date.now());
+                  let now = new Date(Date.now() - 24 * 60 * 60 * 1000);
                   let Monthdif = now.getMonth() - e.target.value;
                   let newDate = now.setMonth(Monthdif);
                   let formatedDate = formatDateToDefault(newDate);
@@ -307,12 +259,14 @@ function AddCattle() {
           Cadastrar Animal
         </Button>
       </Form>
-      <Notification show={notification.show}
-                    setShow={setNotificationShow}
-                    type={notification.type}
-                    title={notification.title}
-                    delay={notification.delay}
-                    text={notification.text}/>
+      <Notification
+        show={notification.show}
+        setShow={setNotificationShow}
+        type={notification.type}
+        title={notification.title}
+        delay={notification.delay}
+        text={notification.text}
+      />
     </Container>
   );
 }

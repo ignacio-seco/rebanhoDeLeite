@@ -1,23 +1,30 @@
-import { useEffect, useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
-import { Link } from "react-router-dom";
-import { calculateAge, stringEqualizer } from "../../helpers/CalculateAge";
-import "./CattleList.css";
+import { useEffect, useState } from 'react';
+import { Col, Container, Form, Row } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { Link } from 'react-router-dom';
+import { calculateAge, stringEqualizer } from '../../helpers/CalculateAge';
+import './CattleList.css';
 
-function CattleList({ cattle, getCattle, cowFilterFn }) {
-  let [search, setSearch] = useState("");
-
-  useEffect(getCattle, []);
+function CattleList({ cattle, getCattle, loading, cowFilterFn }) {
+  let [search, setSearch] = useState('');
+  
+  useEffect(() => {
+    async function renderPage() {
+      await getCattle();
+    }
+    renderPage();
+  }, []);
 
   const cattleSize = () => {
     if (cowFilterFn) {
       return cattle
-        .filter((cow) => !(cow.morreu || cow.vendida))
+        .filter((cow) => !(cow.dadosMorte.morreu || cow.dadosVenda.vendida))
         .filter(cowFilterFn).length;
     }
-    return cattle.filter((cow) => !(cow.morreu || cow.vendida)).length;
+    return cattle.filter(
+      (cow) => !(cow.dadosMorte.morreu || cow.dadosVenda.vendida)
+    ).length;
   };
 
   const renderCattle = () => {
@@ -29,7 +36,7 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
         )
       : cattle;
     filteredCattle = filteredCattle
-      .filter((cow) => !(cow.morreu || cow.vendida))
+      .filter((cow) => !(cow.dadosMorte.morreu || cow.dadosVenda.vendida))
       .sort((a, b) => Number(a.brinco) - Number(b.brinco));
 
     if (cowFilterFn) {
@@ -41,14 +48,14 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
         <Col key={cow._id}>
           <Container className="justify-content-center BeerCard my-3">
             <div className="imageHolder">
-              <Link to={`/gado/${cow._id}`}>
+              <Link to={`/gado/${cow.uuid}`}>
                 <img
                   src={cow.imagem_url}
                   alt={cow.nome}
                 />
               </Link>
             </div>
-            <Card style={{ width: "18rem", marginLeft: "0px" }}>
+            <Card style={{ width: '18rem', marginLeft: '0px' }}>
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <span className="BoldStyle">Brinco: </span> {cow.brinco}
@@ -80,20 +87,20 @@ function CattleList({ cattle, getCattle, cowFilterFn }) {
           onChange={(e) => setSearch(e.currentTarget.value)}
         />
       </Container>
-      <h3 style={{ textAlign: "center" }}>
+      <h3 style={{ textAlign: 'center' }}>
         {cowFilterFn
           ? `${cattleSize()} animais no curral`
           : `Seu rebanho de ${cattleSize()} Animais`}
       </h3>
 
-      <Row
+      {loading ? (<h3>loading</h3>):(<Row
         xs={1}
         md={2}
         lg={3}
         xl={3}
       >
         {renderCattle()}
-      </Row>
+      </Row>)}
     </div>
   );
 }

@@ -1,0 +1,35 @@
+import {v4 as uuidv4} from 'uuid'
+export const animalSchema = {
+  uuid: uuidv4(),
+  brinco: '',
+  brincoDaMae: '',
+  dadosCompra: {
+    comprado: false,
+    dtCompra: '',
+    valorCompra: 0,
+    vendedor: '',
+  },
+  dadosCruzamentos: [],
+  dadosMorte: {
+    morreu: false,
+    dtMorte: '',
+    causaMorte: '',
+  },
+  dtNascimento: '',
+  dadosVacinas: [],
+  dadosVenda: {
+    vendida: false,
+    valorVenda: 0,
+    comprador: '',
+    dtVenda: '',
+  },
+  estadaCurral: [],
+  historico: [],
+  imagem_url: 'https://pngimg.com/uploads/cow/cow_PNG50576.png',
+  noCurral: false,
+  nome: '',
+  pasto: '',
+  pesagem: [],
+  producaoLeite: [],
+  sexo: '',
+}

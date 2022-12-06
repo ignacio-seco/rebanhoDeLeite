@@ -24,41 +24,32 @@ import {
   calculateMonths,
   formatDateToDefault,
 } from '../helpers/CalculateAge';
+import { animalSchema } from '../Models/animalModels';
 
 export default function CattleDetailsPage({
   cattle,
   getCattle,
   pasturesArray,
+  property,
+  loading,
 }) {
   const { id } = useParams();
-  useEffect(getCattle, [cattle.length]);
+  const animalData = { ...animalSchema };
+  delete animalData.uuid;
+  let [oneAnimal, setOneAnimal] = useState({ ...animalData });
+  let [animalIndex, setAnimalIndex] = useState(0);
+  let [animalFinded, setAnimalFinded] = useState(false);
 
-  let [oneAnimal, setOneAnimal] = useState({
-    brinco: '',
-    brincoDaMae: '',
-    causaMorte: '',
-    comprado: false,
-    comprador: '',
-    dtCompra: '',
-    dtCruzamento: '',
-    dtMorte: '',
-    dtNascimento: '',
-    dtVenda: '',
-    estadaCurral: [],
-    historico: [],
-    imagem_url: 'https://pngimg.com/uploads/cow/cow_PNG50576.png',
-    morreu: false,
-    noCurral: false,
-    nome: '',
-    pasto: '',
-    pesagem: [],
-    producaoLeite: [],
-    sexo: '',
-    valorCompra: '',
-    valorVenda: '',
-    vendedor: '',
-    vendida: false,
-  });
+  async function findAnimal() {
+    let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+    setAnimalIndex(cowIndex);
+    setOneAnimal({ ...cattle[cowIndex] });
+    ehUltimaOcorrenciaPastoSaida(oneAnimal);
+    setAnimalFinded(true);
+    console.log(cattle[cowIndex]);
+  }
+
+  !loading && !animalFinded && findAnimal(); //a função de pegar dados já é feita pelo app.js
 
   const [formState, setFormState] = useState({
     ocorrenciaHistoricoToAdd: {
@@ -131,7 +122,7 @@ export default function CattleDetailsPage({
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchData = async () => {
       try {
         await getOneAnimal();
@@ -140,41 +131,54 @@ export default function CattleDetailsPage({
       }
     };
     fetchData();
-  }, []);
+  }, []);*/
 
-  const getOneAnimal = async () => {
-    const { data } = await axios.get(`/${id}`);
-    setOneAnimal(data);
-    console.log(data);
-
-    ehUltimaOcorrenciaPastoSaida(data);
-  };
+  /*const getOneAnimal = async () => {
+    let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+    setAnimalIndex(cowIndex);
+    setOneAnimal({ ...cattle[animalIndex] });
+    ehUltimaOcorrenciaPastoSaida(oneAnimal);
+  };*/
 
   async function handleMorreuCheckButtonChange(_) {
-    let morreu = !oneAnimal.morreu;
+    let morreu = !oneAnimal.dadosMorte.morreu;
 
+    let changeAnimal = { ...oneAnimal };
 
-    setOneAnimal((prevState) => ({
-      ...prevState,
-      morreu:!oneAnimal.morreu,
-      causaMorte:"",
-      dtMorte:(oneAnimal.dtMorte ? "" : formatDateToDefault(new Date(Date.now())))
-    }));
+    if (!morreu) {
+      changeAnimal.dadosMorte = {
+        ...oneAnimal.dadosMorte,
+        morreu: false,
+        causaMorte: '',
+        dtMorte: '',
+      };
+    } else {
+      changeAnimal.dadosMorte = {
+        ...oneAnimal.dadosMorte,
+        morreu: true,
+        causaMorte: '',
+        dtMorte: formatDateToDefault(new Date(Date.now())),
+      };
+    }
 
+    setOneAnimal(changeAnimal);
     try {
-      let data = { ...oneAnimal, morreu:!oneAnimal.morreu,
-        causaMorte:"",
-        dtMorte:(oneAnimal.dtMorte ? "" : formatDateToDefault(new Date(Date.now())))};
-      delete data._id;
-      await axios.put(`/${id}`, data);
+      let newData = { ...property };
+      let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
+      newData.rebanho[cowIndex] = changeAnimal;
+      console.log(newData.rebanho[cowIndex]);
+      await axios.put(
+        'http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f',
+        newData
+      );
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
     } catch (e) {
-      morreu = !morreu;
-      setOneAnimal((prevState) => ({
-        ...prevState,
-        morreu,
-        causaMorte: morreu ? oneAnimal.causaMorte : '',
-        dtMorte: morreu ? oneAnimal.dtMorte : '',
-      }));
+      setOneAnimal(cattle[animalIndex]);
       setNotification({
         type: 'danger',
         title: 'Erro',
@@ -186,32 +190,38 @@ export default function CattleDetailsPage({
   }
 
   async function handleVendaCheckButtonChange(_) {
-    let vendida = !oneAnimal.vendida;
-    const dtVenda = vendida ? oneAnimal.dtVenda : '';
-    const valorVenda = vendida ? oneAnimal.valorVenda : '';
-    const comprador = vendida ? oneAnimal.comprador : '';
+    let vendida = !oneAnimal.dadosVenda.vendida;
+    const dtVenda = vendida ? oneAnimal.dadosVenda.dtVenda : '';
+    const valorVenda = vendida ? oneAnimal.dadosVenda.valorVenda : '';
+    const comprador = vendida ? oneAnimal.dadosVenda.comprador : '';
 
-    setOneAnimal((prevState) => ({
-      ...prevState,
+    let changeAnimal = { ...oneAnimal };
+    changeAnimal.dadosVenda = {
+      ...oneAnimal.dadosVenda,
       dtVenda,
       valorVenda,
       comprador,
       vendida,
-    }));
+    };
 
+    setOneAnimal(changeAnimal);
     try {
-      let data = { ...oneAnimal, vendida, dtVenda, valorVenda, comprador };
-      delete data._id;
-      await axios.put(`/${id}`, data);
+      let newData = { ...property };
+      let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
+      newData.rebanho[cowIndex] = changeAnimal;
+      console.log(newData.rebanho[cowIndex]);
+      await axios.put(
+        'http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f',
+        newData
+      );
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
     } catch (e) {
-      vendida = !vendida;
-      setOneAnimal((prevState) => ({
-        ...prevState,
-        dtVenda: vendida ? oneAnimal.dtVenda : '',
-        valorVenda: vendida ? oneAnimal.valorVenda : '',
-        comprador: vendida ? oneAnimal.comprador : '',
-        vendida,
-      }));
+      setOneAnimal(cattle[animalIndex]);
       setNotification({
         type: 'danger',
         title: 'Erro',
@@ -491,15 +501,19 @@ export default function CattleDetailsPage({
     }));
 
     try {
-      let data = {
-        ...oneAnimal,
-        pesagem: oneAnimal.pesagem.sort(
-          (a, b) =>
-            new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
-        ),
+      await getCattle;
+      let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+      let newData = {
+        ...property,
       };
-      delete data._id;
-      await axios.put(`/${id}`, data);
+      console.log(`data before update`, newData.rebanho[cowIndex]);
+      newData.rebanho[cowIndex] = oneAnimal;
+      console.log(`data after update`, newData.rebanho[cowIndex]);
+
+      await axios.put(
+        'http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f',
+        newData
+      );
       setNotification({
         type: 'success',
         title: 'Sucesso',
@@ -507,6 +521,7 @@ export default function CattleDetailsPage({
         show: true,
       });
     } catch (e) {
+      setAnimalFinded(false);
       setNotification({
         type: 'danger',
         title: 'Erro',
@@ -536,7 +551,25 @@ export default function CattleDetailsPage({
       },
     }));
     try {
-      await axios.delete(`/${id}`);
+      await getCattle;
+      let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+      let newData = {
+        ...property,
+      };
+      console.log(`data before update`, newData.rebanho.length);
+      newData.rebanho.splice(cowIndex, 1);
+      console.log(`data after update`, newData.rebanho.length);
+
+      await axios.put(
+        'http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f',
+        newData
+      );
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
       navigate(-1);
     } catch (e) {
       setNotification({
@@ -558,6 +591,9 @@ export default function CattleDetailsPage({
     }
   }
 
+  if (loading) {
+    return <h3>Loading</h3>;
+  }
   return (
     <Container>
       <Card className="my-5">
@@ -565,7 +601,7 @@ export default function CattleDetailsPage({
           <Container className="d-flex justify-content-between align-items-baseline">
             <span>{oneAnimal.nome}</span>
             <span className="font-monospace text-muted float-sm-end d-none d-sm-inline-block">
-              #{oneAnimal._id}
+              #{oneAnimal.uuid}
             </span>
           </Container>
         </Card.Header>
@@ -592,7 +628,7 @@ export default function CattleDetailsPage({
                 <Container className="cow-details-img-container me-3">
                   <img
                     src={oneAnimal.imagem_url || imgPlaceholder}
-                    alt="cow-image"
+                    alt="cow"
                     className="w-75"
                   />
                 </Container>
@@ -621,7 +657,7 @@ export default function CattleDetailsPage({
                         type="switch"
                         id="dead-switch"
                         label="Morreu"
-                        checked={oneAnimal.morreu}
+                        checked={oneAnimal.dadosMorte.morreu}
                         className="text-nowrap"
                         onChange={handleMorreuCheckButtonChange}
                       />
@@ -631,7 +667,7 @@ export default function CattleDetailsPage({
                         type="switch"
                         id="sold-switch"
                         label="Vendido"
-                        checked={oneAnimal.vendida}
+                        checked={oneAnimal.dadosVenda.vendida}
                         className="text-nowrap"
                         onChange={handleVendaCheckButtonChange}
                       />
@@ -682,7 +718,7 @@ export default function CattleDetailsPage({
                           },
                         }));
                         try {
-                          await getOneAnimal();
+                          await setOneAnimal(cattle[animalIndex]);
                         } catch (e) {
                           console.log(e);
                         } finally {
@@ -840,36 +876,6 @@ export default function CattleDetailsPage({
                 </fieldset>
               </Col>
               <Col
-                xs={{ span: 12, order: 5 }}
-                md={6}
-              >
-                <fieldset disabled={formState.btnEditarDetalhes.show}>
-                  <Form.Group as={Row}>
-                    <Form.Label
-                      column
-                      xs={4}
-                      htmlFor="dt-cruzamento"
-                    >
-                      Cruzamento:
-                    </Form.Label>
-                    <Col xs={8}>
-                      <Form.Control
-                        type="date"
-                        id="dt-cruzamento"
-                        placeholder="Não informada"
-                        defaultValue={oneAnimal.dtCruzamento}
-                        onChange={(e) =>
-                          setOneAnimal((prevState) => ({
-                            ...prevState,
-                            dtCruzamento: e.target.value,
-                          }))
-                        }
-                      />
-                    </Col>
-                  </Form.Group>
-                </fieldset>
-              </Col>
-              <Col
                 xs={{ span: 12, order: 1 }}
                 md={6}
               >
@@ -884,23 +890,43 @@ export default function CattleDetailsPage({
                   <Col xs={8}>
                     <Form.Select
                       aria-label="Pastos da propriedade"
-                      onChange={(e) => {
-                        let data = { ...oneAnimal, pasto: e.target.value };
-                        delete data._id;
-                        axios.put(`/${id}`, data)
-                        .then(getOneAnimal())
-                        .then(()=>{setNotification({
-        type: 'success',
-        title: 'Sucesso',
-        text: 'Novo pasto registrado para o animal',
-        show: true,
-      })})
-                        .catch((err)=>{setNotification({
-        type: 'danger',
-        title: 'Erro',
-        text: `Não foi possível alterar o pasto do animal. Tente mais tarde.`,
-        show: true,
-      })});
+                      onChange={async (e) => {
+                        try {
+                          await getCattle;
+                          let cowIndex = await cattle.findIndex(
+                            (cow) => cow.uuid === id
+                          );
+                          let newData = {
+                            ...property,
+                          };
+                          console.log(
+                            `data before update`,
+                            newData.rebanho[cowIndex].pasto
+                          );
+                          newData.rebanho[cowIndex].pasto = e.target.value;
+                          console.log(
+                            `data after update`,
+                            newData.rebanho[cowIndex].pasto
+                          );
+
+                          await axios.put(
+                            'http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f',
+                            newData
+                          );
+                          setNotification({
+                            type: 'success',
+                            title: 'Sucesso',
+                            text: 'Suas alterações foram salvas!',
+                            show: true,
+                          });
+                        } catch (e) {
+                          setNotification({
+                            type: 'danger',
+                            title: 'Erro',
+                            text: `Não foi possível salvar as alterações. Tente mais tarde.`,
+                            show: true,
+                          });
+                        }
                       }}
                       defaultValue={oneAnimal.pasto}
                     >
@@ -940,10 +966,10 @@ export default function CattleDetailsPage({
                 </Col>
               </Form.Group>
             )}
-            {oneAnimal.morreu && (
+            {oneAnimal.dadosMorte.morreu && (
               <Form.Group className="mt-3">
-              <Row className="mb-2">
-              <Form.Label
+                <Row className="mb-2">
+                  <Form.Label
                     column
                     xs={4}
                     md={3}
@@ -952,14 +978,17 @@ export default function CattleDetailsPage({
                     Data da morte:
                   </Form.Label>
                   <Col>
-                  <Form.Control
+                    <Form.Control
                       id="data-morte"
                       type="date"
-                      value={oneAnimal.dtMorte}
+                      value={oneAnimal.dadosMorte.dtMorte}
                       onChange={(e) =>
                         setOneAnimal((prevState) => ({
                           ...prevState,
-                          dtMorte: e.target.value,
+                          dadosMorte: {
+                            ...prevState.dadosMorte,
+                            dtMorte: e.target.value,
+                          },
                         }))
                       }
                     />
@@ -980,11 +1009,14 @@ export default function CattleDetailsPage({
                       as="textarea"
                       placeholder="Não informada"
                       rows={3}
-                      value={oneAnimal.causaMorte}
+                      value={oneAnimal.dadosMorte.causaMorte}
                       onChange={(e) =>
                         setOneAnimal((prevState) => ({
                           ...prevState,
-                          causaMorte: e.target.value,
+                          dadosMorte: {
+                            ...prevState.dadosMorte,
+                            causaMorte: e.target.value,
+                          },
                         }))
                       }
                     />
@@ -1002,7 +1034,7 @@ export default function CattleDetailsPage({
                 </Row>
               </Form.Group>
             )}
-            {oneAnimal.vendida && (
+            {oneAnimal.dadosVenda.vendida && (
               <div>
                 <Row className="mt-3 gy-2 gx-3">
                   <hr />
@@ -1024,11 +1056,14 @@ export default function CattleDetailsPage({
                         <Form.Control
                           id="dt-venda"
                           type="date"
-                          defaultValue={oneAnimal.dtVenda}
+                          defaultValue={oneAnimal.dadosVenda.dtVenda}
                           onChange={(e) =>
                             setOneAnimal((prevState) => ({
                               ...prevState,
-                              dtVenda: e.target.value,
+                              dadosVenda: {
+                                ...prevState.dadosVenda,
+                                dtVenda: e.target.value,
+                              },
                             }))
                           }
                         />
@@ -1054,11 +1089,14 @@ export default function CattleDetailsPage({
                           <Form.Control
                             id="valor-venda"
                             type="number"
-                            value={oneAnimal.valorVenda}
+                            value={oneAnimal.dadosVenda.valorVenda}
                             onChange={(e) =>
                               setOneAnimal((prevState) => ({
                                 ...prevState,
-                                valorVenda: e.target.value,
+                                dadosVenda: {
+                                  ...prevState.dadosVenda,
+                                  valorVenda: e.target.value,
+                                },
                               }))
                             }
                           />
@@ -1087,11 +1125,14 @@ export default function CattleDetailsPage({
                           id="comprador"
                           type="text"
                           placeholder="Não informado"
-                          value={oneAnimal.comprador}
+                          value={oneAnimal.dadosVenda.comprador}
                           onChange={(e) =>
                             setOneAnimal((prevState) => ({
                               ...prevState,
-                              comprador: e.target.value,
+                              dadosVenda: {
+                                ...prevState.dadosVenda,
+                                comprador: e.target.value,
+                              },
                             }))
                           }
                         />

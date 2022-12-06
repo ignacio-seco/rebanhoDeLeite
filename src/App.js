@@ -1,3 +1,4 @@
+//usar o comando do windows run chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security para usar o localhost como servidor
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -20,28 +21,21 @@ import WeightMonitor from './Pages/Monitoramentos/WeightMonitor';
 import Notification from './Components/Notification';
 
 function App() {
-  const [cattle, setCattle] = useState([]);
-  const [pasturesArray, setPasturesArray] = useState(['']);
-
-  const getCattle = () => {
+  const [data, setData] = useState({
+    rebanho:[],
+    pastos:[""]
+  });
+  const [loading, setLoading] = useState(true);
+  const getData = () => {
+    setLoading(true)
     axios
       .get()
-      .then((response) => setCattle(response.data))
-      .then(() => {
-        let pAr = [];
-        cattle
-          .filter((cow) => !(cow.morreu || cow.vendida))
-          .forEach(
-            (cow) => pAr.indexOf(cow.pasto) === -1 && pAr.push(cow.pasto)
-          );
-        setPasturesArray(pAr);
-      })
-      .catch(() => console.log('Something went wrong'));
+      .then((response) => {setData(response.data)})
+      .then(()=>setLoading(false))
+      .catch((err) => console.log('Something went wrong', err));
   };
 
-  useEffect(() => {
-    getCattle();
-  }, []);
+  useEffect(getData, []);
 
   return (
     <div className="App">
@@ -58,8 +52,9 @@ function App() {
             path="/gado"
             element={
               <CattleHerdPage
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
+                loading={loading}
               />
             }
           />
@@ -67,23 +62,30 @@ function App() {
             path="/curral"
             element={
               <CattleShedPage
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
+                loading={loading}
               />
             }
           />
           <Route
             path="/cadastrarAnimal"
-            element={<AddCattle getCattle={getCattle} />}
+            element={
+              <AddCattle
+                getCattle={getData}
+                property={data}
+              />
+            }
           />
           <Route
             path="/gado/:id"
             element={
               <CattleDetailsPage
-                cattle={cattle}
-                getCattle={getCattle}
-                pasturesArray={pasturesArray}
-                setPasturesArray={setPasturesArray}
+                cattle={data.rebanho}
+                getCattle={getData}
+                pasturesArray={data.pastos}
+                property={data}
+                loading={loading}
               />
             }
           />
@@ -91,8 +93,8 @@ function App() {
             path="/relatorios"
             element={
               <Reports
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
               />
             }
           />
@@ -100,8 +102,8 @@ function App() {
             path="/relatorios/rebanhodetalhado"
             element={
               <RebanhoDetalhado
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
               />
             }
           />
@@ -109,8 +111,8 @@ function App() {
             path="/relatorios/perdas"
             element={
               <Perdas
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
               />
             }
           />
@@ -118,8 +120,8 @@ function App() {
             path="/relatorios/vendas"
             element={
               <Vendas
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={data}
               />
             }
           />
@@ -127,8 +129,8 @@ function App() {
             path="/relatorios/bezerros"
             element={
               <Bezerros
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={data}
               />
             }
           />
@@ -136,9 +138,9 @@ function App() {
             path="/relatorios/pastos"
             element={
               <Pastos
-                cattle={cattle}
-                getCattle={getCattle}
-                pasturesArray={pasturesArray}
+                cattle={data.rebanho}
+                getCattle={getData}
+                pasturesArray={data.pastos}
               />
             }
           />
@@ -150,8 +152,8 @@ function App() {
             path="/monitoramento/monitoramentoleite"
             element={
               <MilkMonitoring
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
               />
             }
           />
@@ -159,8 +161,8 @@ function App() {
             path="/monitoramento/monitoramentopeso"
             element={
               <WeightMonitor
-                cattle={cattle}
-                getCattle={getCattle}
+                cattle={data.rebanho}
+                getCattle={getData}
               />
             }
           />

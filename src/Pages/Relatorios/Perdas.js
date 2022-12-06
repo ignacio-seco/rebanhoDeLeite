@@ -8,8 +8,8 @@ export default function Perdas({ cattle, getCattle }) {
   useEffect(getCattle, []);
   const sortedCattle = () => {
     return cattle
-      .filter((cow) => cow.morreu)
-      .sort((a, b) => filterMonths(a.dtMorte) - filterMonths(b.dtMorte));
+      .filter((cow) => cow.dadosMorte.morreu)
+      .sort((a, b) => filterMonths(a.dadosMorte.dtMorte) - filterMonths(b.dadosMorte.dtMorte));
   };
 
   return (
