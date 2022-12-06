@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid'
 export const animalSchema = {
-  uuid: uuidv4(),
+  uuid: "",
   brinco: '',
   brincoDaMae: '',
   dadosCompra: {

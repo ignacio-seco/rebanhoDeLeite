@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CattleList from "../Components/CattleList/CattleList";
 
-export default function CattleShedPage({ cattle, getCattle }) {
+export default function CattleShedPage({ cattle, getCattle, loading }) {
   const cowFilter = (cow) => cow.noCurral === true;
 
   return (
@@ -10,6 +10,7 @@ export default function CattleShedPage({ cattle, getCattle }) {
       <CattleList
         cattle={cattle}
         getCattle={getCattle}
+        loading={loading}
         cowFilterFn={cowFilter}
       />
       <div

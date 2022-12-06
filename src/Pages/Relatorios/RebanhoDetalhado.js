@@ -5,7 +5,7 @@ export default function RebanhoDetalhado({ cattle, getCattle }) {
   useEffect(getCattle, []);
   const sortedCattle = () => {
     return cattle
-      .filter((cow) => !(cow.morreu || cow.vendida))
+      .filter((cow) => !(cow.dadosMorte.morreu || cow.dadosVenda.vendida))
       .sort((a, b) => Number(a.brinco) - Number(b.brinco));
   };
 

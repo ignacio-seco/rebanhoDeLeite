@@ -13,7 +13,7 @@ import RebanhoDetalhado from './Pages/Relatorios/RebanhoDetalhado';
 import Perdas from './Pages/Relatorios/Perdas';
 import Vendas from './Pages/Relatorios/Vendas';
 import CattleDetailsPage from './Pages/CattleDetailsPage';
-import Bezerros from './Pages/Relatorios/Bezerros';
+import Bezerros from './Pages/Relatorios/Bezerros.js';
 import Pastos from './Pages/Relatorios/Pastos';
 import MilkMonitoring from './Pages/Monitoramentos/MilkMonitoring';
 import Monitoring from './Pages/Monitoring';
@@ -122,6 +122,7 @@ function App() {
               <Vendas
                 cattle={data.rebanho}
                 getCattle={data}
+                loading={loading}
               />
             }
           />
@@ -131,6 +132,7 @@ function App() {
               <Bezerros
                 cattle={data.rebanho}
                 getCattle={data}
+                loading = {loading}
               />
             }
           />
@@ -154,6 +156,8 @@ function App() {
               <MilkMonitoring
                 cattle={data.rebanho}
                 getCattle={getData}
+                property={data}
+                loading={loading}
               />
             }
           />
@@ -163,6 +167,8 @@ function App() {
               <WeightMonitor
                 cattle={data.rebanho}
                 getCattle={getData}
+                property={data}
+                loading={loading}
               />
             }
           />

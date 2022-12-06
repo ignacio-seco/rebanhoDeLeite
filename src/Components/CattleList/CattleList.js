@@ -15,6 +15,9 @@ function CattleList({ cattle, getCattle, loading, cowFilterFn }) {
     }
     renderPage();
   }, []);
+  if(loading){return <h3>Loading...</h3>} else {
+
+
 
   const cattleSize = () => {
     if (cowFilterFn) {
@@ -45,7 +48,7 @@ function CattleList({ cattle, getCattle, loading, cowFilterFn }) {
 
     return filteredCattle.map((cow) => {
       return (
-        <Col key={cow._id}>
+        <Col key={cow.uuid}>
           <Container className="justify-content-center BeerCard my-3">
             <div className="imageHolder">
               <Link to={`/gado/${cow.uuid}`}>
@@ -93,15 +96,16 @@ function CattleList({ cattle, getCattle, loading, cowFilterFn }) {
           : `Seu rebanho de ${cattleSize()} Animais`}
       </h3>
 
-      {loading ? (<h3>loading</h3>):(<Row
+      <Row
         xs={1}
         md={2}
         lg={3}
         xl={3}
       >
         {renderCattle()}
-      </Row>)}
+      </Row>
     </div>
   );
+  }
 }
 export default CattleList;

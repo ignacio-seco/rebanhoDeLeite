@@ -3,16 +3,16 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import ReportsTable from "../../Components/Reports/ReportsTable";
 import { filterMonths } from "../../helpers/CalculateAge";
 
-export default function Bezerros({ cattle, getCattle }) {
+export default function Bezerros({ cattle, getCattle, loading }) {
   const [mesesMax, setMesesMax] = useState(120);
   const [mesesMin, setMesesMin] = useState(0);
 
-  useEffect(getCattle, []);
+  if(loading){return <h3>loading...</h3>} else{
   const sortedCattle = (min, max) => {
     return cattle
       .filter(
         (cow) =>
-          !(cow.morreu || cow.vendida) &&
+          !(cow.dadosMorte.morreu || cow.dadosVenda.vendida) &&
           filterMonths(cow.dtNascimento) > min - 1 &&
           filterMonths(cow.dtNascimento) < max + 1
       )
@@ -51,5 +51,5 @@ export default function Bezerros({ cattle, getCattle }) {
 
       <ReportsTable data={sortedCattle(mesesMin, mesesMax)} />
     </div>
-  );
+  );}
 }

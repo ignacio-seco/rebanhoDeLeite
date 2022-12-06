@@ -42,11 +42,11 @@ export default function Perdas({ cattle, getCattle }) {
                 <tr key={cow._id}>
                   <td>{cow.brinco}</td>
                   <td>
-                    <Link to={`/gado/${cow._id}`}>{cow.nome}</Link>
+                    <Link to={`/gado/${cow.uuid}`}>{cow.nome}</Link>
                   </td>
                   <td>{cow.sexo}</td>
-                  <td>{cow.dtMorte ? formatDate(cow.dtMorte) : `-`}</td>
-                  <td>{cow.causaMorte}</td>
+                  <td>{cow.dadosMorte.dtMorte ? formatDate(cow.dadosMorte.dtMorte) : `-`}</td>
+                  <td>{cow.dadosMorte.causaMorte}</td>
                   <td>
                     {cow.pesagem.length > 0
                       ? cow.pesagem[cow.pesagem.length - 1].peso

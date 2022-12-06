@@ -9,7 +9,7 @@ export default function Pastos({ cattle, getCattle, pasturesArray}) {
   const sortedCattle = (searchedPasture) => {
     return cattle
       .filter(
-        (cow) => !(cow.morreu || cow.vendida) && cow.pasto === searchedPasture
+        (cow) => !(cow.dadosMorte.morreu || cow.dadosVenda.vendida) && cow.pasto === searchedPasture
       )
       .sort((a, b) => Number(a.brinco) - Number(b.brinco));
   };

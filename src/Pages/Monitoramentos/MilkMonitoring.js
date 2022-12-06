@@ -9,16 +9,21 @@ import {
   stringEqualizer,
 } from "../../helpers/CalculateAge";
 
-export default function MilkMonitoring({ cattle, getCattle }) {
+export default function MilkMonitoring({ cattle, getCattle,property, loading }) {
   useEffect(getCattle, []);
   let [search, setSearch] = useState("");
 
+  if(loading){return <h3>Loading...</h3>} else {
 
-  function postIt(id, object) {
-    delete object._id;
-    axios
-      .put(`https://ironrest.cyclic.app/cattleControl/${id}`, object)
-      .then(setSearch(""))
+  async function postIt(id, object) {
+    let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+    console.log(cattle[cowIndex]);
+    let newData = {...property}
+    newData.rebanho[cowIndex] =object
+    axios.put(
+      "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
+      newData
+    ).then(setSearch(""))
       .then(getCattle)
       .catch((err) => alert(err));
   }
@@ -26,7 +31,7 @@ export default function MilkMonitoring({ cattle, getCattle }) {
   function renderTable() {
     let filteredData = cattle.filter(
       (cow) =>
-        !(cow.morreu || cow.vendida) &&
+        !(cow.dadosMorte.morreu || cow.dadosVenda.vendida) &&
         cow.noCurral &&
         cow.sexo === "FEMEA" &&
         (cow.producaoLeite.length > 0
@@ -80,8 +85,8 @@ export default function MilkMonitoring({ cattle, getCattle }) {
                   console.log(e);
                   e.target[0].value = "";
                   let newAnimal = filteredData[i];
-                  let id = newAnimal._id;
-                  postIt(id, newAnimal);
+                  let uuid = newAnimal.uuid;
+                  postIt(uuid, newAnimal);
                 }
                 console.log(filteredData);
               }}
@@ -142,4 +147,5 @@ export default function MilkMonitoring({ cattle, getCattle }) {
     </Container>
     </div>
   );
+}
 }
