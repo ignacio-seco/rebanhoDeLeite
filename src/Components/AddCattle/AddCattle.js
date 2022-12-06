@@ -42,14 +42,16 @@ function AddCattle({ getCattle, property }) {
         if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
           await getCattle();
           let animalUuid = { ...newAnimal, uuid: uuidv4() };
+          let newUuid = animalUuid.uuid;
           await axios.put(
             "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
             { ...property, rebanho: [...property.rebanho, animalUuid] }
           );
           setNewAnimal(cleanForm);
           setRadioValue("");
+          await getCattle();
           console.log(property);
-          navigate(`/`);
+          navigate(`/gado/${newUuid}`);
         } else {
           setNotification({
             show: true,

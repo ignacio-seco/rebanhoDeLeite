@@ -35,23 +35,51 @@ export default function CattleDetailsPage({
 }) {
   const { id } = useParams();
   const animalData = { ...animalSchema };
-  delete animalData.uuid;
   let [oneAnimal, setOneAnimal] = useState({ ...animalData });
   let [animalIndex, setAnimalIndex] = useState(0);
   let [animalFinded, setAnimalFinded] = useState(false);
-
+  
+  useEffect(getCattle,[])
+ 
   async function findAnimal() {
     let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
     setAnimalIndex(cowIndex);
     setOneAnimal({ ...cattle[cowIndex] });
     ehUltimaOcorrenciaPastoSaida(oneAnimal);
-    setAnimalFinded(true);
+    cowIndex>0 && setAnimalFinded(true);
     console.log(cattle[cowIndex]);
   }
+  function ehUltimaOcorrenciaPastoSaida(animal) {
+    const lastOccurrence = animal.estadaCurral
+      ? animal.estadaCurral[animal.estadaCurral.length - 1]
+      : null;
 
-  !loading && !animalFinded && findAnimal(); //a função de pegar dados já é feita pelo app.js,
-  //essa linha acima com circuit break garante que o animal vai ser setado após o cattle ter sido carregado e que a função só vai ser chamada uma vez.
+    const result = Boolean(
+      lastOccurrence?.dtSaidaCurral || !animal.estadaCurral.length
+    );
 
+    let txtBtnAdicionarEstada = result ? "Nova Entrada" : "Nova Saída";
+
+    let txtLabelEstadaDatePicker = result
+      ? "Data da nova entrada"
+      : "Data da nova saída";
+
+    setFormState((prevState) => ({
+      ...prevState,
+      labelEstadaDatePicker: txtLabelEstadaDatePicker,
+      btnAdicionarEstada: {
+        text: txtBtnAdicionarEstada,
+        variant: "outline-primary",
+      },
+    }));
+
+    return {
+      result,
+      lastOccurrence,
+    };
+  }
+
+  
   const [formState, setFormState] = useState({
     ocorrenciaHistoricoToAdd: {
       descricao: "",
@@ -122,6 +150,11 @@ export default function CattleDetailsPage({
     setNotification({ ...notification, show: value });
 
   const navigate = useNavigate();
+  
+  if(loading){return <h3>Loading...</h3>} else {
+    !loading && !animalFinded && findAnimal(); //a função de pegar dados já é feita pelo app.js,
+  //essa linha acima com circuit break garante que o animal vai ser setado após o cattle ter sido carregado e que a função só vai ser chamada uma vez.
+
 
   async function handleMorreuCheckButtonChange(_) {
     let morreu = !oneAnimal.dadosMorte.morreu;
@@ -215,35 +248,7 @@ export default function CattleDetailsPage({
     }
   }
 
-  function ehUltimaOcorrenciaPastoSaida(animal) {
-    const lastOccurrence = animal.estadaCurral
-      ? animal.estadaCurral[animal.estadaCurral.length - 1]
-      : null;
-
-    const result = Boolean(
-      lastOccurrence?.dtSaidaCurral || !animal.estadaCurral.length
-    );
-
-    let txtBtnAdicionarEstada = result ? "Nova Entrada" : "Nova Saída";
-
-    let txtLabelEstadaDatePicker = result
-      ? "Data da nova entrada"
-      : "Data da nova saída";
-
-    setFormState((prevState) => ({
-      ...prevState,
-      labelEstadaDatePicker: txtLabelEstadaDatePicker,
-      btnAdicionarEstada: {
-        text: txtBtnAdicionarEstada,
-        variant: "outline-primary",
-      },
-    }));
-
-    return {
-      result,
-      lastOccurrence,
-    };
-  }
+  
 
   function handleAddEstadaBtnClick(cancelBtn = false) {
     let { clicked, disabled, variant, text, marginRightClass } =
@@ -1807,4 +1812,5 @@ export default function CattleDetailsPage({
       </Modal>
     </Container>
   );
+}
 }
