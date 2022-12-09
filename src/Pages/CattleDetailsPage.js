@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "./api/api.js";
 import {
   Button,
   Card,
@@ -183,10 +183,7 @@ export default function CattleDetailsPage({
       let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
       newData.rebanho[cowIndex] = changeAnimal;
       console.log(newData.rebanho[cowIndex]);
-      await axios.put(
-        "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
-        newData
-      );
+      await api.put('/user/change',newData);
       setNotification({
         type: "success",
         title: "Sucesso",
@@ -226,10 +223,7 @@ export default function CattleDetailsPage({
       let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
       newData.rebanho[cowIndex] = changeAnimal;
       console.log(newData.rebanho[cowIndex]);
-      await axios.put(
-        "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
-        newData
-      );
+      await api.put('/user/change',newData);
       setNotification({
         type: "success",
         title: "Sucesso",
@@ -500,10 +494,7 @@ export default function CattleDetailsPage({
       newData.rebanho[cowIndex] = oneAnimal;
       console.log(`data after update`, newData.rebanho[cowIndex]);
 
-      await axios.put(
-        "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
-        newData
-      );
+      await api.put('/user/change',newData);
       setNotification({
         type: "success",
         title: "Sucesso",
@@ -550,10 +541,7 @@ export default function CattleDetailsPage({
       newData.rebanho.splice(cowIndex, 1);
       console.log(`data after update`, newData.rebanho.length);
 
-      await axios.put(
-        "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
-        newData
-      );
+      await api.put('/user/change',newData);
       setNotification({
         type: "success",
         title: "Sucesso",
@@ -894,10 +882,7 @@ export default function CattleDetailsPage({
                             newData.rebanho[cowIndex].pasto
                           );
 
-                          await axios.put(
-                            "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
-                            newData
-                          );
+                          await api.put('/user/change',newData);
                           setNotification({
                             type: "success",
                             title: "Sucesso",

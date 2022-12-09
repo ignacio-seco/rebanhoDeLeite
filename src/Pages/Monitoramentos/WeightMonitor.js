@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import {
@@ -7,6 +7,7 @@ import {
   formatDateToDefault,
   stringEqualizer,
 } from "../../helpers/CalculateAge";
+import api from "../api/api";
 
 export default function MilkMonitoring({
   cattle,
@@ -25,9 +26,8 @@ export default function MilkMonitoring({
       console.log(cattle[cowIndex]);
       let newData = { ...property };
       newData.rebanho[cowIndex] = object;
-      axios
+      api
         .put(
-          "http://127.0.0.1:8080/propriedade/change/638aa5d8e56f87444ebcb65f",
           newData
         )
         .then(setSearch(""))

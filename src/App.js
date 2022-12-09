@@ -1,5 +1,4 @@
 //usar o comando do windows run chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security para usar o localhost como servidor
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -19,6 +18,7 @@ import MilkMonitoring from './Pages/Monitoramentos/MilkMonitoring';
 import Monitoring from './Pages/Monitoring';
 import WeightMonitor from './Pages/Monitoramentos/WeightMonitor';
 import Notification from './Components/Notification';
+import api from './Pages/api/api.js';
 
 function App() {
   const [data, setData] = useState({
@@ -28,8 +28,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const getData = () => {
     setLoading(true)
-    axios
-      .get()
+    api
+      .get('/user/perfil')
       .then((response) => {setData(response.data)})
       .then(()=>setLoading(false))
       .catch((err) => console.log('Something went wrong', err));
