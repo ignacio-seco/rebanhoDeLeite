@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import {
@@ -7,7 +6,7 @@ import {
   formatDateToDefault,
   stringEqualizer,
 } from "../../helpers/CalculateAge";
-import api from "../api/api";
+import api from "../../api/api";
 
 export default function MilkMonitoring({
   cattle,
@@ -27,9 +26,7 @@ export default function MilkMonitoring({
       let newData = { ...property };
       newData.rebanho[cowIndex] = object;
       api
-        .put(
-          newData
-        )
+        .put('user/change/',newData)
         .then(setSearch(""))
         .then(getCattle)
         .catch((err) => alert(err));

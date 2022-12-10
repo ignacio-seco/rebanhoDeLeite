@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { useEffect, useState } from "react";
+import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import {
   calculateAge,
   filterMonths,
   formatDate,
   formatDateToDefault,
   stringEqualizer,
-} from '../../helpers/CalculateAge';
-import api from '../api/api';
+} from "../../helpers/CalculateAge";
+import api from "../../api/api";
 
 export default function MilkMonitoring({
   cattle,
@@ -16,7 +16,7 @@ export default function MilkMonitoring({
   loading,
 }) {
   useEffect(getCattle, []);
-  let [search, setSearch] = useState('');
+  let [search, setSearch] = useState("");
 
   if (loading) {
     return <h3>Loading...</h3>;
@@ -27,8 +27,8 @@ export default function MilkMonitoring({
       let newData = { ...property };
       newData.rebanho[cowIndex] = object;
       api
-        .put('/user/change', newData)
-        .then(setSearch(''))
+        .put("/user/change", newData)
+        .then(setSearch(""))
         .then(getCattle)
         .catch((err) => alert(err));
     }
@@ -39,7 +39,7 @@ export default function MilkMonitoring({
           (cow) =>
             !(cow.dadosMorte.morreu || cow.dadosVenda.vendida) &&
             cow.noCurral &&
-            cow.sexo === 'FEMEA' &&
+            cow.sexo === "FEMEA" &&
             (cow.producaoLeite.length > 0
               ? cow.producaoLeite[cow.producaoLeite.length - 1]
                   .dtVerificacao !== formatDateToDefault(new Date(Date.now()))
@@ -72,8 +72,8 @@ export default function MilkMonitoring({
             <td>
               <Form
                 onSubmit={(e) => {
-                  if (e.target[0].value === '' || e.target[0].value === '0') {
-                    alert('nenhum dado de produção apontado');
+                  if (e.target[0].value === "" || e.target[0].value === "0") {
+                    alert("nenhum dado de produção apontado");
                     e.preventDefault();
                   } else {
                     e.preventDefault();
@@ -90,7 +90,7 @@ export default function MilkMonitoring({
                       ],
                     };
                     console.log(e);
-                    e.target[0].value = '';
+                    e.target[0].value = "";
                     let newAnimal = filteredData[i];
                     let uuid = newAnimal.uuid;
                     postIt(uuid, newAnimal);
@@ -99,7 +99,7 @@ export default function MilkMonitoring({
                 }}
               >
                 <Row>
-                  <Col style={{ width: '80%' }}>
+                  <Col style={{ width: "80%" }}>
                     <Form.Control
                       type="number"
                       min="0"
@@ -138,7 +138,7 @@ export default function MilkMonitoring({
           >
             <thead
               className="sticky-top"
-              style={{ backgroundColor: 'white', top: '2.4em' }}
+              style={{ backgroundColor: "white", top: "2.4em" }}
             >
               <tr>
                 <th>Brinco</th>

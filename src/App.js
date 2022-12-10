@@ -1,48 +1,60 @@
 //usar o comando do windows run chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security para usar o localhost como servidor
-import { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import './App.css';
-import AddCattle from './Components/AddCattle/AddCattle';
-import NavigationBar from './Components/NavigationBar/NavigationBar';
-import HomePage from './Pages/HomePage';
-import CattleHerdPage from './Pages/CattleHerdPage';
-import CattleShedPage from './Pages/CattleShedPage';
-import Reports from './Pages/Reports';
-import RebanhoDetalhado from './Pages/Relatorios/RebanhoDetalhado';
-import Perdas from './Pages/Relatorios/Perdas';
-import Vendas from './Pages/Relatorios/Vendas';
-import CattleDetailsPage from './Pages/CattleDetailsPage';
-import Bezerros from './Pages/Relatorios/Bezerros.js';
-import Pastos from './Pages/Relatorios/Pastos';
-import MilkMonitoring from './Pages/Monitoramentos/MilkMonitoring';
-import Monitoring from './Pages/Monitoring';
-import WeightMonitor from './Pages/Monitoramentos/WeightMonitor';
-import Notification from './Components/Notification';
-import api from './Pages/api/api.js';
+import { useContext, useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import AddCattle from "./Components/AddCattle/AddCattle";
+import NavigationBar from "./Components/NavigationBar/NavigationBar";
+import HomePage from "./Pages/HomePage";
+import CattleHerdPage from "./Pages/CattleHerdPage";
+import CattleShedPage from "./Pages/CattleShedPage";
+import Reports from "./Pages/Reports";
+import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
+import Perdas from "./Pages/Relatorios/Perdas";
+import Vendas from "./Pages/Relatorios/Vendas";
+import CattleDetailsPage from "./Pages/CattleDetailsPage";
+import Bezerros from "./Pages/Relatorios/Bezerros.js";
+import Pastos from "./Pages/Relatorios/Pastos";
+import MilkMonitoring from "./Pages/Monitoramentos/MilkMonitoring";
+import Monitoring from "./Pages/Monitoring";
+import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
+import Notification from "./Components/Notification";
+import { AuthContext } from "./contexts/authContext";
+import LandingPage from "./Pages/LandingPage";
 
 function App() {
-  const [data, setData] = useState({
-    rebanho:[],
-    pastos:[""]
-  });
-  const [loading, setLoading] = useState(true);
-  const getData = () => {
-    setLoading(true)
-    api
-      .get('/user/perfil')
-      .then((response) => {setData(response.data)})
-      .then(()=>setLoading(false))
-      .catch((err) => console.log('Something went wrong', err));
-  };
+  
+  const {
+    loggedInUser,
+    setLoggedInUser,
+    data,
+    setData,
+    loading,
+    setLoading,
+    getData,
+    getLoggedInUser,
+  }= useContext(AuthContext)
 
-  useEffect(getData, []);
-
-  return (
+  if(!loggedInUser){ return(
+  <div>
+    <Routes>
+          <Route
+            path="/"
+            element={<LandingPage />}
+          />
+          <Route
+            path="*"
+            element={<LandingPage />}
+          />
+   </Routes> 
+   </div>
+   )
+  } else {
+  return ( 
     <div className="App">
       <div className="sticky-top">
         <NavigationBar />
       </div>
-      <div style={{ width: '100%', height: '92vh', overflow: 'auto' }}>
+      <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
         <Routes>
           <Route
             path="/"
@@ -132,7 +144,7 @@ function App() {
               <Bezerros
                 cattle={data.rebanho}
                 getCattle={data}
-                loading = {loading}
+                loading={loading}
               />
             }
           />
@@ -176,6 +188,6 @@ function App() {
       </div>
     </div>
   );
-}
+}}
 
 export default App;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiURLs = {
-  development: 'http://127.0.0.1:8080',
+  development: 'http://localhost:8080',
   production: 'futuro link da api',
 };
 
