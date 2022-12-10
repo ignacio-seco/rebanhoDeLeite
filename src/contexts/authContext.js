@@ -1,11 +1,13 @@
 import { createContext, useState, useEffect } from "react";
 import api from "../api/api";
+import Dexie from "dexie";
+import { useLiveQuery } from "dexie-react-hooks";
 
 const AuthContext = createContext();
 
 function AuthContextComponente(props) {
-    //estados que serão atualizados 
-const [loggedInUser, setLoggedInUser] = useState({ token: "", user: {} });
+  //estados que serão atualizados
+  const [loggedInUser, setLoggedInUser] = useState({ token: "", user: {} });
   const [data, setData] = useState({
     rebanho: [],
     pastos: [""],
@@ -15,6 +17,12 @@ const [loggedInUser, setLoggedInUser] = useState({ token: "", user: {} });
     nome: "",
   });
   const [loading, setLoading] = useState(true);
+
+  const db = new Dexie("loggedUser");
+  db.version(1).stores({ user: "_id" });
+  const { user } = db;
+  const userData = useLiveQuery(() => user.toArray(), []);
+
   //funções utilizadas
   const getData = () => {
     setLoading(true);
