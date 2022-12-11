@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import api from "../api/api";
 import Dexie from "dexie";
-import { useLiveQuery } from "dexie-react-hooks";
 
 const AuthContext = createContext();
 
@@ -21,19 +20,28 @@ function AuthContextComponente(props) {
   const db = new Dexie("loggedUser");
   db.version(1).stores({ user: "_id" });
   const { user } = db;
-  const userData = useLiveQuery(() => user.toArray(), []);
+
 
   //funções utilizadas
-  const getData = () => {
+  const getData = async () => {
     setLoading(true);
-    api
+    const loggedInUserJson = localStorage.getItem("loggedInUser");
+    const parsedLoggedInUser = JSON.parse(loggedInUserJson || '""');
+    let id = parsedLoggedInUser.user._id
+    let userData = await user.get(id);
+    if(!userData){api
       .get("/user/perfil")
-      .then((response) => {
-        setData(response.data);
+      .then(async (response) => {
+        await user.add(response.data);
+        let newData = await user.get(id);
+        setData(newData);
       })
+      .then(()=>console.log(data))
       .then(() => setLoading(false))
       .catch((err) => console.log("Something went wrong", err));
-  };
+  }else {await setData(userData);
+    setLoading(false)}}
+    
   const getLoggedInUser = () => {
     const loggedInUserJson = localStorage.getItem("loggedInUser");
     const parsedLoggedInUser = JSON.parse(loggedInUserJson || '""');
@@ -58,6 +66,7 @@ function AuthContextComponente(props) {
         setLoading,
         getData,
         getLoggedInUser,
+        user
       }}
     >
       {props.children}

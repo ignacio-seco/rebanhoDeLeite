@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import ReportsTable from "../../Components/Reports/ReportsTable";
+import { AuthContext } from "../../contexts/authContext";
 import { filterMonths } from "../../helpers/CalculateAge";
 
-export default function Bezerros({ cattle, getCattle, loading }) {
+export default function Bezerros() {
   const [mesesMax, setMesesMax] = useState(120);
   const [mesesMin, setMesesMin] = useState(0);
+  const {data,getData, loading}= useContext(AuthContext)
+  let cattle = data.rebanho
+  let getCattle = getData
+  useEffect(()=>{getCattle()}, []);
 
   if(loading){return <h3>loading...</h3>} else{
   const sortedCattle = (min, max) => {

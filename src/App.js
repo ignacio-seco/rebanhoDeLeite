@@ -1,5 +1,4 @@
-//usar o comando do windows run chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security para usar o localhost como servidor
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AddCattle from "./Components/AddCattle/AddCattle";
@@ -22,21 +21,12 @@ import { AuthContext } from "./contexts/authContext";
 import LandingPage from "./Pages/LandingPage";
 
 function App() {
-  
-  const {
-    loggedInUser,
-    setLoggedInUser,
-    data,
-    setData,
-    loading,
-    setLoading,
-    getData,
-    getLoggedInUser,
-  }= useContext(AuthContext)
+  const { loggedInUser } = useContext(AuthContext);
 
-  if(!loggedInUser){ return(
-  <div>
-    <Routes>
+  if (!loggedInUser) {
+    return (
+      <div>
+        <Routes>
           <Route
             path="/"
             element={<LandingPage />}
@@ -45,149 +35,78 @@ function App() {
             path="*"
             element={<LandingPage />}
           />
-   </Routes> 
-   </div>
-   )
-  } else {
-  return ( 
-    <div className="App">
-      <div className="sticky-top">
-        <NavigationBar />
-      </div>
-      <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage />}
-          />
-          <Route
-            path="/gado"
-            element={
-              <CattleHerdPage
-                cattle={data.rebanho}
-                getCattle={getData}
-                loading={loading}
-              />
-            }
-          />
-          <Route
-            path="/curral"
-            element={
-              <CattleShedPage
-                cattle={data.rebanho}
-                getCattle={getData}
-                loading={loading}
-              />
-            }
-          />
-          <Route
-            path="/cadastrarAnimal"
-            element={
-              <AddCattle
-                getCattle={getData}
-                property={data}
-              />
-            }
-          />
-          <Route
-            path="/gado/:id"
-            element={
-              <CattleDetailsPage
-                cattle={data.rebanho}
-                getCattle={getData}
-                pasturesArray={data.pastos}
-                property={data}
-                loading={loading}
-              />
-            }
-          />
-          <Route
-            path="/relatorios"
-            element={
-              <Reports
-                cattle={data.rebanho}
-                getCattle={getData}
-              />
-            }
-          />
-          <Route
-            path="/relatorios/rebanhodetalhado"
-            element={
-              <RebanhoDetalhado
-                cattle={data.rebanho}
-                getCattle={getData}
-              />
-            }
-          />
-          <Route
-            path="/relatorios/perdas"
-            element={
-              <Perdas
-                cattle={data.rebanho}
-                getCattle={getData}
-              />
-            }
-          />
-          <Route
-            path="/relatorios/vendas"
-            element={
-              <Vendas
-                cattle={data.rebanho}
-                getCattle={data}
-                loading={loading}
-              />
-            }
-          />
-          <Route
-            path="/relatorios/bezerros"
-            element={
-              <Bezerros
-                cattle={data.rebanho}
-                getCattle={data}
-                loading={loading}
-              />
-            }
-          />
-          <Route
-            path="/relatorios/pastos"
-            element={
-              <Pastos
-                cattle={data.rebanho}
-                getCattle={getData}
-                pasturesArray={data.pastos}
-              />
-            }
-          />
-          <Route
-            path="/monitoramento"
-            element={<Monitoring />}
-          />
-          <Route
-            path="/monitoramento/monitoramentoleite"
-            element={
-              <MilkMonitoring
-                cattle={data.rebanho}
-                getCattle={getData}
-                property={data}
-                loading={loading}
-              />
-            }
-          />
-          <Route
-            path="/monitoramento/monitoramentopeso"
-            element={
-              <WeightMonitor
-                cattle={data.rebanho}
-                getCattle={getData}
-                property={data}
-                loading={loading}
-              />
-            }
-          />
         </Routes>
       </div>
-    </div>
-  );
-}}
+    );
+  } else {
+    return (
+      <div className="App">
+        <div className="sticky-top">
+          <NavigationBar />
+        </div>
+        <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
+          <Routes>
+            <Route
+              path="/"
+              element={<HomePage />}
+            />
+            <Route
+              path="/gado"
+              element={<CattleHerdPage />}
+            />
+            <Route
+              path="/curral"
+              element={<CattleShedPage />}
+            />
+            <Route
+              path="/cadastrarAnimal"
+              element={<AddCattle />}
+            />
+            <Route
+              path="/gado/:id"
+              element={<CattleDetailsPage />}
+            />
+            <Route
+              path="/relatorios"
+              element={<Reports />}
+            />
+            <Route
+              path="/relatorios/rebanhodetalhado"
+              element={<RebanhoDetalhado />}
+            />
+            <Route
+              path="/relatorios/perdas"
+              element={<Perdas />}
+            />
+            <Route
+              path="/relatorios/vendas"
+              element={<Vendas />}
+            />
+            <Route
+              path="/relatorios/bezerros"
+              element={<Bezerros />}
+            />
+            <Route
+              path="/relatorios/pastos"
+              element={<Pastos />}
+            />
+            <Route
+              path="/monitoramento"
+              element={<Monitoring />}
+            />
+            <Route
+              path="/monitoramento/monitoramentoleite"
+              element={<MilkMonitoring />}
+            />
+            <Route
+              path="/monitoramento/monitoramentopeso"
+              element={<WeightMonitor />}
+            />
+          </Routes>
+        </div>
+      </div>
+    );
+  }
+}
 
 export default App;

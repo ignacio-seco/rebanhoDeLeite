@@ -1,11 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Container, Form, FormLabel } from "react-bootstrap";
 import ReportsTable from "../../Components/Reports/ReportsTable";
+import { AuthContext } from "../../contexts/authContext";
 
-export default function Pastos({ cattle, getCattle, pasturesArray}) {
+export default function Pastos() {
   const [pasture, setPasture] = useState("");
-  useEffect(getCattle, [cattle.length]);
-
+  const {
+    data,
+    getData,
+    loading
+  }= useContext(AuthContext)
+  let cattle = data.rebanho
+  let getCattle = getData
+  let pasturesArray = data.pastos
+  useEffect(()=>{getCattle()}, []);
+  if(loading){return <h3>loading...</h3>} else{
   const sortedCattle = (searchedPasture) => {
     return cattle
       .filter(
@@ -39,4 +48,5 @@ export default function Pastos({ cattle, getCattle, pasturesArray}) {
       <ReportsTable data={sortedCattle(pasture)} />
     </div>
   );
+}
 }

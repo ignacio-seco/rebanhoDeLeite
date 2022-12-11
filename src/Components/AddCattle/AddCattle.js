@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useState } from "react";
+
+import { useContext, useState } from "react";
 import {
   Button,
   ButtonGroup,
@@ -14,10 +14,13 @@ import { filterMonths, formatDateToDefault } from "../../helpers/CalculateAge";
 import { animalSchema } from "../../Models/animalModels";
 import Notification from "../Notification";
 import { v4 as uuidv4 } from "uuid";
-import api from "../../api/api";
+import { AuthContext } from "../../contexts/authContext";
 
-function AddCattle({ getCattle, property }) {
+function AddCattle() {
   const navigate = useNavigate();
+  const { data, getData, user } = useContext(AuthContext);
+  let property = data;
+  let getCattle = getData;
   const [newAnimal, setNewAnimal] = useState({ ...animalSchema });
 
   const [radioValue, setRadioValue] = useState("");
@@ -42,9 +45,9 @@ function AddCattle({ getCattle, property }) {
       try {
         if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
           await getCattle();
-          let animalUuid = { ...newAnimal, uuid: uuidv4() };
+          let animalUuid = { ...newAnimal, uuid: uuidv4(), creator: property._id,dadosServidor:{...newAnimal.dadosServidor, lastUpdate:new Date(Date.now()).getTime()}};
           let newUuid = animalUuid.uuid;
-          await api.put("/user/change", {
+          await user.update(property._id, {
             ...property,
             rebanho: [...property.rebanho, animalUuid],
           });

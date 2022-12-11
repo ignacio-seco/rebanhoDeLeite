@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import api from "../api/api.js";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -20,26 +19,29 @@ import moment from "moment";
 import Notification from "../Components/Notification";
 import { Charts } from "../Components/Charts/Chart";
 import {
-  calculateAge,
   calculateMonths,
   formatDateToDefault,
 } from "../helpers/CalculateAge";
 import { animalSchema } from "../Models/animalModels";
+import { AuthContext } from "../contexts/authContext.js";
 
-export default function CattleDetailsPage({
-  cattle,
-  getCattle,
-  pasturesArray,
-  property,
-  loading,
-}) {
+export default function CattleDetailsPage() {
   const { id } = useParams();
+  const {
+    data,
+    loading,
+    getData,
+    user
+  }= useContext(AuthContext)
+  let cattle = data.rebanho
+  let property = data
+  let getCattle = getData
+  let pasturesArray = data.pastos
   const animalData = { ...animalSchema };
   let [oneAnimal, setOneAnimal] = useState({ ...animalData });
   let [animalIndex, setAnimalIndex] = useState(0);
   let [animalFinded, setAnimalFinded] = useState(false);
-
-  useEffect(getCattle, []);
+  useEffect(()=>{getCattle()}, []);
 
   async function findAnimal() {
     let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
@@ -185,7 +187,7 @@ export default function CattleDetailsPage({
         );
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
-        await api.put("/user/change", newData);
+        await user.update(property._id, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -227,7 +229,7 @@ export default function CattleDetailsPage({
         );
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
-        await api.put("/user/change", newData);
+        await user.update(property._id, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -497,7 +499,7 @@ export default function CattleDetailsPage({
         newData.rebanho[cowIndex] = oneAnimal;
         console.log(`data after update`, newData.rebanho[cowIndex]);
 
-        await api.put("/user/change", newData);
+        await user.update(property._id, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -544,7 +546,7 @@ export default function CattleDetailsPage({
         newData.rebanho.splice(cowIndex, 1);
         console.log(`data after update`, newData.rebanho.length);
 
-        await api.put("/user/change", newData);
+        await user.update(property._id, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -884,7 +886,7 @@ export default function CattleDetailsPage({
                               newData.rebanho[cowIndex].pasto
                             );
 
-                            await api.put("/user/change", newData);
+                            await user.update(property._id, newData);
                             setNotification({
                               type: "success",
                               title: "Sucesso",

@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/authContext';
 import { calculateAge, stringEqualizer } from '../../helpers/CalculateAge';
 import './CattleList.css';
 
-function CattleList({ cattle, getCattle, loading, cowFilterFn }) {
+function CattleList({cowFilterFn }) {
   let [search, setSearch] = useState('');
-  
-  useEffect(() => {
-    async function renderPage() {
-      await getCattle();
-    }
-    renderPage();
-  }, []);
-  if(loading){return <h3>Loading...</h3>} else {
-
+  const {
+    data,
+    getData,
+    loading
+  }= useContext(AuthContext)
+  let cattle = data.rebanho
+  let getCattle = getData
+  useEffect(()=>{getCattle()}, []);
+  if(loading){return <h3>loading...</h3>} else{
 
 
   const cattleSize = () => {

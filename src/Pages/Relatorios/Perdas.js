@@ -1,11 +1,16 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/authContext";
 import { filterMonths, formatDate } from "../../helpers/CalculateAge";
 
-export default function Perdas({ cattle, getCattle }) {
-  useEffect(getCattle, []);
+export default function Perdas() {
+  const {data,getData, loading}= useContext(AuthContext)
+  let cattle = data.rebanho
+  let getCattle = getData
+  useEffect(()=>{getCattle()}, []);
+  if(loading){return <h3>loading...</h3>} else{
   const sortedCattle = () => {
     return cattle
       .filter((cow) => cow.dadosMorte.morreu)
@@ -67,4 +72,5 @@ export default function Perdas({ cattle, getCattle }) {
       </Container>
     </div>
   );
+}
 }

@@ -1,11 +1,12 @@
 export const animalSchema = {
+  creator: "",
   uuid: "",
   brinco: "",
   brincoDaMae: "",
   dadosCompra: {
     comprado: false,
     dtCompra: "",
-    valorCompra: 0,
+    valorCompra: "",
     vendedor: "",
   },
   dadosCruzamentos: [],
@@ -15,10 +16,9 @@ export const animalSchema = {
     causaMorte: "",
   },
   dtNascimento: "",
-  dadosVacinas: [],
   dadosVenda: {
     vendida: false,
-    valorVenda: 0,
+    valorVenda: "",
     comprador: "",
     dtVenda: "",
   },
@@ -27,8 +27,15 @@ export const animalSchema = {
   imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
   noCurral: false,
   nome: "",
-  pasto:"",
+  pasto: "sem pasto definido",
   pesagem: [],
   producaoLeite: [],
   sexo: "",
+  dadosServidor: {
+    colecao: "cow",
+    relacao: "propriedade",
+    referencia: "rebanho",
+    lastUpdate: "",
+    deletado: false,
+  },
 };

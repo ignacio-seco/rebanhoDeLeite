@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import {
   calculateAge,
@@ -7,17 +7,21 @@ import {
   formatDateToDefault,
   stringEqualizer,
 } from "../../helpers/CalculateAge";
-import api from "../../api/api";
+import { AuthContext } from "../../contexts/authContext";
 
-export default function MilkMonitoring({
-  cattle,
-  getCattle,
-  property,
-  loading,
-}) {
-  useEffect(getCattle, []);
+export default function MilkMonitoring() {
+  
+  const {
+    data,
+    loading,
+    getData,
+    user
+  }= useContext(AuthContext)
+  let cattle = data.rebanho
+  let property = data
+  let getCattle = getData
+  useEffect(()=>{getCattle()}, []);
   let [search, setSearch] = useState("");
-
   if (loading) {
     return <h3>Loading...</h3>;
   } else {
@@ -26,8 +30,8 @@ export default function MilkMonitoring({
       console.log(cattle[cowIndex]);
       let newData = { ...property };
       newData.rebanho[cowIndex] = object;
-      api
-        .put("/user/change", newData)
+      user
+        .update(property._id, newData)
         .then(setSearch(""))
         .then(getCattle)
         .catch((err) => alert(err));
