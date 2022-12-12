@@ -78,3 +78,7 @@ export function calculateMonths(initialDate, finalDate) {
     return age;
   }
 }
+
+export function getLastUpdate(){
+  return new Date(Date.now()).getTime()
+}

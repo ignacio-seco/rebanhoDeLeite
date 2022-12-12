@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -21,35 +22,50 @@ import { Charts } from "../Components/Charts/Chart";
 import {
   calculateMonths,
   formatDateToDefault,
+  getLastUpdate,
 } from "../helpers/CalculateAge";
 import { animalSchema } from "../Models/animalModels";
 import { AuthContext } from "../contexts/authContext.js";
+import curralPermanenciaSchema from "../Models/curralPermanencia.models";
+import pesagemSchema from "../Models/pesagem.models";
+import litragemSchema from "../Models/litragem.models";
+import historicoSchema from "../Models/historico.models";
 
 export default function CattleDetailsPage() {
   const { id } = useParams();
-  const {
-    data,
-    loading,
-    getData,
-    user
-  }= useContext(AuthContext)
-  let cattle = data.rebanho
-  let property = data
-  let getCattle = getData
-  let pasturesArray = data.pastos
+  const { data, loading, getData, user } = useContext(AuthContext);
+  let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
+  let property = data;
+  let getCattle = getData;
+  let pasturesArray = data.pastos;
   const animalData = { ...animalSchema };
   let [oneAnimal, setOneAnimal] = useState({ ...animalData });
   let [animalIndex, setAnimalIndex] = useState(0);
   let [animalFinded, setAnimalFinded] = useState(false);
-  useEffect(()=>{getCattle()}, []);
+  useEffect(() => {
+    getCattle();
+  }, []);
+
+  let activeEstadas = oneAnimal.estadaCurral.filter(
+    (estada) => !estada.dadosServidor.deletado
+  );
+  let activePesagens = oneAnimal.pesagem.filter(
+    (pesagem) => !pesagem.dadosServidor.deletado
+  );
+  let activeLitragens = oneAnimal.producaoLeite.filter(
+    (litragem) => !litragem.dadosServidor.deletado
+  );
+  let activeHistoricos = oneAnimal.historico.filter(
+    (historico) => !historico.dadosServidor.deletado
+  );
 
   async function findAnimal() {
-    let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+    let cowIndex = await property.rebanho.findIndex((cow) => cow._id === id);
     setAnimalIndex(cowIndex);
-    setOneAnimal({ ...cattle[cowIndex] });
+    setOneAnimal({ ...property.rebanho[cowIndex] });
     ehUltimaOcorrenciaPastoSaida(oneAnimal);
     cowIndex > -1 && setAnimalFinded(true);
-    console.log(cattle[cowIndex]);
+    console.log(property.rebanho[cowIndex]);
   }
   function ehUltimaOcorrenciaPastoSaida(animal) {
     const lastOccurrence = animal.estadaCurral
@@ -161,7 +177,13 @@ export default function CattleDetailsPage() {
     async function handleMorreuCheckButtonChange(_) {
       let morreu = !oneAnimal.dadosMorte.morreu;
 
-      let changeAnimal = { ...oneAnimal };
+      let changeAnimal = {
+        ...oneAnimal,
+        dadosServidor: {
+          ...oneAnimal.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
 
       if (!morreu) {
         changeAnimal.dadosMorte = {
@@ -181,10 +203,14 @@ export default function CattleDetailsPage() {
 
       setOneAnimal(changeAnimal);
       try {
-        let newData = { ...property };
-        let cowIndex = await newData.rebanho.findIndex(
-          (cow) => cow.uuid === id
-        );
+        let newData = {
+          ...property,
+          dadosServidor: {
+            ...property.dadosServidor,
+            lastUpdate: getLastUpdate(),
+          },
+        };
+        let cowIndex = await newData.rebanho.findIndex((cow) => cow._id === id);
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
         await user.update(property._id, newData);
@@ -195,7 +221,7 @@ export default function CattleDetailsPage() {
           show: true,
         });
       } catch (e) {
-        setOneAnimal(cattle[animalIndex]);
+        setOneAnimal(property.rebanho[animalIndex]);
         setNotification({
           type: "danger",
           title: "Erro",
@@ -212,7 +238,13 @@ export default function CattleDetailsPage() {
       const valorVenda = vendida ? oneAnimal.dadosVenda.valorVenda : "";
       const comprador = vendida ? oneAnimal.dadosVenda.comprador : "";
 
-      let changeAnimal = { ...oneAnimal };
+      let changeAnimal = {
+        ...oneAnimal,
+        dadosServidor: {
+          ...oneAnimal.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
       changeAnimal.dadosVenda = {
         ...oneAnimal.dadosVenda,
         dtVenda,
@@ -223,10 +255,14 @@ export default function CattleDetailsPage() {
 
       setOneAnimal(changeAnimal);
       try {
-        let newData = { ...property };
-        let cowIndex = await newData.rebanho.findIndex(
-          (cow) => cow.uuid === id
-        );
+        let newData = {
+          ...property,
+          dadosServidor: {
+            ...property.dadosServidor,
+            lastUpdate: getLastUpdate(),
+          },
+        };
+        let cowIndex = await newData.rebanho.findIndex((cow) => cow._id === id);
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
         await user.update(property._id, newData);
@@ -237,7 +273,7 @@ export default function CattleDetailsPage() {
           show: true,
         });
       } catch (e) {
-        setOneAnimal(cattle[animalIndex]);
+        setOneAnimal(property.rebanho[animalIndex]);
         setNotification({
           type: "danger",
           title: "Erro",
@@ -264,10 +300,14 @@ export default function CattleDetailsPage() {
           text = "Nova Entrada";
           if (formState.ocorrenciaPastoToAdd) {
             if (!cancelBtn) {
-              oneAnimal.estadaCurral[
-                oneAnimal.estadaCurral.indexOf(lastOccurrence)
-              ].dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+              let thisOcurrance =
+                oneAnimal.estadaCurral[
+                  oneAnimal.estadaCurral.indexOf(lastOccurrence)
+                ];
+              thisOcurrance.dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+              thisOcurrance.dadosServidor.lastUpdate = getLastUpdate();
               oneAnimal.noCurral = false;
+              oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
             }
             handleBtnSalvarAlteracoesClick();
             text = "Nova Entrada";
@@ -278,9 +318,18 @@ export default function CattleDetailsPage() {
         } else {
           if (!cancelBtn && formState.ocorrenciaPastoToAdd) {
             oneAnimal.estadaCurral.push({
+              ...curralPermanenciaSchema,
               dtEntradaCurral: formState.ocorrenciaPastoToAdd,
+              creator: property._id,
+              animal: oneAnimal._id,
+              _id: uuidv4(),
+              dadosServidor: {
+                ...curralPermanenciaSchema.dadosServidor,
+                lastUpdate: getLastUpdate(),
+              },
             });
             oneAnimal.noCurral = true;
+            oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
             handleBtnSalvarAlteracoesClick();
             text = "Nova Saída";
           } else {
@@ -330,7 +379,17 @@ export default function CattleDetailsPage() {
           formState.ocorrenciaPesoToAdd.dtPesagem &&
           formState.ocorrenciaPesoToAdd.peso
         ) {
-          oneAnimal.pesagem.push(formState.ocorrenciaPesoToAdd);
+          oneAnimal.pesagem.push({
+            ...pesagemSchema,
+            ...formState.ocorrenciaPesoToAdd,
+            _id: uuidv4(),
+            creator: property._id,
+            animal: oneAnimal._id,
+            dadosServidor: {
+              ...pesagemSchema.dadosServidor,
+              lastUpdate: getLastUpdate(),
+            },
+          });
           setOneAnimal({
             ...oneAnimal,
             pesagem: oneAnimal.pesagem.sort(
@@ -382,7 +441,17 @@ export default function CattleDetailsPage() {
           formState.ocorrenciaLeiteToAdd.dtVerificacao &&
           formState.ocorrenciaLeiteToAdd.qtdLitros
         ) {
-          oneAnimal.producaoLeite.push(formState.ocorrenciaLeiteToAdd);
+          oneAnimal.producaoLeite.push({
+            ...litragemSchema,
+            ...formState.ocorrenciaLeiteToAdd,
+            _id: uuidv4(),
+            creator: property._id,
+            animal: oneAnimal._id,
+            dadosServidor: {
+              ...litragemSchema.dadosServidor,
+              lastUpdate: getLastUpdate(),
+            },
+          });
           setOneAnimal({
             ...oneAnimal,
             producaoLeite: oneAnimal.producaoLeite.sort(
@@ -434,7 +503,17 @@ export default function CattleDetailsPage() {
           formState.ocorrenciaHistoricoToAdd.dtHistorico &&
           formState.ocorrenciaHistoricoToAdd.descricao
         ) {
-          oneAnimal.historico.push(formState.ocorrenciaHistoricoToAdd);
+          oneAnimal.historico.push({
+            ...historicoSchema,
+            ...formState.ocorrenciaHistoricoToAdd,
+            _id: uuidv4(),
+            creator: property._id,
+            animal: oneAnimal._id,
+            dadosServidor: {
+              ...historicoSchema.dadosServidor,
+              lastUpdate: getLastUpdate(),
+            },
+          });
           setOneAnimal({
             ...oneAnimal,
             historico: oneAnimal.historico.sort(
@@ -490,12 +569,18 @@ export default function CattleDetailsPage() {
       }));
 
       try {
-        await getCattle;
-        let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+        let cowIndex = await property.rebanho.findIndex(
+          (cow) => cow._id === id
+        );
         let newData = {
           ...property,
+          dadosServidor: {
+            ...property.dadosServidor,
+            lastUpdate: new Date(Date.now()).getTime(),
+          },
         };
-        console.log(`data before update`, newData.rebanho[cowIndex]);
+        console.log(`data before update`, property.rebanho[cowIndex]);
+        oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
         newData.rebanho[cowIndex] = oneAnimal;
         console.log(`data after update`, newData.rebanho[cowIndex]);
 
@@ -537,13 +622,19 @@ export default function CattleDetailsPage() {
         },
       }));
       try {
-        await getCattle;
-        let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
+        let cowIndex = await property.rebanho.findIndex(
+          (cow) => cow._id === id
+        );
         let newData = {
           ...property,
+          dadosServidor: {
+            ...property.dadosServidor,
+            lastUpdate: getLastUpdate(),
+          },
         };
         console.log(`data before update`, newData.rebanho.length);
-        newData.rebanho.splice(cowIndex, 1);
+        newData.rebanho[cowIndex].dadosServidor.deletado = true;
+        newData.rebanho[cowIndex].dadosServidor.lastUpdate = getLastUpdate();
         console.log(`data after update`, newData.rebanho.length);
 
         await user.update(property._id, newData);
@@ -579,12 +670,15 @@ export default function CattleDetailsPage() {
     }
     return (
       <Container>
+        {oneAnimal.dadosServidor.deletado && (
+          <h1 style={{ color: "red" }}>ANIMAL DELETADO</h1>
+        )}
         <Card className="my-5">
           <Card.Header className="cattle-details-header">
             <Container className="d-flex justify-content-between align-items-baseline">
               <span>{oneAnimal.nome}</span>
               <span className="font-monospace text-muted float-sm-end d-none d-sm-inline-block">
-                #{oneAnimal.uuid}
+                #{oneAnimal._id}
               </span>
             </Container>
           </Card.Header>
@@ -695,7 +789,11 @@ export default function CattleDetailsPage() {
                             },
                           }));
                           try {
-                            await setOneAnimal(cattle[animalIndex]);
+                            let thisIndex = await property.rebanho.findIndex(
+                              (element) => element._id === id
+                            );
+                            setOneAnimal(property.rebanho[thisIndex]);
+                            getCattle();
                           } catch (e) {
                             console.log(e);
                           } finally {
@@ -869,23 +967,31 @@ export default function CattleDetailsPage() {
                         aria-label="Pastos da propriedade"
                         onChange={async (e) => {
                           try {
-                            await getCattle;
-                            let cowIndex = await cattle.findIndex(
-                              (cow) => cow.uuid === id
-                            );
+                            setOneAnimal({
+                              ...oneAnimal,
+                              pasto: e.target.value,
+                            });
                             let newData = {
                               ...property,
+                              dadosServidor: {
+                                ...property.dadosServidor,
+                                lastUpdate: getLastUpdate(),
+                              },
                             };
+                            let cowIndex = await newData.rebanho.findIndex(
+                              (cow) => cow._id === id
+                            );
                             console.log(
                               `data before update`,
-                              newData.rebanho[cowIndex].pasto
+                              newData.rebanho[cowIndex]
                             );
                             newData.rebanho[cowIndex].pasto = e.target.value;
+                            newData.rebanho[cowIndex].dadosServidor.lastUpdate =
+                              getLastUpdate();
                             console.log(
                               `data after update`,
-                              newData.rebanho[cowIndex].pasto
+                              newData.rebanho[cowIndex]
                             );
-
                             await user.update(property._id, newData);
                             setNotification({
                               type: "success",
@@ -902,7 +1008,7 @@ export default function CattleDetailsPage() {
                             });
                           }
                         }}
-                        defaultValue={oneAnimal.pasto}
+                        value={oneAnimal.pasto}
                       >
                         {pasturesArray.map((p, i) => (
                           <option key={i}>{p}</option>
@@ -1140,7 +1246,7 @@ export default function CattleDetailsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {oneAnimal.estadaCurral.length <= 0 && (
+                        {activeEstadas.length <= 0 && (
                           <tr>
                             <td
                               colSpan={4}
@@ -1150,12 +1256,10 @@ export default function CattleDetailsPage() {
                             </td>
                           </tr>
                         )}
-                        {oneAnimal.estadaCurral.length > 0 &&
-                          oneAnimal.estadaCurral.map((estada, index) => (
+                        {activeEstadas.length > 0 &&
+                          activeEstadas.map((estada, index) => (
                             <tr key={index}>
-                              <td>
-                                {oneAnimal.estadaCurral.indexOf(estada) + 1}
-                              </td>
+                              <td>{index + 1}</td>
                               <td>
                                 {estada.dtEntradaCurral &&
                                   moment(estada.dtEntradaCurral).format(
@@ -1170,26 +1274,41 @@ export default function CattleDetailsPage() {
                               </td>
                               <td>
                                 <Button
-                                  variant="danger"
+                                  variant={"danger"}
                                   size="sm"
                                   onClick={() => {
-                                    const newEstadaCurral =
-                                      oneAnimal.estadaCurral.filter(
-                                        (estada, indexEstada) =>
-                                          index !== indexEstada
+                                    let newAnimal = { ...oneAnimal };
+                                    newAnimal.estadaCurral[
+                                      newAnimal.estadaCurral.indexOf(estada)
+                                    ].dtSaidaCurral = formatDateToDefault(
+                                      new Date(Date.now())
+                                    );
+                                    newAnimal.estadaCurral[
+                                      newAnimal.estadaCurral.indexOf(estada)
+                                    ].dadosServidor.deletado = true;
+                                    newAnimal.estadaCurral[
+                                      newAnimal.estadaCurral.indexOf(estada)
+                                    ].dadosServidor.lastUpdate =
+                                      getLastUpdate();
+                                    let EstadaArray = newAnimal.estadaCurral
+                                      .filter(
+                                        (estada) =>
+                                          !estada.dadosServidor.deletado
+                                      )
+                                      .sort(
+                                        (a, b) =>
+                                          a.dtEntradaCurral - b.dtEntradaCurral
                                       );
-                                    setOneAnimal((prevState) => ({
-                                      ...prevState,
-                                      estadaCurral: newEstadaCurral,
-                                      noCurral: false,
-                                    }));
-                                    setFormState((prevState) => ({
-                                      ...prevState,
-                                      btnAdicionarEstada: {
-                                        ...formState.btnAdicionarEstada,
-                                        text: "Nova Entrada",
-                                      },
-                                    }));
+                                    if (
+                                      EstadaArray.length > 0 &&
+                                      !EstadaArray[EstadaArray.length - 1]
+                                        .dtSaidaCurral
+                                    ) {
+                                      newAnimal.noCurral = true;
+                                    } else {
+                                      newAnimal.noCurral = false;
+                                    }
+                                    setOneAnimal(newAnimal);
                                   }}
                                 >
                                   Excluir
@@ -1270,7 +1389,7 @@ export default function CattleDetailsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {oneAnimal.pesagem.length <= 0 && (
+                        {activePesagens.length <= 0 && (
                           <tr>
                             <td
                               colSpan={4}
@@ -1280,10 +1399,10 @@ export default function CattleDetailsPage() {
                             </td>
                           </tr>
                         )}
-                        {oneAnimal.pesagem.length > 0 &&
-                          oneAnimal.pesagem.map((elemento, index) => (
+                        {activePesagens.length > 0 &&
+                          activePesagens.map((elemento, index) => (
                             <tr key={index}>
-                              <td>{oneAnimal.pesagem.indexOf(elemento) + 1}</td>
+                              <td>{activePesagens.indexOf(elemento) + 1}</td>
                               <td>{elemento.peso}</td>
                               <td>
                                 {moment(elemento.dtPesagem).format(
@@ -1301,14 +1420,15 @@ export default function CattleDetailsPage() {
                                   variant="danger"
                                   size="sm"
                                   onClick={() => {
-                                    const newPesagem = oneAnimal.pesagem.filter(
-                                      (elemento, indexelemento) =>
-                                        index !== indexelemento
-                                    );
-                                    setOneAnimal((prevState) => ({
-                                      ...prevState,
-                                      pesagem: newPesagem,
-                                    }));
+                                    let newAnimal = { ...oneAnimal };
+                                    newAnimal.pesagem[
+                                      newAnimal.pesagem.indexOf(elemento)
+                                    ].dadosServidor.deletado = true;
+                                    newAnimal.pesagem[
+                                      newAnimal.pesagem.indexOf(elemento)
+                                    ].dadosServidor.lastUpdate =
+                                      getLastUpdate();
+                                    setOneAnimal(newAnimal);
                                   }}
                                 >
                                   Excluir
@@ -1427,7 +1547,7 @@ export default function CattleDetailsPage() {
                           </tr>
                         </thead>
                         <tbody>
-                          {oneAnimal.producaoLeite.length <= 0 && (
+                          {activeLitragens.length <= 0 && (
                             <tr>
                               <td
                                 colSpan={4}
@@ -1437,13 +1557,10 @@ export default function CattleDetailsPage() {
                               </td>
                             </tr>
                           )}
-                          {oneAnimal.producaoLeite.length > 0 &&
-                            oneAnimal.producaoLeite.map((elemento, index) => (
+                          {activeLitragens.length > 0 &&
+                            activeLitragens.map((elemento, index) => (
                               <tr key={index}>
-                                <td>
-                                  {oneAnimal.producaoLeite.indexOf(elemento) +
-                                    1}
-                                </td>
+                                <td>{activeLitragens.indexOf(elemento) + 1}</td>
                                 <td>{elemento.qtdLitros}</td>
                                 <td>
                                   {moment(elemento.dtVerificacao).format(
@@ -1461,15 +1578,19 @@ export default function CattleDetailsPage() {
                                     variant="danger"
                                     size="sm"
                                     onClick={() => {
-                                      const newLitragem =
-                                        oneAnimal.producaoLeite.filter(
-                                          (elemento, indexelemento) =>
-                                            index !== indexelemento
-                                        );
-                                      setOneAnimal((prevState) => ({
-                                        ...prevState,
-                                        producaoLeite: newLitragem,
-                                      }));
+                                      let newAnimal = { ...oneAnimal };
+                                      newAnimal.producaoLeite[
+                                        newAnimal.producaoLeite.indexOf(
+                                          elemento
+                                        )
+                                      ].dadosServidor.deletado = true;
+                                      newAnimal.producaoLeite[
+                                        newAnimal.producaoLeite.indexOf(
+                                          elemento
+                                        )
+                                      ].dadosServidor.lastUpdate =
+                                        getLastUpdate();
+                                      setOneAnimal(newAnimal);
                                     }}
                                   >
                                     Excluir
@@ -1582,8 +1703,8 @@ export default function CattleDetailsPage() {
                   <Charts
                     chartTitle="Evolução do peso"
                     dataTitle={oneAnimal.nome}
-                    chartLabels={oneAnimal.pesagem.map((e) => e.dtPesagem)}
-                    chartData={oneAnimal.pesagem.map((e) => e.peso)}
+                    chartLabels={activePesagens.map((e) => e.dtPesagem)}
+                    chartData={activePesagens.map((e) => e.peso)}
                     lineColor="red"
                     barColor="rgba(255, 99, 132, 0.5)"
                     type="line"
@@ -1594,12 +1715,8 @@ export default function CattleDetailsPage() {
                     <Charts
                       chartTitle="Produção de leite"
                       dataTitle={oneAnimal.nome}
-                      chartLabels={oneAnimal.producaoLeite.map(
-                        (e) => e.dtVerificacao
-                      )}
-                      chartData={oneAnimal.producaoLeite.map(
-                        (e) => e.qtdLitros
-                      )}
+                      chartLabels={activeLitragens.map((e) => e.dtVerificacao)}
+                      chartData={activeLitragens.map((e) => e.qtdLitros)}
                       lineColor="black"
                       barColor="rgba(106, 121, 247, 0.5)"
                       type="bar"
@@ -1623,7 +1740,7 @@ export default function CattleDetailsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {oneAnimal.historico.length <= 0 && (
+                        {activeHistoricos.length <= 0 && (
                           <tr>
                             <td
                               colSpan={4}
@@ -1633,12 +1750,10 @@ export default function CattleDetailsPage() {
                             </td>
                           </tr>
                         )}
-                        {oneAnimal.historico.length > 0 &&
-                          oneAnimal.historico.map((elemento, index) => (
+                        {activeHistoricos.length > 0 &&
+                          activeHistoricos.map((elemento, index) => (
                             <tr key={index}>
-                              <td>
-                                {oneAnimal.historico.indexOf(elemento) + 1}
-                              </td>
+                              <td>{activeHistoricos.indexOf(elemento) + 1}</td>
                               <td>
                                 {moment(elemento.dtHistorico).format(
                                   "DD/MM/yyyy"
@@ -1650,15 +1765,15 @@ export default function CattleDetailsPage() {
                                   variant="danger"
                                   size="sm"
                                   onClick={() => {
-                                    const newHistorico =
-                                      oneAnimal.historico.filter(
-                                        (elemento, indexelemento) =>
-                                          index !== indexelemento
-                                      );
-                                    setOneAnimal((prevState) => ({
-                                      ...prevState,
-                                      historico: newHistorico,
-                                    }));
+                                    let newAnimal = { ...oneAnimal };
+                                    newAnimal.historico[
+                                      newAnimal.historico.indexOf(elemento)
+                                    ].dadosServidor.deletado = true;
+                                    newAnimal.historico[
+                                      newAnimal.historico.indexOf(elemento)
+                                    ].dadosServidor.lastUpdate =
+                                      getLastUpdate();
+                                    setOneAnimal(newAnimal);
                                   }}
                                 >
                                   Excluir

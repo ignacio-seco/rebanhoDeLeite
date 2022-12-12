@@ -1,6 +1,6 @@
 const ganhoSchema ={
     creator: "",
-    uuid: "",
+    _id: "",
     dtGanho: "",
     valor: "",
     descricao: "",

@@ -33,7 +33,7 @@ export default function ReportsTable({ data }) {
               <tr key={cow._id}>
                 <td>{cow.brinco}</td>
                 <td>
-                  <Link to={`/gado/${cow.uuid}`}>{cow.nome}</Link>
+                  <Link to={`/gado/${cow._id}`}>{cow.nome}</Link>
                 </td>
                 <td>{cow.sexo}</td>
                 <td>{cow.dtNascimento ? formatDate(cow.dtNascimento) : `-`}</td>

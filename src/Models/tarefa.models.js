@@ -1,6 +1,6 @@
 const tarefaSchema = {
   creator: "",
-  uuid: "",
+  _id: "",
   dtCriacao: "",
   urgente: false,
   descricao: "",

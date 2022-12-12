@@ -6,25 +6,25 @@ import { AuthContext } from "../../contexts/authContext";
 import { filterMonths, formatDate } from "../../helpers/CalculateAge";
 
 export default function Vendas() {
-  const {
-    data,
-    loading,
-    getData
-  }= useContext(AuthContext)
-  let cattle = data.rebanho
-  let getCattle = getData
+  const { data, loading, getData } = useContext(AuthContext);
+  let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
+  let getCattle = getData;
 
-  useEffect(()=>{getCattle()}, []);
-if(loading){return <h3>loading...</h3>}else{  
-function sortedCattle(){
-    return cattle
-      .filter((cow) => cow.dadosVenda.vendida)
-      .sort(
-        (a, b) =>
-          filterMonths(a.dadosVenda.dtVenda) -
-          filterMonths(b.dadosVenda.dtVenda)
-      );
-  };
+  useEffect(() => {
+    getCattle();
+  }, []);
+  if (loading) {
+    return <h3>loading...</h3>;
+  } else {
+    function sortedCattle() {
+      return cattle
+        .filter((cow) => cow.dadosVenda.vendida)
+        .sort(
+          (a, b) =>
+            filterMonths(a.dadosVenda.dtVenda) -
+            filterMonths(b.dadosVenda.dtVenda)
+        );
+    }
     return (
       <div style={{ width: "100%", height: "90vh", overflow: "auto" }}>
         <h2 style={{ textAlign: "center" }}>Cabeças vendidas</h2>
@@ -53,10 +53,10 @@ function sortedCattle(){
             <tbody>
               {sortedCattle().map((cow) => {
                 return (
-                  <tr key={cow.uuid}>
+                  <tr key={cow._id}>
                     <td>{cow.brinco}</td>
                     <td>
-                      <Link to={`/gado/${cow.uuid}`}>{cow.nome}</Link>
+                      <Link to={`/gado/${cow._id}`}>{cow.nome}</Link>
                     </td>
                     <td>{cow.sexo}</td>
                     <td>
@@ -85,5 +85,6 @@ function sortedCattle(){
           </Table>
         </Container>
       </div>
-    );}
+    );
+  }
 }

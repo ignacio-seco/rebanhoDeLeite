@@ -1,6 +1,6 @@
 export const animalSchema = {
   creator: "",
-  uuid: "",
+  _id: "",
   brinco: "",
   brincoDaMae: "",
   dadosCompra: {

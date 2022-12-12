@@ -1,7 +1,7 @@
 const curralPermanenciaSchema =
   {
     creator:"",
-    uuid:"",
+    _id:"",
     animal:"",
     dtEntradaCurral:"",
     dtSaidaCurral:"",

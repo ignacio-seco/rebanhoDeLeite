@@ -1,39 +1,43 @@
 import { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import {
   calculateAge,
   filterMonths,
   formatDate,
   formatDateToDefault,
+  getLastUpdate,
   stringEqualizer,
 } from "../../helpers/CalculateAge";
 import { AuthContext } from "../../contexts/authContext";
+import litragemSchema from "../../Models/litragem.models";
 
 export default function MilkMonitoring() {
-  
-  const {
-    data,
-    loading,
-    getData,
-    user
-  }= useContext(AuthContext)
-  let cattle = data.rebanho
-  let property = data
-  let getCattle = getData
-  useEffect(()=>{getCattle()}, []);
+  const { data, loading, getData, user } = useContext(AuthContext);
+  let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
+  let property = data;
+  let getCattle = getData;
+  useEffect(() => {
+    getCattle();
+  }, []);
   let [search, setSearch] = useState("");
   if (loading) {
     return <h3>Loading...</h3>;
   } else {
     async function postIt(id, object) {
-      let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
-      console.log(cattle[cowIndex]);
-      let newData = { ...property };
+      let cowIndex = await property.rebanho.findIndex((cow) => cow._id === id);
+      console.log(property.rebanho[cowIndex]);
+      let newData = {
+        ...property,
+        dadosServidor: {
+          ...property.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
       newData.rebanho[cowIndex] = object;
       user
         .update(property._id, newData)
         .then(setSearch(""))
-        .then(getCattle)
         .catch((err) => alert(err));
     }
 
@@ -46,7 +50,10 @@ export default function MilkMonitoring() {
             cow.sexo === "FEMEA" &&
             (cow.producaoLeite.length > 0
               ? cow.producaoLeite[cow.producaoLeite.length - 1]
-                  .dtVerificacao !== formatDateToDefault(new Date(Date.now()))
+                  .dtVerificacao !==
+                  formatDateToDefault(new Date(Date.now())) ||
+                cow.producaoLeite[cow.producaoLeite.length - 1].dadosServidor
+                  .deletado
               : true) &&
             filterMonths(cow.dtNascimento) > 11
         )
@@ -83,20 +90,32 @@ export default function MilkMonitoring() {
                     e.preventDefault();
                     filteredData[i] = {
                       ...filteredData[i],
+                      dadosServidor: {
+                        ...filteredData[i].dadosServidor,
+                        lastUpdate: getLastUpdate(),
+                      },
                       producaoLeite: [
                         ...filteredData[i].producaoLeite,
                         {
+                          ...litragemSchema,
+                          _id: uuidv4(),
                           qtdLitros: e.target[0].value,
                           dtVerificacao: formatDateToDefault(
                             new Date(Date.now())
                           ),
+                          creator: property._id,
+                          animal: filteredData[i]._id,
+                          dadosServidor: {
+                            ...litragemSchema.dadosServidor,
+                            lastUpdate: getLastUpdate(),
+                          },
                         },
                       ],
                     };
                     console.log(e);
                     e.target[0].value = "";
                     let newAnimal = filteredData[i];
-                    let uuid = newAnimal.uuid;
+                    let uuid = newAnimal._id;
                     postIt(uuid, newAnimal);
                   }
                   console.log(filteredData);

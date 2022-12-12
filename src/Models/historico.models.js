@@ -1,6 +1,6 @@
 const historicoSchema = {
   creator: "",
-  uuid: "",
+  _id: "",
   animal: "",
   dtHistorico: "",
   descricao: "",

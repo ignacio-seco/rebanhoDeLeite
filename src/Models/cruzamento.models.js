@@ -1,6 +1,6 @@
 const cruzamentoSchema ={
     creator: "",
-    uuid: "",
+    _id: "",
     animal: "",
     semen:'não informado',
     dtCruzamento:"",

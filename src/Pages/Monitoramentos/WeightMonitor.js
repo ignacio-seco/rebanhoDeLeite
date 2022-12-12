@@ -4,30 +4,36 @@ import {
   calculateAge,
   formatDate,
   formatDateToDefault,
+  getLastUpdate,
   stringEqualizer,
 } from "../../helpers/CalculateAge";
 import { AuthContext } from "../../contexts/authContext";
+import pesagemSchema from "../../Models/pesagem.models";
+import { v4 } from "uuid";
 
 export default function MilkMonitoring() {
-  const {
-    data,
-    loading,
-    getData,
-    user
-  }= useContext(AuthContext)
-  let cattle = data.rebanho
-  let property = data
-  let getCattle = getData
-  useEffect(()=>{getCattle()}, []);
+  const { data, loading, getData, user } = useContext(AuthContext);
+  let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
+  let property = data;
+  let getCattle = getData;
+  useEffect(() => {
+    getCattle();
+  }, []);
   let [search, setSearch] = useState("");
 
   if (loading) {
     return <h3>Loading...</h3>;
   } else {
     async function postIt(id, object) {
-      let cowIndex = await cattle.findIndex((cow) => cow.uuid === id);
-      console.log(cattle[cowIndex]);
-      let newData = { ...property };
+      let cowIndex = await property.rebanho.findIndex((cow) => cow._id === id);
+      console.log(property.rebanho[cowIndex]);
+      let newData = {
+        ...property,
+        dadosServidor: {
+          ...property.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
       newData.rebanho[cowIndex] = object;
       user
         .update(property._id, newData)
@@ -43,7 +49,8 @@ export default function MilkMonitoring() {
             !(cow.morreu || cow.vendida) &&
             (cow.pesagem.length > 0
               ? cow.pesagem[cow.pesagem.length - 1].dtPesagem !==
-                formatDateToDefault(new Date(Date.now()))
+                  formatDateToDefault(new Date(Date.now())) ||
+                cow.pesagem[cow.pesagem.length - 1].dadosServidor.deletado
               : true)
         )
         .sort((a, b) => Number(a.brinco) - Number(b.brinco));
@@ -79,18 +86,30 @@ export default function MilkMonitoring() {
                     e.preventDefault();
                     filteredData[i] = {
                       ...filteredData[i],
+                      dadosServidor: {
+                        ...filteredData[i].dadosServidor,
+                        lastUpdate: getLastUpdate(),
+                      },
                       pesagem: [
                         ...filteredData[i].pesagem,
                         {
+                          ...pesagemSchema,
+                          _id: v4(),
                           peso: e.target[0].value,
                           dtPesagem: formatDateToDefault(new Date(Date.now())),
+                          creator: property._id,
+                          animal: filteredData[i]._id,
+                          dadosServidor: {
+                            ...pesagemSchema.dadosServidor,
+                            lastUpdate: getLastUpdate(),
+                          },
                         },
                       ],
                     };
                     console.log(e);
                     e.target[0].value = "";
                     let newAnimal = filteredData[i];
-                    let id = newAnimal.uuid;
+                    let id = newAnimal._id;
                     postIt(id, newAnimal);
                   }
                   console.log(filteredData);

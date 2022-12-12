@@ -1,6 +1,6 @@
 const litragemSchema =  {
     creator: "",
-    uuid: "",
+    _id: "",
     animal: "",
     qtdLitros:"",
     dtVerificacao:"",

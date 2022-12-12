@@ -1,6 +1,6 @@
 const pesagemSchema = {
     creator:"",
-    uuid: "",
+    _id: "",
     animal:"",
     peso: "",
     dtPesagem: "",

@@ -1,6 +1,6 @@
 const gastoSchema = {
   creator: "",
-  uuid: "",
+  _id: "",
   dtGasto: "",
   valor: "",
   descricao: "",
