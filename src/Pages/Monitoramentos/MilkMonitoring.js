@@ -38,6 +38,7 @@ export default function MilkMonitoring() {
       user
         .update(property._id, newData)
         .then(setSearch(""))
+        .then(getCattle)
         .catch((err) => alert(err));
     }
 
