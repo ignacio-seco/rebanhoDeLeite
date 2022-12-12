@@ -34,7 +34,6 @@ import historicoSchema from "../Models/historico.models";
 export default function CattleDetailsPage() {
   const { id } = useParams();
   const { data, loading, getData, user } = useContext(AuthContext);
-  let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
   let property = data;
   let getCattle = getData;
   let pasturesArray = data.pastos;

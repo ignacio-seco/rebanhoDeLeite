@@ -7,9 +7,7 @@ export default function CattleShedPage() {
 
   return (
     <div>
-      <CattleList
-        cowFilterFn={cowFilter}
-      />
+      <CattleList cowFilterFn={cowFilter} />
       <div
         style={{
           display: "flex",

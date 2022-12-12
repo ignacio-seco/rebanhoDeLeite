@@ -5,7 +5,7 @@ import CattleList from "../Components/CattleList/CattleList";
 export default function CattleHerdPage() {
   return (
     <div>
-      <CattleList/>
+      <CattleList />
       <div
         style={{
           display: "flex",
