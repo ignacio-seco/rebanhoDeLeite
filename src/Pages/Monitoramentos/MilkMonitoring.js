@@ -43,8 +43,8 @@ export default function MilkMonitoring() {
     }
 
     function renderTable() {
-      let filteredData = cattle
-        .filter(
+      console.log(cattle)
+      let filteredData = cattle.filter(
           (cow) =>
             !(cow.dadosMorte.morreu || cow.dadosVenda.vendida) &&
             cow.noCurral &&
@@ -65,6 +65,7 @@ export default function MilkMonitoring() {
             cow.brinco.indexOf(search) !== -1 ||
             stringEqualizer(cow.nome).indexOf(stringEqualizer(search)) !== -1
         ));
+        console.log(filteredData)
       return filteredData.map((cow, i) => {
         return (
           <tr key={i}>

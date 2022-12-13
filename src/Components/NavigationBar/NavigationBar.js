@@ -27,6 +27,7 @@ function NavigationBar() {
       console.log("this is the updated Data", updatedData.data);
       await user.delete(id);
       await getData();
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }

@@ -6,6 +6,7 @@ import curral from "../assets/curral.jpg";
 import novoAnimal from "../assets/newAnimal.jpg";
 import relatorios from "../assets/relatorio.jpg";
 import monitoramento from "../assets/monitoramento.jpeg";
+import cadastroPastos from "../assets/CadastroPastos.jpg"
 import { Link } from "react-router-dom";
 
 function HomePage() {
@@ -69,6 +70,23 @@ function HomePage() {
                   <h3>Novo animal</h3>
                 </Card.Title>
                 <Card.Text>Cadastrar um novo animal no rebanho</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/cadastropasto">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={cadastroPastos}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h3>Cadastro de pastos</h3>
+                </Card.Title>
+                <Card.Text>Cadastrar pastos na propriedade</Card.Text>
               </Card.Body>
             </Card>
           </Link>

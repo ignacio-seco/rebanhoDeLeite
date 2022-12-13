@@ -146,7 +146,7 @@ function LandingPage() {
           show: true,
           type: "danger",
           title: "Servidor diz:",
-          text: err.response.data.msg,
+          text: err.response.data.errorMessage,
           delay: 7000,
         });
       }
@@ -187,7 +187,7 @@ function LandingPage() {
         show: true,
         type: "danger",
         title: "Servidor diz:",
-        text: err.response.data.msg,
+        text: err.response.data.errorMessage,
         delay: 7000,
       });
     }

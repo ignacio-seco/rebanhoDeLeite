@@ -40,8 +40,7 @@ export default function Pastos() {
           <Form.Select
             aria-label="Pastos da propriedade"
             onChange={(e) => setPasture(e.currentTarget.value)}
-            value=""
-          >
+          ><option>Selecione um pasto</option>
             {pasturesArray.map((p, i) => (
               <option key={i}>{p}</option>
             ))}

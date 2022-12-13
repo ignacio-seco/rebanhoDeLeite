@@ -19,6 +19,7 @@ import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
 import Notification from "./Components/Notification";
 import { AuthContext } from "./contexts/authContext";
 import LandingPage from "./Pages/LandingPage";
+import CadastrarPastos from "./Pages/CadastroPastos";
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -102,6 +103,10 @@ function App() {
               path="/monitoramento/monitoramentopeso"
               element={<WeightMonitor />}
             />
+            <Route
+            path="/cadastropasto"
+            element={<CadastrarPastos />}
+          />
             <Route
             path="*"
             element={<HomePage />}
