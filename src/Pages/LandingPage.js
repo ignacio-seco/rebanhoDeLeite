@@ -10,9 +10,11 @@ import Button from "react-bootstrap/Button";
 import api from "../api/api";
 import Notification from "../Components/Notification.js";
 import { AuthContext } from "../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
   const { getLoggedInUser } = useContext(AuthContext);
+  let navigate = useNavigate();
   let carrouselData = [
     {
       imgSrc: bandeira,
@@ -136,9 +138,17 @@ function LandingPage() {
           const newToken = await api.post("/user/login", { email, password });
           localStorage.setItem("loggedInUser", JSON.stringify(newToken.data));
           getLoggedInUser();
+          navigate("/");
         }
       } catch (err) {
         console.log(err);
+        setNotification({
+          show: true,
+          type: "danger",
+          title: "Servidor diz:",
+          text: err.response.data.msg,
+          delay: 7000,
+        });
       }
     }
     register();
@@ -170,9 +180,16 @@ function LandingPage() {
         const newToken = await api.post("/user/login", { email, password });
         localStorage.setItem("loggedInUser", JSON.stringify(newToken.data));
         getLoggedInUser();
+        navigate("/");
       }
     } catch (err) {
-      console.log(err);
+      setNotification({
+        show: true,
+        type: "danger",
+        title: "Servidor diz:",
+        text: err.response.data.msg,
+        delay: 7000,
+      });
     }
   }
 
