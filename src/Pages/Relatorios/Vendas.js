@@ -53,10 +53,10 @@ export default function Vendas() {
             <tbody>
               {sortedCattle().map((cow) => {
                 return (
-                  <tr key={cow._id}>
+                  <tr key={cow.uuid}>
                     <td>{cow.brinco}</td>
                     <td>
-                      <Link to={`/gado/${cow._id}`}>{cow.nome}</Link>
+                      <Link to={`/gado/${cow.uuid}`}>{cow.nome}</Link>
                     </td>
                     <td>{cow.sexo}</td>
                     <td>

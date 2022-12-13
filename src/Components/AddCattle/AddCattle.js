@@ -1,4 +1,3 @@
-
 import { useContext, useState } from "react";
 import {
   Button,
@@ -45,9 +44,17 @@ function AddCattle() {
       try {
         if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
           await getCattle();
-          let animalUuid = { ...newAnimal, _id: uuidv4(), creator: property._id,dadosServidor:{...newAnimal.dadosServidor, lastUpdate:new Date(Date.now()).getTime()}};
-          let newUuid = animalUuid._id;
-          await user.update(property._id, {
+          let animalUuid = {
+            ...newAnimal,
+            uuid: uuidv4(),
+            creator: property._id,
+            dadosServidor: {
+              ...newAnimal.dadosServidor,
+              lastUpdate: new Date(Date.now()).getTime(),
+            },
+          };
+          let newUuid = animalUuid.uuid;
+          await user.update(property.uuid, {
             ...property,
             rebanho: [...property.rebanho, animalUuid],
           });

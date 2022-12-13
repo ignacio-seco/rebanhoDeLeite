@@ -47,10 +47,10 @@ function CattleList({ cowFilterFn }) {
 
       return filteredCattle.map((cow) => {
         return (
-          <Col key={cow._id}>
+          <Col key={cow.uuid}>
             <Container className="justify-content-center BeerCard my-3">
               <div className="imageHolder">
-                <Link to={`/gado/${cow._id}`}>
+                <Link to={`/gado/${cow.uuid}`}>
                   <img
                     src={cow.imagem_url}
                     alt={cow.nome}

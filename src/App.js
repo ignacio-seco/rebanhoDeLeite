@@ -102,6 +102,10 @@ function App() {
               path="/monitoramento/monitoramentopeso"
               element={<WeightMonitor />}
             />
+            <Route
+            path="*"
+            element={<HomePage />}
+          />
           </Routes>
         </div>
       </div>

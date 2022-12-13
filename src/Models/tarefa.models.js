@@ -1,5 +1,6 @@
 const tarefaSchema = {
   creator: "",
+  uuid:"",
   _id: "",
   dtCriacao: "",
   urgente: false,
@@ -10,6 +11,7 @@ const tarefaSchema = {
     relacao: "propriedade",
     referencia: "tarefas",
     lastUpdate: "",
+    populaveis: [],
     deletado: false,
   },
 };

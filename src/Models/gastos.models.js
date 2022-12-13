@@ -1,6 +1,7 @@
 const gastoSchema = {
   creator: "",
   _id: "",
+  uuid:"",
   dtGasto: "",
   valor: "",
   descricao: "",
@@ -8,6 +9,7 @@ const gastoSchema = {
     colecao: "gastos",
     relacao: "propriedade",
     referencia: "gastos",
+    populaveis:[],
     lastUpdate: "",
     deletado: false,
   },

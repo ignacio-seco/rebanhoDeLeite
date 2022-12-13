@@ -1,6 +1,7 @@
 export const animalSchema = {
   creator: "",
   _id: "",
+  uuid: "",
   brinco: "",
   brincoDaMae: "",
   dadosCompra: {
@@ -36,6 +37,14 @@ export const animalSchema = {
     colecao: "cow",
     relacao: "propriedade",
     referencia: "rebanho",
+    populaveis: [
+      "dadosCruzamentos",
+      "estadaCurral",
+      "pesagem",
+      "historico",
+      "producaoLeite",
+      "dadosVacinas",
+    ],
     lastUpdate: "",
     deletado: false,
   },

@@ -25,7 +25,7 @@ export default function MilkMonitoring() {
     return <h3>Loading...</h3>;
   } else {
     async function postIt(id, object) {
-      let cowIndex = await property.rebanho.findIndex((cow) => cow._id === id);
+      let cowIndex = await property.rebanho.findIndex((cow) => cow.uuid === id);
       console.log(property.rebanho[cowIndex]);
       let newData = {
         ...property,
@@ -36,7 +36,7 @@ export default function MilkMonitoring() {
       };
       newData.rebanho[cowIndex] = object;
       user
-        .update(property._id, newData)
+        .update(property.uuid, newData)
         .then(setSearch(""))
         .then(getCattle)
         .catch((err) => alert(err));
@@ -98,7 +98,7 @@ export default function MilkMonitoring() {
                           peso: e.target[0].value,
                           dtPesagem: formatDateToDefault(new Date(Date.now())),
                           creator: property._id,
-                          animal: filteredData[i]._id,
+                          animaluuid: filteredData[i].uuid,
                           dadosServidor: {
                             ...pesagemSchema.dadosServidor,
                             lastUpdate: getLastUpdate(),
@@ -109,7 +109,7 @@ export default function MilkMonitoring() {
                     console.log(e);
                     e.target[0].value = "";
                     let newAnimal = filteredData[i];
-                    let id = newAnimal._id;
+                    let id = newAnimal.uuid;
                     postIt(id, newAnimal);
                   }
                   console.log(filteredData);

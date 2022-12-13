@@ -59,7 +59,7 @@ export default function CattleDetailsPage() {
   );
 
   async function findAnimal() {
-    let cowIndex = await property.rebanho.findIndex((cow) => cow._id === id);
+    let cowIndex = await property.rebanho.findIndex((cow) => cow.uuid === id);
     setAnimalIndex(cowIndex);
     setOneAnimal({ ...property.rebanho[cowIndex] });
     ehUltimaOcorrenciaPastoSaida(oneAnimal);
@@ -209,10 +209,10 @@ export default function CattleDetailsPage() {
             lastUpdate: getLastUpdate(),
           },
         };
-        let cowIndex = await newData.rebanho.findIndex((cow) => cow._id === id);
+        let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
-        await user.update(property._id, newData);
+        await user.update(property.uuid, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -261,10 +261,10 @@ export default function CattleDetailsPage() {
             lastUpdate: getLastUpdate(),
           },
         };
-        let cowIndex = await newData.rebanho.findIndex((cow) => cow._id === id);
+        let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
-        await user.update(property._id, newData);
+        await user.update(property.uuid, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -320,8 +320,8 @@ export default function CattleDetailsPage() {
               ...curralPermanenciaSchema,
               dtEntradaCurral: formState.ocorrenciaPastoToAdd,
               creator: property._id,
-              animal: oneAnimal._id,
-              _id: uuidv4(),
+              animaluuid: oneAnimal.uuid,
+              uuid: uuidv4(),
               dadosServidor: {
                 ...curralPermanenciaSchema.dadosServidor,
                 lastUpdate: getLastUpdate(),
@@ -381,9 +381,9 @@ export default function CattleDetailsPage() {
           oneAnimal.pesagem.push({
             ...pesagemSchema,
             ...formState.ocorrenciaPesoToAdd,
-            _id: uuidv4(),
+            uuid: uuidv4(),
             creator: property._id,
-            animal: oneAnimal._id,
+            animaluuid: oneAnimal.uuid,
             dadosServidor: {
               ...pesagemSchema.dadosServidor,
               lastUpdate: getLastUpdate(),
@@ -443,9 +443,9 @@ export default function CattleDetailsPage() {
           oneAnimal.producaoLeite.push({
             ...litragemSchema,
             ...formState.ocorrenciaLeiteToAdd,
-            _id: uuidv4(),
+            uuid: uuidv4(),
             creator: property._id,
-            animal: oneAnimal._id,
+            animaluuid: oneAnimal.uuid,
             dadosServidor: {
               ...litragemSchema.dadosServidor,
               lastUpdate: getLastUpdate(),
@@ -505,9 +505,9 @@ export default function CattleDetailsPage() {
           oneAnimal.historico.push({
             ...historicoSchema,
             ...formState.ocorrenciaHistoricoToAdd,
-            _id: uuidv4(),
+            uuid: uuidv4(),
             creator: property._id,
-            animal: oneAnimal._id,
+            animaluuid: oneAnimal.uuid,
             dadosServidor: {
               ...historicoSchema.dadosServidor,
               lastUpdate: getLastUpdate(),
@@ -569,7 +569,7 @@ export default function CattleDetailsPage() {
 
       try {
         let cowIndex = await property.rebanho.findIndex(
-          (cow) => cow._id === id
+          (cow) => cow.uuid === id
         );
         let newData = {
           ...property,
@@ -583,7 +583,7 @@ export default function CattleDetailsPage() {
         newData.rebanho[cowIndex] = oneAnimal;
         console.log(`data after update`, newData.rebanho[cowIndex]);
 
-        await user.update(property._id, newData);
+        await user.update(property.uuid, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -622,7 +622,7 @@ export default function CattleDetailsPage() {
       }));
       try {
         let cowIndex = await property.rebanho.findIndex(
-          (cow) => cow._id === id
+          (cow) => cow.uuid === id
         );
         let newData = {
           ...property,
@@ -636,7 +636,7 @@ export default function CattleDetailsPage() {
         newData.rebanho[cowIndex].dadosServidor.lastUpdate = getLastUpdate();
         console.log(`data after update`, newData.rebanho.length);
 
-        await user.update(property._id, newData);
+        await user.update(property.uuid, newData);
         setNotification({
           type: "success",
           title: "Sucesso",
@@ -677,7 +677,7 @@ export default function CattleDetailsPage() {
             <Container className="d-flex justify-content-between align-items-baseline">
               <span>{oneAnimal.nome}</span>
               <span className="font-monospace text-muted float-sm-end d-none d-sm-inline-block">
-                #{oneAnimal._id}
+                #{oneAnimal.uuid}
               </span>
             </Container>
           </Card.Header>
@@ -789,7 +789,7 @@ export default function CattleDetailsPage() {
                           }));
                           try {
                             let thisIndex = await property.rebanho.findIndex(
-                              (element) => element._id === id
+                              (element) => element.uuid === id
                             );
                             setOneAnimal(property.rebanho[thisIndex]);
                             getCattle();
@@ -978,7 +978,7 @@ export default function CattleDetailsPage() {
                               },
                             };
                             let cowIndex = await newData.rebanho.findIndex(
-                              (cow) => cow._id === id
+                              (cow) => cow.uuid === id
                             );
                             console.log(
                               `data before update`,
@@ -991,7 +991,7 @@ export default function CattleDetailsPage() {
                               `data after update`,
                               newData.rebanho[cowIndex]
                             );
-                            await user.update(property._id, newData);
+                            await user.update(property.uuid, newData);
                             setNotification({
                               type: "success",
                               title: "Sucesso",
@@ -1693,6 +1693,7 @@ export default function CattleDetailsPage() {
                 </Row>
               )}
               <Row
+                className="mt-3 gy-2 gx-3"
                 xs={1}
                 md={1}
                 lg={2}

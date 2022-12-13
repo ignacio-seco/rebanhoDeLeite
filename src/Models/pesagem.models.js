@@ -1,7 +1,9 @@
 const pesagemSchema = {
-    creator:"",
-    _id: "",
-    animal:"",
+  creator: "",
+  _id: "",
+  uuid:"",
+  animal: "",
+  animaluuid:"",
     peso: "",
     dtPesagem: "",
     dadosServidor: {
@@ -9,6 +11,7 @@ const pesagemSchema = {
       relacao: 'cow',
       referencia: 'pesagem',
       lastUpdate:"",
+      populaveis:[],
       deletado: false
     },
   }

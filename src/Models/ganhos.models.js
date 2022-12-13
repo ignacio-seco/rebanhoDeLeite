@@ -1,6 +1,7 @@
 const ganhoSchema ={
     creator: "",
     _id: "",
+    uuid: "",
     dtGanho: "",
     valor: "",
     descricao: "",
@@ -8,6 +9,7 @@ const ganhoSchema ={
       colecao:'ganhos',
       relacao:'propriedade',
       referencia: 'ganhos',
+      populaveis:[],
       lastUpdate: "",
       deletado: false
     },

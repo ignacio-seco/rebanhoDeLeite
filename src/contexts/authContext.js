@@ -18,7 +18,7 @@ function AuthContextComponente(props) {
   const [loading, setLoading] = useState(true);
 
   const db = new Dexie("loggedUser");
-  db.version(1).stores({ user: "_id" });
+  db.version(1).stores({ user: "uuid" });
   const { user } = db;
 
 
@@ -27,7 +27,7 @@ function AuthContextComponente(props) {
     setLoading(true);
     const loggedInUserJson = localStorage.getItem("loggedInUser");
     const parsedLoggedInUser = JSON.parse(loggedInUserJson || '""');
-    let id = parsedLoggedInUser.user._id
+    let id = parsedLoggedInUser.user.uuid
     let userData = await user.get(id);
     if(!userData){api
       .get("/user/perfil")
