@@ -212,7 +212,7 @@ export default function GraficoFinanceiro() {
             >
               <thead
                 className="sticky-top"
-                style={{ top: '5em', backgroundColor: 'white' }}
+                style={{ backgroundColor: 'white' }}
               >
                 <tr>
                   <th>#</th>
