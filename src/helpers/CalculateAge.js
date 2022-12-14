@@ -33,7 +33,8 @@ export function formatDate(dt) {
   return `${TzDt[2]}/${TzDt[1]}/${TzDt[0]}`
 }
 
-export function filterMonths(date) {
+//função olha quantos meses algo tem atualmente
+export function filterMonths(date) { 
   if (date === "") {
     return 100;
   } else {
@@ -78,4 +79,19 @@ export function calculateMonths(initialDate, finalDate) {
 
 export function getLastUpdate(){
   return new Date(Date.now()).getTime()
+}
+
+export function calculateDifMonths(initialDate, finalDate) {
+  if (initialDate === "") {
+    return "sem dados de nascimento";
+  } else {
+    let dob = new Date(initialDate);
+    let sob = new Date (finalDate)
+    let month_diff = sob.getTime() - dob.getTime();
+    let age_dt = new Date(month_diff);
+    let year = Math.abs(age_dt.getUTCFullYear() - 1970);
+    let month = age_dt.getUTCMonth();
+    let months = year * 12 + month;
+    return months;
+  }
 }
