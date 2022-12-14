@@ -2,9 +2,9 @@ import {
   formatDate,
   formatDateToDefault,
   getLastUpdate,
-} from '../helpers/CalculateAge';
-import { AuthContext } from '../contexts/authContext';
-import { useContext, useEffect, useState } from 'react';
+} from "../helpers/CalculateAge";
+import { AuthContext } from "../contexts/authContext";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -13,10 +13,10 @@ import {
   Row,
   Table,
   Form,
-} from 'react-bootstrap';
-import Modal from 'react-bootstrap/Modal';
-import ganhoSchema from '../Models/ganhos.models';
-import { v4 } from 'uuid';
+} from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import ganhoSchema from "../Models/ganhos.models";
+import { v4 } from "uuid";
 
 export default function Ganhos() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
@@ -40,7 +40,7 @@ export default function Ganhos() {
   useEffect(() => {
     getData();
   }, []);
-  console.log('this is the data', data);
+  console.log("this is the data", data);
   if (loading) {
     return <h1>Loading</h1>;
   } else {
@@ -56,10 +56,15 @@ export default function Ganhos() {
         .filter(
           (element) =>
             !element.dadosServidor.deletado &&
-            new Date(element.dtGanho).getTime() > new Date(dateMin).getTime()-24 * 60 * 60 * 1000 &&
-            new Date(element.dtGanho).getTime() < new Date(dateMax).getTime()+24 * 60 * 60 * 1000
+            new Date(element.dtGanho).getTime() >
+              new Date(dateMin).getTime() - 24 * 60 * 60 * 1000 &&
+            new Date(element.dtGanho).getTime() <
+              new Date(dateMax).getTime() + 24 * 60 * 60 * 1000
         )
-        .sort((a, b) => a.dtGanho - b.dtGanho);
+        .sort(
+          (a, b) =>
+            new Date(b.dtGanho).getTime() - new Date(a.dtGanho).getTime()
+        );
     };
     const renderGanhosTable = () => {
       let filteredData = filterData();
@@ -83,7 +88,7 @@ export default function Ganhos() {
               <tr key={index}>
                 <td>{filteredData.indexOf(elemento) + 1}</td>
                 <td>{formatDate(elemento.dtGanho)}</td>
-                <td>{elemento.valor}</td>
+                <td>R$ {Number(elemento.valor).toLocaleString("pt-BR")}</td>
                 <td>{elemento.descricao}</td>
                 <td>
                   <Button
@@ -121,18 +126,20 @@ export default function Ganhos() {
     const handleFinancasSubmit = async () => {
       try {
         if (
-          financasForm.dtGanho &&
+          financasForm.dtGasto &&
           financasForm.valor &&
           financasForm.descricao
         ) {
-          console.log('formulario a ser adicionado', financasForm);
+          let changeData = { ...financasForm };
+          changeData.valor = Number(changeData.valor).toFixed(2);
+          console.log("formulario a ser adicionado", changeData);
           let dataToAdd = {
             ...data,
             dadosServidor: {
               ...data.dadosServidor,
               lastUpdate: getLastUpdate(),
             },
-            ganhos: [...data.ganhos, financasForm],
+            ganhos: [...data.ganhos, changeData],
           };
           await user.update(dataToAdd.uuid, dataToAdd);
           setFinancasForm({ ...ganhoSchema });
@@ -141,7 +148,7 @@ export default function Ganhos() {
           setFindedData(false);
         } else {
           alert(
-            'É necessário preecher todos os campos para cadastrar um novo ganho'
+            "É necessário preecher todos os campos para cadastrar um novo gasto"
           );
         }
       } catch (err) {
@@ -153,7 +160,7 @@ export default function Ganhos() {
       <div>
         <Container
           className="mt-4 sticky-top"
-          style={{ backgroundColor: 'white' }}
+          style={{ backgroundColor: "white" }}
         >
           <Container>
             <Row>
@@ -173,14 +180,15 @@ export default function Ganhos() {
                   });
                 }}
               >
-                Cadastrar novo ganho
+                Cadastrar novo{" "}
+                <span style={{ color: "blue", fontWeight: "700" }}>ganho</span>
               </Button>
             </Row>
           </Container>
         </Container>
         <Container>
           <Container>
-            <h2 style={{ textAlign: 'center' }}>Filtrar período</h2>
+            <h2 style={{ textAlign: "center" }}>Filtrar período</h2>
             <Row>
               <Col>
                 <Form.Group className="mb-3">
@@ -207,7 +215,7 @@ export default function Ganhos() {
           {showBTNDetalhes && (
             <div
               className="mt-4 sticky-top"
-              style={{ top: '2.4em', backgroundColor: 'white' }}
+              style={{ top: "2.4em", backgroundColor: "white" }}
             >
               <Button
                 variant="outline-primary"
@@ -226,7 +234,7 @@ export default function Ganhos() {
           {!showBTNDetalhes && (
             <div
               className="mt-4 sticky-top"
-              style={{ top: '2.4em', backgroundColor: 'white' }}
+              style={{ top: "2.4em", backgroundColor: "white" }}
             >
               <Button
                 variant="success"
@@ -271,7 +279,7 @@ export default function Ganhos() {
                 >
                   <thead
                     className="sticky-top"
-                    style={{ top: '5em', backgroundColor: 'white' }}
+                    style={{ top: "5em", backgroundColor: "white" }}
                   >
                     <tr>
                       <th>#</th>
@@ -284,8 +292,10 @@ export default function Ganhos() {
                   {renderGanhosTable()}
                   <tfoot>
                     <tr>
+                    <td></td>
                       <th scope="row">Total:</th>
-                      <td>{calculateTotal()}</td>
+                      
+                      <td>R$ {calculateTotal().toLocaleString("pt-BR")}</td>
                     </tr>
                   </tfoot>
                 </Table>

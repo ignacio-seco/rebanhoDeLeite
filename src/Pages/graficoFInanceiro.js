@@ -18,7 +18,7 @@ import { Charts } from '../Components/Charts/Chart';
 
 export default function GraficoFinanceiro() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
-  const [dateMin, setDateMin] = useState(formatDateToDefault(new Date(0)));
+  const [dateMin, setDateMin] = useState(formatDateToDefault(new Date(Date.now() -31* 24 * 60 * 60 * 1000)));
   const [dateMax, setDateMax] = useState(
     formatDateToDefault(new Date(Date.now() + 24 * 60 * 60 * 1000))
   );
@@ -145,9 +145,7 @@ export default function GraficoFinanceiro() {
             >
               <td>{filteredData.indexOf(elemento) + 1}</td>
               <td>
-                {
-                  elemento.dtGasto ? elemento.dtGasto : elemento.dtGanho
-                }
+                {formatDate(elemento.dtGasto ? elemento.dtGasto : elemento.dtGanho)}
               </td>
               <td>{`R$ ${Number(elemento.valor).toLocaleString('pt-BR')}`}</td>
               <td>{elemento.descricao}</td>

@@ -2,9 +2,9 @@ import {
   formatDate,
   formatDateToDefault,
   getLastUpdate,
-} from '../helpers/CalculateAge';
-import { AuthContext } from '../contexts/authContext';
-import { useContext, useEffect, useState } from 'react';
+} from "../helpers/CalculateAge";
+import { AuthContext } from "../contexts/authContext";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -13,10 +13,10 @@ import {
   Row,
   Table,
   Form,
-} from 'react-bootstrap';
-import Modal from 'react-bootstrap/Modal';
-import gastoSchema from '../Models/gastos.models';
-import { v4 } from 'uuid';
+} from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import gastoSchema from "../Models/gastos.models";
+import { v4 } from "uuid";
 
 export default function Gastos() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
@@ -40,7 +40,7 @@ export default function Gastos() {
   useEffect(() => {
     getData();
   }, []);
-  console.log('this is the data', data);
+  console.log("this is the data", data);
   if (loading) {
     return <h1>Loading</h1>;
   } else {
@@ -61,7 +61,10 @@ export default function Gastos() {
             new Date(element.dtGasto).getTime() <
               new Date(dateMax).getTime() + 24 * 60 * 60 * 1000
         )
-        .sort((a, b) => a.dtGasto - b.dtGasto);
+        .sort(
+          (a, b) =>
+            new Date(b.dtGasto).getTime() - new Date(a.dtGasto).getTime()
+        );
     };
     const renderGanhosTable = () => {
       let filteredData = filterData();
@@ -85,7 +88,7 @@ export default function Gastos() {
               <tr key={index}>
                 <td>{filteredData.indexOf(elemento) + 1}</td>
                 <td>{formatDate(elemento.dtGasto)}</td>
-                <td>{elemento.valor * -1}</td>
+                <td>R$ {(elemento.valor * -1).toLocaleString("pt-BR")}</td>
                 <td>{elemento.descricao}</td>
                 <td>
                   <Button
@@ -128,8 +131,8 @@ export default function Gastos() {
           financasForm.descricao
         ) {
           let changeData = { ...financasForm };
-          changeData.valor = changeData.valor * -1;
-          console.log('formulario a ser adicionado', changeData);
+          changeData.valor = (changeData.valor * -1).toFixed(2);
+          console.log("formulario a ser adicionado", changeData);
           let dataToAdd = {
             ...data,
             dadosServidor: {
@@ -145,7 +148,7 @@ export default function Gastos() {
           setFindedData(false);
         } else {
           alert(
-            'É necessário preecher todos os campos para cadastrar um novo gasto'
+            "É necessário preecher todos os campos para cadastrar um novo gasto"
           );
         }
       } catch (err) {
@@ -157,12 +160,12 @@ export default function Gastos() {
       <div>
         <Container
           className="mt-4 sticky-top"
-          style={{ backgroundColor: 'white' }}
+          style={{ backgroundColor: "white" }}
         >
           <Container>
             <Row>
               <Button
-                variant="outline-success"
+                variant="outline-danger"
                 onClick={() => {
                   setShowModal(true);
                   setFinancasForm({
@@ -177,14 +180,17 @@ export default function Gastos() {
                   });
                 }}
               >
-                Cadastrar novo gasto
+                Cadastrar novo{" "}
+                <span style={{ color: "purple", fontWeight: "700" }}>
+                  gasto
+                </span>
               </Button>
             </Row>
           </Container>
         </Container>
         <Container>
           <Container>
-            <h2 style={{ textAlign: 'center' }}>Filtrar período</h2>
+            <h2 style={{ textAlign: "center" }}>Filtrar período</h2>
             <Row>
               <Col>
                 <Form.Group className="mb-3">
@@ -211,7 +217,7 @@ export default function Gastos() {
           {showBTNDetalhes && (
             <div
               className="mt-4 sticky-top"
-              style={{ top: '2.4em', backgroundColor: 'white' }}
+              style={{ top: "2.4em", backgroundColor: "white" }}
             >
               <Button
                 variant="outline-primary"
@@ -230,7 +236,7 @@ export default function Gastos() {
           {!showBTNDetalhes && (
             <div
               className="mt-4 sticky-top"
-              style={{ top: '2.4em', backgroundColor: 'white' }}
+              style={{ top: "2.4em", backgroundColor: "white" }}
             >
               <Button
                 variant="success"
@@ -275,7 +281,7 @@ export default function Gastos() {
                 >
                   <thead
                     className="sticky-top"
-                    style={{ top: '5em', backgroundColor: 'white' }}
+                    style={{ top: "5em", backgroundColor: "white" }}
                   >
                     <tr>
                       <th>#</th>
@@ -288,8 +294,9 @@ export default function Gastos() {
                   {renderGanhosTable()}
                   <tfoot>
                     <tr>
+                      <td></td>
                       <th scope="row">Total:</th>
-                      <td>{calculateTotal()}</td>
+                      <td>R$ {calculateTotal().toLocaleString("pt-BR")}</td>
                     </tr>
                   </tfoot>
                 </Table>
