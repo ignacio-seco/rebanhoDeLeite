@@ -3,7 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import lucro from "../assets/Lucro2.jpg"
 import gastos from "../assets/gastos.jpg"
-
+import graficoFinanceiro from "../assets/graficos-02-1200x488.jpg"
 import { Link } from "react-router-dom";
 
 export default function Finances() {
@@ -50,6 +50,23 @@ export default function Finances() {
                   <h1>Custos</h1>
                 </Card.Title>
                 <Card.Text>Registrar os custos da propriedade</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to={`/financas/balanco`}>
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={graficoFinanceiro}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Graficos</h1>
+                </Card.Title>
+                <Card.Text>Visão geral das finanças da propriedade</Card.Text>
               </Card.Body>
             </Card>
           </Link>

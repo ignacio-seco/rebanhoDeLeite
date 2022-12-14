@@ -23,6 +23,7 @@ import CadastrarPastos from "./Pages/CadastroPastos";
 import Ganhos from "./Pages/Ganhos";
 import Gastos from "./Pages/Gastos";
 import Finances from "./Pages/FinancasMainPage";
+import GraficoFinanceiro from "./Pages/graficoFInanceiro";
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -121,6 +122,10 @@ function App() {
                     <Route
             path="/financas/gastos"
             element={<Gastos />}
+          />
+          <Route
+            path="/financas/balanco"
+            element={<GraficoFinanceiro />}
           />
             <Route
             path="*"

@@ -56,8 +56,8 @@ export default function Ganhos() {
         .filter(
           (element) =>
             !element.dadosServidor.deletado &&
-            new Date(element.dtGanho).getTime() > new Date(dateMin).getTime() &&
-            new Date(element.dtGanho).getTime() < new Date(dateMax).getTime()
+            new Date(element.dtGanho).getTime() > new Date(dateMin).getTime()-24 * 60 * 60 * 1000 &&
+            new Date(element.dtGanho).getTime() < new Date(dateMax).getTime()+24 * 60 * 60 * 1000
         )
         .sort((a, b) => a.dtGanho - b.dtGanho);
     };

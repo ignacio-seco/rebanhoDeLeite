@@ -56,8 +56,10 @@ export default function Gastos() {
         .filter(
           (element) =>
             !element.dadosServidor.deletado &&
-            new Date(element.dtGasto).getTime() > new Date(dateMin).getTime() &&
-            new Date(element.dtGasto).getTime() < new Date(dateMax).getTime()
+            new Date(element.dtGasto).getTime() >
+              new Date(dateMin).getTime() - 24 * 60 * 60 * 1000 &&
+            new Date(element.dtGasto).getTime() <
+              new Date(dateMax).getTime() + 24 * 60 * 60 * 1000
         )
         .sort((a, b) => a.dtGasto - b.dtGasto);
     };
@@ -157,27 +159,27 @@ export default function Gastos() {
           className="mt-4 sticky-top"
           style={{ backgroundColor: 'white' }}
         >
-        <Container>
-          <Row>
-            <Button
-              variant="outline-success"
-              onClick={() => {
-                setShowModal(true);
-                setFinancasForm({
-                  ...financasForm,
-                  dtGasto: formatDateToDefault(new Date(Date.now())),
-                  uuid: v4(),
-                  creator: data._id,
-                  dadosServidor: {
-                    ...financasForm.dadosServidor,
-                    lastUpdate: getLastUpdate(),
-                  },
-                });
-              }}
-            >
-              Cadastrar novo gasto
-            </Button>
-          </Row>
+          <Container>
+            <Row>
+              <Button
+                variant="outline-success"
+                onClick={() => {
+                  setShowModal(true);
+                  setFinancasForm({
+                    ...financasForm,
+                    dtGasto: formatDateToDefault(new Date(Date.now())),
+                    uuid: v4(),
+                    creator: data._id,
+                    dadosServidor: {
+                      ...financasForm.dadosServidor,
+                      lastUpdate: getLastUpdate(),
+                    },
+                  });
+                }}
+              >
+                Cadastrar novo gasto
+              </Button>
+            </Row>
           </Container>
         </Container>
         <Container>
