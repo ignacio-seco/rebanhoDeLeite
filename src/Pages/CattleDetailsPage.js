@@ -20,6 +20,7 @@ import moment from "moment";
 import Notification from "../Components/Notification";
 import { Charts } from "../Components/Charts/Chart";
 import {
+  calculateDifMonths,
   calculateMonths,
   formatDateToDefault,
   getLastUpdate,
@@ -45,18 +46,98 @@ export default function CattleDetailsPage() {
     getCattle();
   }, []);
 
-  let activeEstadas = oneAnimal.estadaCurral.filter(
-    (estada) => !estada.dadosServidor.deletado
-  );
-  let activePesagens = oneAnimal.pesagem.filter(
-    (pesagem) => !pesagem.dadosServidor.deletado
-  );
-  let activeLitragens = oneAnimal.producaoLeite.filter(
-    (litragem) => !litragem.dadosServidor.deletado
-  );
-  let activeHistoricos = oneAnimal.historico.filter(
-    (historico) => !historico.dadosServidor.deletado
-  );
+  let activeEstadas = oneAnimal.estadaCurral
+    .filter((estada) => !estada.dadosServidor.deletado)
+    .sort(
+      (a, b) =>
+        new Date(a.dtEntradaCurral).getTime() -
+        new Date(b.dtEntradaCurral).getTime()
+    );
+  let activePesagens = oneAnimal.pesagem
+    .filter((pesagem) => !pesagem.dadosServidor.deletado)
+    .sort(
+      (a, b) =>
+        new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
+    );
+  let activeLitragens = oneAnimal.producaoLeite
+    .filter((litragem) => !litragem.dadosServidor.deletado)
+    .sort(
+      (a, b) =>
+        new Date(a.dtVerificacao).getTime() -
+        new Date(b.dtVerificacao).getTime()
+    );
+  let activeHistoricos = oneAnimal.historico
+    .filter((historico) => !historico.dadosServidor.deletado)
+    .sort(
+      (a, b) =>
+        new Date(a.dtHistorico).getTime() - new Date(b.dtHistorico).getTime()
+    );
+
+  function createWeightChartData() {
+    if (activePesagens.length > 1) {
+      let initialDate = calculateDifMonths(
+        oneAnimal.dtNascimento,
+        activePesagens[0].dtPesagem
+      );
+      let finalDate = calculateDifMonths(
+        oneAnimal.dtNascimento,
+        activePesagens[activePesagens.length - 1].dtPesagem
+      );
+      let monthsDif = finalDate - initialDate;
+      let firstTreatedData = [];
+
+      activePesagens.forEach((elemento) => {
+        firstTreatedData.push({
+          peso: Number(elemento.peso),
+          idade: calculateDifMonths(oneAnimal.dtNascimento, elemento.dtPesagem),
+        });
+      });
+      let treatedData = [{ ...firstTreatedData[0] }];
+      firstTreatedData.forEach((element) => {
+        if (element.idade !== treatedData[treatedData.length - 1].idade) {
+          treatedData.push(element);
+        } else {
+          treatedData[treatedData.length - 1] = element;
+        }
+      });
+
+      console.log(treatedData);
+      let completeArray = [];
+      let lastOriginUsedIndex = 0;
+      for (let i = 0; i < monthsDif + 1; i++) {
+        completeArray.push({ peso: 0, idade: initialDate + i });
+      }
+      console.log("this is the completeArray", completeArray);
+      let result = [];
+      completeArray.forEach((element, ind) => {
+        let dataIndex = treatedData.findIndex(
+          (el) => el.idade === element.idade
+        );
+        if (dataIndex !== -1) {
+          lastOriginUsedIndex = dataIndex;
+          result.push({
+            peso: treatedData[dataIndex].peso,
+            idade: element.idade,
+          });
+        } else {
+          let indexToDif = completeArray.findIndex(
+            (elem) => elem.idade === treatedData[lastOriginUsedIndex + 1].idade
+          );
+          console.log("this is the index to dif", indexToDif);
+          let newPeso =
+            Number(result[ind - 1].peso) +
+            (Number(treatedData[lastOriginUsedIndex + 1].peso) -
+              Number(result[ind - 1].peso)) /
+              (indexToDif - (ind - 1));
+          result.push({ peso: newPeso, idade: element.idade });
+        }
+      });
+      console.log(result);
+      return result;
+    } else {
+      return activePesagens;
+    }
+  }
 
   async function findAnimal() {
     let cowIndex = await property.rebanho.findIndex((cow) => cow.uuid === id);
@@ -209,7 +290,9 @@ export default function CattleDetailsPage() {
             lastUpdate: getLastUpdate(),
           },
         };
-        let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
+        let cowIndex = await newData.rebanho.findIndex(
+          (cow) => cow.uuid === id
+        );
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
         await user.update(property.uuid, newData);
@@ -261,7 +344,9 @@ export default function CattleDetailsPage() {
             lastUpdate: getLastUpdate(),
           },
         };
-        let cowIndex = await newData.rebanho.findIndex((cow) => cow.uuid === id);
+        let cowIndex = await newData.rebanho.findIndex(
+          (cow) => cow.uuid === id
+        );
         newData.rebanho[cowIndex] = changeAnimal;
         console.log(newData.rebanho[cowIndex]);
         await user.update(property.uuid, newData);
@@ -1703,8 +1788,8 @@ export default function CattleDetailsPage() {
                   <Charts
                     chartTitle="Evolução do peso"
                     dataTitle={oneAnimal.nome}
-                    chartLabels={activePesagens.map((e) => e.dtPesagem)}
-                    chartData={activePesagens.map((e) => e.peso)}
+                    chartLabels={createWeightChartData().map((e) => e.idade)}
+                    chartData={createWeightChartData().map((e) => e.peso)}
                     lineColor="red"
                     barColor="rgba(255, 99, 132, 0.5)"
                     type="line"
