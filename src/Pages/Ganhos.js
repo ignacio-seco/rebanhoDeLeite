@@ -126,7 +126,7 @@ export default function Ganhos() {
     const handleFinancasSubmit = async () => {
       try {
         if (
-          financasForm.dtGasto &&
+          financasForm.dtGanho &&
           financasForm.valor &&
           financasForm.descricao
         ) {
@@ -292,9 +292,9 @@ export default function Ganhos() {
                   {renderGanhosTable()}
                   <tfoot>
                     <tr>
-                    <td></td>
+                      <td></td>
                       <th scope="row">Total:</th>
-                      
+
                       <td>R$ {calculateTotal().toLocaleString("pt-BR")}</td>
                     </tr>
                   </tfoot>
