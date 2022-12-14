@@ -1,6 +1,6 @@
-import { getLastUpdate } from "../helpers/CalculateAge";
-import { AuthContext } from "../contexts/authContext";
-import { useContext, useEffect, useState } from "react";
+import { getLastUpdate } from '../helpers/CalculateAge';
+import { AuthContext } from '../contexts/authContext';
+import { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -10,7 +10,7 @@ import {
   Row,
   Table,
   Form,
-} from "react-bootstrap";
+} from 'react-bootstrap';
 
 export default function CadastrarPastos() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
@@ -20,7 +20,7 @@ export default function CadastrarPastos() {
   useEffect(() => {
     getData();
   }, []);
-  console.log("this is the data", data);
+  console.log('this is the data', data);
   if (loading) {
     return <h1>Loading</h1>;
   } else {
@@ -32,7 +32,7 @@ export default function CadastrarPastos() {
     !findedData && putNewData();
     const renderTable = () => {
       let filteredData = newData.pastos.filter(
-        (element) => element !== "sem pasto definido"
+        (element) => element !== 'sem pasto definido'
       );
       console.log(filteredData);
       if (filteredData.length === 0) {
@@ -83,6 +83,7 @@ export default function CadastrarPastos() {
         {showBTNDetalhes && (
           <div className="mt-4">
             <Button
+              variant="outline-primary"
               onClick={async () => {
                 try {
                   setShowBTNDetalhes(!showBTNDetalhes);
@@ -147,8 +148,10 @@ export default function CadastrarPastos() {
           <Form
             onSubmit={async (e) => {
               try {
-                if (e.target[0].value === "") {
-                  alert("Escreva o nome do pasto que deseja realizar o cadastro");
+                if (e.target[0].value === '') {
+                  alert(
+                    'Escreva o nome do pasto que deseja realizar o cadastro'
+                  );
                   e.preventDefault();
                 } else {
                   let dataToChange = { ...data };
@@ -157,7 +160,7 @@ export default function CadastrarPastos() {
                   await user.update(dataToChange.uuid, dataToChange);
                   setData(dataToChange);
                   setNewData(dataToChange);
-                  e.target[0].value = "";
+                  e.target[0].value = '';
                   e.preventDefault();
                 }
               } catch (err) {
@@ -165,7 +168,7 @@ export default function CadastrarPastos() {
               }
             }}
           >
-            <Col style={{ width: "80%" }}>
+            <Col style={{ width: '80%' }}>
               <Form.Control
                 type="text"
                 name="Nome do pasto"
@@ -174,6 +177,7 @@ export default function CadastrarPastos() {
             </Col>
             <Col>
               <Button
+                variant="success"
                 type="submit"
                 className="mt-3 "
               >
