@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiURLs = {
   development: 'http://localhost:8080',
-  production: 'futuro link da api',
+  production: 'https://controlegadoapp.cyclic.app',
 };
 
 const api = axios.create({ baseURL: apiURLs[process.env.NODE_ENV] });
