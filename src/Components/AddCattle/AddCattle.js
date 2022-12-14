@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Button,
   ButtonGroup,
@@ -11,40 +10,17 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { filterMonths, formatDateToDefault } from "../../helpers/CalculateAge";
+import { animalSchema } from "../../Models/animalModels";
 import Notification from "../Notification";
+import { v4 as uuidv4 } from "uuid";
+import { AuthContext } from "../../contexts/authContext";
 
 function AddCattle() {
   const navigate = useNavigate();
-  const [newAnimal, setNewAnimal] = useState({
-    imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
-    brinco: "",
-    sexo: "",
-    dtNascimento: "",
-    brincoDaMae: "",
-    nome: "",
-    dtCruzamento: "",
-    pasto: "",
-    noCurral: false,
-    estadaCurral: [],
-    vendida: false,
-    dtVenda: "",
-    valorVenda: "",
-    comprador: "",
-    comprado: false,
-    dtCompra: "",
-    valorCompra: "",
-    vendedor: "",
-    morreu: false,
-    dtMorte: "",
-    causaMorte: "",
-    pesagem: [],
-    historico: [
-      {
-        descricao: "Animal registrado no aplicativo",
-        dtHistorico: formatDateToDefault(new Date(Date.now())),
-      },
-    ],
-  });
+  const { data, getData, user } = useContext(AuthContext);
+  let property = data;
+  let getCattle = getData;
+  const [newAnimal, setNewAnimal] = useState({ ...animalSchema });
 
   const [radioValue, setRadioValue] = useState("");
   const [notification, setNotification] = useState({
@@ -52,9 +28,10 @@ function AddCattle() {
     type: "",
     title: "",
     text: "",
-    delay: 2000
+    delay: 2000,
   });
-  const setNotificationShow = value => setNotification({ ...notification, show: value  });
+  const setNotificationShow = (value) =>
+    setNotification({ ...notification, show: value });
 
   function handleChange(e) {
     setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
@@ -62,54 +39,44 @@ function AddCattle() {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    const cleanForm = {
-      imagem_url: "https://pngimg.com/uploads/cow/cow_PNG50576.png",
-      brinco: "",
-      sexo: "",
-      dtNascimento: "",
-      brincoDaMae: "",
-      nome: "",
-      dtCruzamento: "",
-      pasto: "",
-      noCurral: false,
-      estadaCurral: [],
-      vendida: false,
-      dtVenda: "",
-      valorVenda: "",
-      comprador: "",
-      comprado: false,
-      dtCompra: "",
-      valorCompra: "",
-      vendedor: "",
-      morreu: false,
-      dtMorte: "",
-      causaMorte: "",
-      pesagem: [],
-      historico: [
-        {
-          descricao: "Animal registrado no aplicativo",
-          dtHistorico: formatDateToDefault(new Date(Date.now())),
-        },
-      ],
-    };
-    if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
-      axios
-        .post("https://ironrest.cyclic.app/cattleControl", newAnimal)
-        .then((response) => {
+    const cleanForm = { ...animalSchema };
+    async function updating() {
+      try {
+        if (newAnimal.nome && newAnimal.sexo && newAnimal.dtNascimento) {
+          await getCattle();
+          let animalUuid = {
+            ...newAnimal,
+            uuid: uuidv4(),
+            creator: property._id,
+            dadosServidor: {
+              ...newAnimal.dadosServidor,
+              lastUpdate: new Date(Date.now()).getTime(),
+            },
+          };
+          let newUuid = animalUuid.uuid;
+          await user.update(property.uuid, {
+            ...property,
+            rebanho: [...property.rebanho, animalUuid],
+          });
           setNewAnimal(cleanForm);
           setRadioValue("");
-          console.log(response);
-          navigate(`../gado/${response.data.ops[0]._id}`);
-        });
-    } else {
-      setNotification({
-        show: true,
-        type: "danger",
-        title: "Erro",
-        text: "É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal",
-        delay: 7000
-      });
+          await getCattle();
+          console.log(property);
+          navigate(`/gado/${newUuid}`);
+        } else {
+          setNotification({
+            show: true,
+            type: "danger",
+            title: "Erro",
+            text: "É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal",
+            delay: 7000,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
+    updating();
   }
 
   return (
@@ -264,7 +231,7 @@ function AddCattle() {
                     : ""
                 }
                 onChange={(e) => {
-                  let now = new Date(Date.now());
+                  let now = new Date(Date.now() - 24 * 60 * 60 * 1000);
                   let Monthdif = now.getMonth() - e.target.value;
                   let newDate = now.setMonth(Monthdif);
                   let formatedDate = formatDateToDefault(newDate);
@@ -307,12 +274,14 @@ function AddCattle() {
           Cadastrar Animal
         </Button>
       </Form>
-      <Notification show={notification.show}
-                    setShow={setNotificationShow}
-                    type={notification.type}
-                    title={notification.title}
-                    delay={notification.delay}
-                    text={notification.text}/>
+      <Notification
+        show={notification.show}
+        setShow={setNotificationShow}
+        type={notification.type}
+        title={notification.title}
+        delay={notification.delay}
+        text={notification.text}
+      />
     </Container>
   );
 }

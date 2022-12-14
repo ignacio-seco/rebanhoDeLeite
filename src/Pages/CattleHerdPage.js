@@ -2,13 +2,10 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CattleList from "../Components/CattleList/CattleList";
 
-export default function CattleHerdPage({ cattle, getCattle }) {
+export default function CattleHerdPage() {
   return (
     <div>
-      <CattleList
-        cattle={cattle}
-        getCattle={getCattle}
-      />
+      <CattleList />
       <div
         style={{
           display: "flex",
