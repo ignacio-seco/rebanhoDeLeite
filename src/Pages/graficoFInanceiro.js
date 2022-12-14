@@ -65,6 +65,7 @@ export default function GraficoFinanceiro() {
         ),
       },
     ];
+    let pureResult=[...result]
     for (let i = 0; i < sortedData.length; i++) {
       let newObj = {
         valor: result[i].valor + Number(sortedData[i].valor),
@@ -72,12 +73,53 @@ export default function GraficoFinanceiro() {
           ? sortedData[i].dtGanho
           : sortedData[i].dtGasto,
       };
+      let newPureObj={        
+        valor: Number(sortedData[i].valor),
+        data: sortedData[i].dtGanho
+          ? sortedData[i].dtGanho
+          : sortedData[i].dtGasto,
+      }
+      pureResult.push(newPureObj);
       result.push(newObj);
     }
-    console.log(result);
-    return result;
+    let dtDif = new Date(dateMax).getTime() - new Date(dateMin).getTime();
+    let initialDate = new Date(dateMin).getTime();
+    let daysDif = dtDif / (24 * 60 * 60 * 1000);
+    if (daysDif < 366) { console.log(daysDif)//Aqui que seto quantos dias o grafico gera a linha detalhada
+      for (let i = 0; i < daysDif; i++) {
+        pureResult.push({
+          valor: 0,
+          data: formatDateToDefault(
+            new Date(initialDate + i * 24 * 60 * 60 * 1000)
+          ),
+        });
+      }
+      let newResult = pureResult.sort(
+        (a, b) => new Date(a.data).getTime() - new Date(b.data).getTime()
+      );
+      console.log("this is the new result",newResult)
+      let consolidateArray = [{...newResult[0]}];
+      for (let i = 1; i < newResult.length; i++) {
+        console.log("this is the data",consolidateArray[consolidateArray.length - 1])
+        if (
+          newResult[i].data ===
+          consolidateArray[consolidateArray.length - 1].data
+        ) {
+          consolidateArray[consolidateArray.length - 1].valor +=
+            newResult[i].valor;
+        } else {
+          consolidateArray.push({data:newResult[i].data,
+        valor:consolidateArray[consolidateArray.length - 1].valor +
+        newResult[i].valor});
+        }
+      }
+      console.log(consolidateArray)
+      return consolidateArray
+    } else {
+      console.log(result);
+      return result;
+    }
   };
-
   const renderAllDataTable = () => {
     let filteredData = firstSort();
     if (filteredData.length === 0) {
@@ -97,14 +139,17 @@ export default function GraficoFinanceiro() {
       return (
         <tbody>
           {filteredData.map((elemento, index) => (
-            <tr key={index} style={elemento.valor>0 ? {color:"green"} : {color:"red"}}>
+            <tr
+              key={index}
+              style={elemento.valor > 0 ? { color: 'green' } : { color: 'red' }}
+            >
               <td>{filteredData.indexOf(elemento) + 1}</td>
               <td>
-                {formatDate(
+                {
                   elemento.dtGasto ? elemento.dtGasto : elemento.dtGanho
-                )}
+                }
               </td>
-              <td>{elemento.valor}</td>
+              <td>{`R$ ${Number(elemento.valor).toLocaleString('pt-BR')}`}</td>
               <td>{elemento.descricao}</td>
             </tr>
           ))}
@@ -181,8 +226,17 @@ export default function GraficoFinanceiro() {
               {renderAllDataTable()}
               <tfoot>
                 <tr>
+                  <td></td>
                   <th scope="row">Total:</th>
-                  <td style={calculateTotal()<0 ? {color:"red"} : {color:"green"}}>{calculateTotal()}</td>
+                  <td
+                    style={
+                      calculateTotal() < 0
+                        ? { color: 'red' }
+                        : { color: 'green' }
+                    }
+                  >
+                    R$ {calculateTotal().toLocaleString('pt-BR')}
+                  </td>
                 </tr>
               </tfoot>
             </Table>

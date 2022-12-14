@@ -29,7 +29,8 @@ export function stringEqualizer(string) {
 }
 
 export function formatDate(dt) {
-  const newDt = new Date(dt);
+  const TzDt = new Date(dt).getTime();
+  const newDt= new Date(TzDt)
   let day
   if((newDt.getDate()+1)<10){day=`0${newDt.getDate()+1}`} else {day=`${newDt.getDate()+1}`};
   let month
@@ -51,7 +52,8 @@ export function filterMonths(date) {
   }
 }
 export function formatDateToDefault(dt) {
-  const newDt = new Date(dt);
+  const TzDt = new Date(dt).getTime();
+  const newDt = new Date(TzDt)
   return `${newDt.getFullYear()}-${
     newDt.getMonth() + 1 < 10
       ? `0${newDt.getMonth() + 1}`
