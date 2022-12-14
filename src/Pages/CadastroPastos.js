@@ -14,7 +14,6 @@ import {
 
 export default function CadastrarPastos() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
-  const [editar, setEditar] = useState(true);
   const [showBTNDetalhes, setShowBTNDetalhes] = useState(true);
   const [findedData, setFindedData] = useState(false);
   const [newData, setNewData] = useState({ ...data });

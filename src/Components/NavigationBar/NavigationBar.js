@@ -26,8 +26,9 @@ function NavigationBar() {
       const updatedData = await api.put("/sincronizar", data);
       console.log("this is the updated Data", updatedData.data);
       await user.delete(id);
+      console.log("the user data was deleted");
       await getData();
-      window.location.reload();
+      //window.location.reload();
     } catch (err) {
       console.log(err);
     }
@@ -49,13 +50,13 @@ function NavigationBar() {
           alt="return"
         />
         <Button
-          variant="danger"
+          variant="outline-danger"
           onClick={handleShowLogOut}
         >
           Encerrar
         </Button>
         <Button
-          variant="warning"
+          variant="dark"
           onClick={handleSincronizar}
         >
           Sincronizar dados

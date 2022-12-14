@@ -20,6 +20,9 @@ import Notification from "./Components/Notification";
 import { AuthContext } from "./contexts/authContext";
 import LandingPage from "./Pages/LandingPage";
 import CadastrarPastos from "./Pages/CadastroPastos";
+import Ganhos from "./Pages/Ganhos";
+import Gastos from "./Pages/Gastos";
+import Finances from "./Pages/FinancasMainPage";
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -106,6 +109,18 @@ function App() {
             <Route
             path="/cadastropasto"
             element={<CadastrarPastos />}
+          />
+          <Route
+            path="/financas"
+            element={<Finances/>}
+          />
+          <Route
+            path="/financas/ganhos"
+            element={<Ganhos />}
+          />
+                    <Route
+            path="/financas/gastos"
+            element={<Gastos />}
           />
             <Route
             path="*"
