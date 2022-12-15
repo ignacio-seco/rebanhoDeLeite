@@ -6,6 +6,7 @@ import perdas from "../assets/dead.jpg";
 import vendas from "../assets/Lucro.jpg";
 import bezerros from "../assets/bezerros.jpg";
 import pastos from "../assets/Pasto.jpg";
+import nascimentos from "../assets/Nascimentos.jpg";
 import { Link } from "react-router-dom";
 
 function Reports() {
@@ -103,6 +104,23 @@ function Reports() {
                   <h1>Pastos</h1>
                 </Card.Title>
                 <Card.Text>Ver animais por pasto</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/relatorios/nascimentos">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={nascimentos}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Gestação</h1>
+                </Card.Title>
+                <Card.Text>Ver próximos nascimentos na propriedade</Card.Text>
               </Card.Body>
             </Card>
           </Link>

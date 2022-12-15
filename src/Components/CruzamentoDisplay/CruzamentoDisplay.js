@@ -201,7 +201,7 @@ export default function CruzamentoDisplay({
                             type="text"
                             id="Semem"
                             value={elemento.semen}
-                            onCHange={(e) => {
+                            onChange={(e) => {
                               let newAnimal = { ...oneAnimal };
                               newAnimal.dadosCruzamentos[
                                 newAnimal.dadosCruzamentos.indexOf(elemento)
