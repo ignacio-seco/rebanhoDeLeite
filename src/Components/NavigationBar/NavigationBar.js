@@ -56,7 +56,7 @@ function NavigationBar() {
         text: "Dados sincronizados com sucesso!",
         delay: 7000,
       });
-      //window.location.reload();
+      window.location.reload();
     } catch (err) {
       setNotification({
         show: true,
@@ -99,13 +99,7 @@ function NavigationBar() {
             Sincronizar dados
           </Button>
         )}
-        {syncLoading && (
-          <Button
-            variant="success"
-          >
-            Sincronizando...
-          </Button>
-        )}
+        {syncLoading && <Button variant="success">Sincronizando...</Button>}
 
         <Link to="/">
           <img
