@@ -18,7 +18,6 @@ import Monitoring from "./Pages/Monitoring";
 import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
 import Notification from "./Components/Notification";
 import { AuthContext } from "./contexts/authContext";
-import LandingPage from "./Pages/LandingPage";
 import CadastrarPastos from "./Pages/CadastroPastos";
 import Ganhos from "./Pages/Ganhos";
 import Gastos from "./Pages/Gastos";
@@ -115,33 +114,33 @@ function App() {
               element={<WeightMonitor />}
             />
             <Route
-            path="/cadastropasto"
-            element={<CadastrarPastos />}
-          />
-          <Route
-            path="/financas"
-            element={<Finances/>}
-          />
-          <Route
-            path="/financas/ganhos"
-            element={<Ganhos />}
-          />
-                    <Route
-            path="/financas/gastos"
-            element={<Gastos />}
-          />
-          <Route
-            path="/financas/balanco"
-            element={<GraficoFinanceiro />}
-          />
-          <Route
-            path="/tarefas"
-            element={<Tarefas  />}
-          />
+              path="/cadastropasto"
+              element={<CadastrarPastos />}
+            />
             <Route
-            path="*"
-            element={<HomePage />}
-          />
+              path="/financas"
+              element={<Finances />}
+            />
+            <Route
+              path="/financas/ganhos"
+              element={<Ganhos />}
+            />
+            <Route
+              path="/financas/gastos"
+              element={<Gastos />}
+            />
+            <Route
+              path="/financas/balanco"
+              element={<GraficoFinanceiro />}
+            />
+            <Route
+              path="/tarefas"
+              element={<Tarefas />}
+            />
+            <Route
+              path="*"
+              element={<HomePage />}
+            />
           </Routes>
         </div>
       </div>
