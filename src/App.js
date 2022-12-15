@@ -24,6 +24,7 @@ import Ganhos from "./Pages/Ganhos";
 import Gastos from "./Pages/Gastos";
 import Finances from "./Pages/FinancasMainPage";
 import GraficoFinanceiro from "./Pages/graficoFInanceiro";
+import LandingPage2 from "./Pages/LandingPage2";
 import Tarefas from "./Pages/Tarefas";
 
 function App() {
@@ -35,11 +36,11 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<LandingPage />}
+            element={<LandingPage2 />}
           />
           <Route
             path="*"
-            element={<LandingPage />}
+            element={<LandingPage2 />}
           />
         </Routes>
       </div>
