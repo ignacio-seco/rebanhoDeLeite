@@ -103,7 +103,7 @@ function NavigationBar() {
           <Button
             variant="success"
           >
-            Sincronizando
+            Sincronizando...
           </Button>
         )}
 
