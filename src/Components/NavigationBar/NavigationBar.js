@@ -99,6 +99,13 @@ function NavigationBar() {
             Sincronizar dados
           </Button>
         )}
+        {syncLoading && (
+          <Button
+            variant="success"
+          >
+            Sincronizando
+          </Button>
+        )}
 
         <Link to="/">
           <img

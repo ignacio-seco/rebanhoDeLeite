@@ -11,7 +11,6 @@ import {
   InputGroup,
   Modal,
   Row,
-  Toast,
 } from "react-bootstrap";
 import imgPlaceholder from "../assets/cow2.png";
 import "./CattleDetailsPage.css";
