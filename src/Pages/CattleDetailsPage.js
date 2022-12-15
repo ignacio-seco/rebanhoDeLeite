@@ -13,7 +13,7 @@ import {
   Row,
 } from "react-bootstrap";
 import imgPlaceholder from "../assets/cow2.png";
-import "./CattleDetailsPage.css";
+import "../Pages/CattleDetailsPage.css";
 import Table from "react-bootstrap/Table";
 import moment from "moment";
 import Notification from "../Components/Notification";
@@ -30,6 +30,7 @@ import curralPermanenciaSchema from "../Models/curralPermanencia.models";
 import pesagemSchema from "../Models/pesagem.models";
 import litragemSchema from "../Models/litragem.models";
 import historicoSchema from "../Models/historico.models";
+import CruzamentoDisplay from "../Components/CruzamentoDisplay/CruzamentoDisplay";
 
 export default function CattleDetailsPage() {
   const { id } = useParams();
@@ -41,6 +42,7 @@ export default function CattleDetailsPage() {
   let [oneAnimal, setOneAnimal] = useState({ ...animalData });
   let [animalIndex, setAnimalIndex] = useState(0);
   let [animalFinded, setAnimalFinded] = useState(false);
+  
   useEffect(() => {
     getCattle();
   }, []);
@@ -956,7 +958,7 @@ export default function CattleDetailsPage() {
                       </Form.Label>
                       <Col xs={8}>
                         <Form.Control
-                          type="number"
+                          type="text"
                           id="brinco"
                           placeholder="Não informado"
                           value={oneAnimal.brinco}
@@ -1455,6 +1457,15 @@ export default function CattleDetailsPage() {
                   </Col>
                 )}
               </Row>
+              {oneAnimal.sexo === "FEMEA" && (
+                <CruzamentoDisplay
+                  oneAnimal={oneAnimal}
+                  setOneAnimal={setOneAnimal}
+                  formState={formState}
+                  setAnimalFinded={setAnimalFinded}
+                  setNotification={setNotification}
+                />
+              )}
               {/*Formulário da pesagem*/}
               <Row className="mt-3 gy-2 gx-3">
                 <hr />
@@ -1715,7 +1726,7 @@ export default function CattleDetailsPage() {
                       md={4}
                     >
                       <FloatingLabel
-                        controlId="floating-entrada-curral"
+                        controlId="floating-Data-Litragem"
                         label={"Data da Verificação"}
                       >
                         <Form.Control
@@ -1747,7 +1758,7 @@ export default function CattleDetailsPage() {
                       md={4}
                     >
                       <FloatingLabel
-                        controlId="floating-entrada-curral"
+                        controlId="floating-qtd-Litros"
                         label={"Litros"}
                       >
                         <Form.Control
