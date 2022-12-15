@@ -247,7 +247,7 @@ function AddCattle() {
             <Form.Group className="mb-3 ">
               <Form.Label>Brinco (opcional)</Form.Label>
               <Form.Control
-                type="number"
+                type="text"
                 value={newAnimal.brinco}
                 name="brinco"
                 onChange={handleChange}
