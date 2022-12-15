@@ -25,6 +25,7 @@ import Gastos from "./Pages/Gastos";
 import Finances from "./Pages/FinancasMainPage";
 import GraficoFinanceiro from "./Pages/graficoFInanceiro";
 import LandingPage2 from "./Pages/LandingPage2";
+import Tarefas from "./Pages/Tarefas";
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -127,6 +128,10 @@ function App() {
           <Route
             path="/financas/balanco"
             element={<GraficoFinanceiro />}
+          />
+          <Route
+            path="/tarefas"
+            element={<Tarefas  />}
           />
             <Route
             path="*"

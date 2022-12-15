@@ -8,6 +8,7 @@ import relatorios from "../assets/relatorio.jpg";
 import monitoramento from "../assets/monitoramento.jpeg";
 import cadastroPastos from "../assets/CadastroPastos.jpg";
 import financasIcon from "../assets/Financas.jpg"
+import todopage from "../assets/tarefas.png"
 
 import { Link } from "react-router-dom";
 
@@ -88,7 +89,7 @@ function HomePage() {
                 <Card.Title>
                   <h3>Cadastro de pastos</h3>
                 </Card.Title>
-                <Card.Text>Cadastrar pastos na propriedade</Card.Text>
+                <Card.Text>Cadastre aqui os pastos da propriedade </Card.Text>
               </Card.Body>
             </Card>
           </Link>
@@ -106,6 +107,25 @@ function HomePage() {
                   <h3>Finanças</h3>
                 </Card.Title>
                 <Card.Text>Dados da saúde financeira da propriedade</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/tarefas">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={todopage}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h3>Tarefas</h3>
+                </Card.Title>
+                <Card.Text>
+                  Registre as tarefas que necessita realizar na propriedade e não se esqueça de nada
+                </Card.Text>
               </Card.Body>
             </Card>
           </Link>

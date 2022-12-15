@@ -15,7 +15,7 @@ export default function Notification({show, setShow, type, title, text, delay}) 
                    onClose={() => setShow(false)}>
                 <Toast.Header>
                     <strong className="me-auto">{title}</strong>
-                    <small>11 mins ago</small>
+                    <small>1 seg atrás</small>
                 </Toast.Header>
                 <Toast.Body>{text}</Toast.Body>
             </Toast>
