@@ -16,6 +16,7 @@ function AuthContextComponente(props) {
     nome: '',
   });
   const [loading, setLoading] = useState(true);
+  const [syncLoading, setSyncLoading] =useState(false)
 
   const db = new Dexie('loggedUser');
   db.version(1).stores({ user: 'uuid' });
@@ -79,6 +80,8 @@ function AuthContextComponente(props) {
         getData,
         getLoggedInUser,
         user,
+        syncLoading,
+        setSyncLoading
       }}
     >
       {props.children}
