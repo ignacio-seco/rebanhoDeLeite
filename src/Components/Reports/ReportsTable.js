@@ -4,6 +4,15 @@ import { Link } from "react-router-dom";
 import { calculateAge, formatDate } from "../../helpers/CalculateAge";
 
 export default function ReportsTable({ data }) {
+  const dataToRender = data.map((cow) => {
+    return {
+      ...cow,
+      pesagem: cow.pesagem.sort(
+        (a, b) =>
+          new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
+      ),
+    };
+  });
   return (
     <Container>
       <Table
@@ -28,7 +37,7 @@ export default function ReportsTable({ data }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((cow) => {
+          {dataToRender.map((cow) => {
             return (
               <tr key={cow.uuid}>
                 <td>{cow.brinco}</td>

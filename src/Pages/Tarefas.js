@@ -323,141 +323,174 @@ export default function Tarefas() {
         <Container className="mt-4">
           <Container
             className="mt-4 sticky-top"
-            style={{ backgroundColor: "white", padding:"0.5", zIndex:"3"}}
+            style={{ backgroundColor: "white", padding: "0.5", zIndex: "3" }}
           >
-              <Row>
-                <Button
-                  variant="outline-success"
-                  onClick={() => {
-                    setShowModal(true);
-                  }}
-                >
-                  Cadastrar nova{" "}
-                  <span style={{ color: "purple", fontWeight: "700" }}>
-                    tarefa
-                  </span>
-                </Button>
-              </Row>
-              </Container>
-              <div>
-          <Container
-            className="sticky-top mt-4 flex-row flex-nowrap"
-            style={{ top: "2.45em", backgroundColor: "white", padding:"0.5", zIndex:"3"}}
-          >
-            <Form.Control
-              type="search"
-              placeholder={`Procurar tarefa`}
-              className="mb-4"
-              defaultValue=""
-              aria-label="Search"
-              onChange={(e) => setSearch(e.currentTarget.value)}
-            />
+            <Row>
+              <Button
+                variant="outline-success"
+                onClick={() => {
+                  setShowModal(true);
+                }}
+              >
+                Cadastrar nova{" "}
+                <span style={{ color: "purple", fontWeight: "700" }}>
+                  tarefa
+                </span>
+              </Button>
+            </Row>
           </Container>
           <div>
-
-          {showBTNDetalhes && (
-            <div
-              className="mt-4 sticky-top"
-              style={{ top: "4.9em", backgroundColor: "white", padding:"0.5" ,zIndex:"3"}}
+            <Container
+              className="sticky-top mt-4 flex-row flex-nowrap"
+              style={{
+                top: "2.45em",
+                backgroundColor: "white",
+                padding: "0.5",
+                zIndex: "3",
+              }}
             >
-              <Button
-                variant="outline-primary"
-                onClick={async () => {
-                  try {
-                    setShowBTNDetalhes(!showBTNDetalhes);
-                  } catch (err) {
-                    console.log(err);
-                  }
-                }}
-              >
-                Editar lançamentos
-              </Button>
-            </div>
-          )}
-          {!showBTNDetalhes && (
-            <div
-              className="mt-4 ms-3 sticky-top"
-              style={{ top: "4.9em", backgroundColor: "white", padding:"0.5", zIndex:"3" }}
-            >
-              <Button
-                variant="success"
-                onClick={async () => {
-                  try {
-                    console.log(newData);
-                    setData(newData);
-                    await user.update(data.uuid, data);
-                    getData();
-                    setFindedData(false);
-                    setShowBTNDetalhes(!showBTNDetalhes);
-                  } catch (err) {
-                    console.log(err);
-                  }
-                }}
-              >
-                Salvar Alterações
-              </Button>
-              <Button
-                className="ms-4"
-                variant="danger"
-                onClick={() => {
-                  getData();
-                  setFindedData(false);
-                  setShowBTNDetalhes(!showBTNDetalhes);
-                }}
-              >
-                Cancelar
-              </Button>
-            </div>
-          )}
-          <div>
-          <div>
-          <Row className="mt-3 gy-2 gx-3">
-            <hr />
-            <Card.Subtitle>Tarefas para realizar</Card.Subtitle>
-            <Col xs={12}>
-              <Table hover>
-                <thead
-                  className="sticky-top"
-                  style={{ top: "7.25em", backgroundColor: "white", padding:"0.5", zIndex:"1" }}
+              <Form.Control
+                type="search"
+                placeholder={`Procurar tarefa`}
+                className="mb-4"
+                defaultValue=""
+                aria-label="Search"
+                onChange={(e) => setSearch(e.currentTarget.value)}
+              />
+            </Container>
+            <div>
+              {showBTNDetalhes && (
+                <div
+                  className="mt-4 sticky-top"
+                  style={{
+                    top: "4.9em",
+                    backgroundColor: "white",
+                    padding: "0.5",
+                    zIndex: "3",
+                  }}
                 >
-                  <tr>
-                    <th>#</th>
-                    <th>Data</th>
-                    <th>Descrição</th>
-                    <th>Urgente</th>
-                    <th>Concluída</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                {renderTarefasTable()}
-              </Table>
-            </Col>
-          </Row>
-          <Row className="mt-3 gy-2 gx-3">
-            <hr />
-            <Card.Subtitle>Tarefas Concluidas</Card.Subtitle>
-            <Col xs={12}>
-              <Table hover>
-              <thead
-                  className="sticky-top"
-                  style={{ top: "7.25em", backgroundColor: "white", zIndex:"1" }}
+                  <Button
+                    variant="outline-primary"
+                    onClick={async () => {
+                      try {
+                        setShowBTNDetalhes(!showBTNDetalhes);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                  >
+                    Editar lançamentos
+                  </Button>
+                </div>
+              )}
+              {!showBTNDetalhes && (
+                <div
+                  className="mt-4 ms-3 sticky-top"
+                  style={{
+                    top: "4.9em",
+                    backgroundColor: "white",
+                    padding: "0.5",
+                    zIndex: "3",
+                  }}
                 >
-                  <tr>
-                    <th>#</th>
-                    <th>Data</th>
-                    <th>Descrição</th>
-                    <th>Urgente</th>
-                    <th>Concluída</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                {renderTarefasConcluidasTable()}
-              </Table>
-            </Col>
-          </Row>
-          </div>
-          </div>
-          </div>
+                  <Button
+                    variant="success"
+                    onClick={async () => {
+                      try {
+                        console.log(newData);
+                        setData(newData);
+                        await user.update(data.uuid, data);
+                        getData();
+                        setFindedData(false);
+                        setShowBTNDetalhes(!showBTNDetalhes);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                  >
+                    Salvar Alterações
+                  </Button>
+                  <Button
+                    className="ms-4"
+                    variant="danger"
+                    onClick={() => {
+                      getData();
+                      setFindedData(false);
+                      setShowBTNDetalhes(!showBTNDetalhes);
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              )}
+              <div>
+                <div>
+                  <Row className="mt-3 gy-2 gx-3">
+                    <hr />
+                    <Card.Subtitle
+                      className="text-center"
+                      style={{ fontSize: "2em" }}
+                    >
+                      Tarefas para realizar
+                    </Card.Subtitle>
+                    <Col xs={12}>
+                      <Table hover>
+                        <thead
+                          className="sticky-top"
+                          style={{
+                            top: "7.25em",
+                            backgroundColor: "white",
+                            padding: "0.5",
+                            zIndex: "1",
+                          }}
+                        >
+                          <tr>
+                            <th>#</th>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Urgente</th>
+                            <th>Concluída</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        {renderTarefasTable()}
+                      </Table>
+                    </Col>
+                  </Row>
+                  <Row className="mt-3 gy-2 gx-3">
+                    <hr />
+                    <Card.Subtitle
+                      className="text-center"
+                      style={{ fontSize: "2em" }}
+                    >
+                      Tarefas Concluidas
+                    </Card.Subtitle>
+                    <Col xs={12}>
+                      <Table hover>
+                        <thead
+                          className="sticky-top"
+                          style={{
+                            top: "7.25em",
+                            backgroundColor: "white",
+                            zIndex: "1",
+                          }}
+                        >
+                          <tr>
+                            <th>#</th>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Urgente</th>
+                            <th>Concluída</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        {renderTarefasConcluidasTable()}
+                      </Table>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </div>
           </div>
         </Container>
         <Modal
@@ -504,8 +537,10 @@ export default function Tarefas() {
             <Button
               className="ms-4"
               variant="secondary"
-              onClick={() => {handleCloseModal();
-                setTarefasForm({ ...tarefaSchema })}}
+              onClick={() => {
+                handleCloseModal();
+                setTarefasForm({ ...tarefaSchema });
+              }}
             >
               Cancelar
             </Button>

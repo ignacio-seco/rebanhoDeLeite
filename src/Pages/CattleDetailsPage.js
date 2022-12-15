@@ -42,7 +42,7 @@ export default function CattleDetailsPage() {
   let [oneAnimal, setOneAnimal] = useState({ ...animalData });
   let [animalIndex, setAnimalIndex] = useState(0);
   let [animalFinded, setAnimalFinded] = useState(false);
-  
+
   useEffect(() => {
     getCattle();
   }, []);
@@ -831,6 +831,165 @@ export default function CattleDetailsPage() {
                     </Row>
                   </fieldset>
                 </Col>
+              </Row>
+              <Row className="mb-2 mt-3 d-flex align-content-center">
+                <hr />
+                <Container className="d-flex align-content-center">
+                  <Col
+                    className="d-flex align-content-center"
+                    xs={3}
+                  >
+                    <Form.Check
+                      type="switch"
+                      id="sold-switch"
+                      label="Animal em observação"
+                      checked={oneAnimal.dadosObservacao.animalObservado}
+                      className="text-nowrap"
+                      onChange={async () => {
+                        try {
+                          let newAnimal = {
+                            ...oneAnimal,
+                            dadosServidor: {
+                              ...oneAnimal.dadosServidor,
+                              lastUpdate: getLastUpdate(),
+                            },
+                          };
+                          newAnimal.dadosObservacao.animalObservado =
+                            !newAnimal.dadosObservacao.animalObservado;
+                          setOneAnimal(newAnimal);
+                          newAnimal.dadosObservacao.motivo = "";
+                          let cowIndex = await property.rebanho.findIndex(
+                            (cow) => cow.uuid === newAnimal.uuid
+                          );
+                          let newData = {
+                            ...property,
+                            dadosServidor: {
+                              ...property.dadosServidor,
+                              lastUpdate: getLastUpdate(),
+                            },
+                          };
+                          console.log(
+                            `data before update`,
+                            property.rebanho[cowIndex]
+                          );
+                          newData.rebanho[cowIndex] = newAnimal;
+                          console.log(
+                            `data after update`,
+                            newData.rebanho[cowIndex]
+                          );
+                          await user.update(property.uuid, newData);
+                          setNotification({
+                            type: "success",
+                            title: "Sucesso",
+                            text: "Suas alterações foram salvas!",
+                            show: true,
+                          });
+                        } catch (err) {
+                          setAnimalFinded(false);
+                          setNotification({
+                            type: "danger",
+                            title: "Erro",
+                            text: `Não foi possível salvar as alterações. Tente mais tarde.`,
+                            show: true,
+                          });
+                          console.error(err);
+                        }
+                      }}
+                    />
+                  </Col>
+                  {oneAnimal.dadosObservacao.animalObservado && (
+                    <Col
+                      className="d-flex align-content-center"
+                      xs={7}
+                    >
+                      <Form.Group style={{ width: "95%" }}>
+                        <FloatingLabel
+                          className="text-nowrap"
+                          htmlFor="motivoObservação"
+                        >
+                          Motivo:
+                        </FloatingLabel>
+                        <Form.Control
+                          type="text"
+                          placeholder="Não informado"
+                          value={oneAnimal.dadosObservacao.motivo}
+                          onChange={(e) =>
+                            setOneAnimal((prevState) => ({
+                              ...prevState,
+                              dadosObservacao: {
+                                ...oneAnimal.dadosObservacao,
+                                motivo: e.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                  )}
+                  {oneAnimal.dadosObservacao.animalObservado && (
+                    <Col className="d-flex align-content-center justify-content-end">
+                      <fieldset
+                        disabled={!formState.btnEditarDetalhes.show}
+                        className="d-flex align-content-center"
+                      >
+                        <Button
+                          variant="outline-success"
+                          className="text-nowrap align-self-center"
+                          style={{ maxHeight: 40 }}
+                          onClick={async () => {
+                            try {
+                              let newAnimal = {
+                                ...oneAnimal,
+                                dadosServidor: {
+                                  ...oneAnimal.dadosServidor,
+                                  lastUpdate: getLastUpdate(),
+                                },
+                              };
+                              setOneAnimal(newAnimal);
+                              let cowIndex = await property.rebanho.findIndex(
+                                (cow) => cow.uuid === newAnimal.uuid
+                              );
+                              let newData = {
+                                ...property,
+                                dadosServidor: {
+                                  ...property.dadosServidor,
+                                  lastUpdate: getLastUpdate(),
+                                },
+                              };
+                              console.log(
+                                `data before update`,
+                                property.rebanho[cowIndex]
+                              );
+                              newData.rebanho[cowIndex] = newAnimal;
+                              console.log(
+                                `data after update`,
+                                newData.rebanho[cowIndex]
+                              );
+                              await user.update(property.uuid, newData);
+                              setNotification({
+                                type: "success",
+                                title: "Sucesso",
+                                text: "Suas alterações foram salvas!",
+                                show: true,
+                              });
+                            } catch (err) {
+                              setAnimalFinded(false);
+                              setNotification({
+                                type: "danger",
+                                title: "Erro",
+                                text: `Não foi possível salvar as alterações. Tente mais tarde.`,
+                                show: true,
+                              });
+                              console.error(err);
+                            }
+                          }}
+                        >
+                          Salvar motivo
+                        </Button>
+                      </fieldset>
+                    </Col>
+                  )}
+                </Container>
               </Row>
               <Row className="mb-2 mt-3">
                 <hr />

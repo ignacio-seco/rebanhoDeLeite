@@ -269,7 +269,7 @@ export default function Ganhos() {
 
           <Row className="mt-3 gy-2 gx-3">
             <hr />
-            <Card.Subtitle>Ganhos da propriedade</Card.Subtitle>
+            <Card.Subtitle className="text-center" style={{fontSize:"2em"}}>Ganhos da propriedade</Card.Subtitle>
             <Col xs={12}>
               <fieldset disabled={showBTNDetalhes}>
                 <Table
