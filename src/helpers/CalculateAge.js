@@ -30,11 +30,11 @@ export function stringEqualizer(string) {
 
 export function formatDate(dt) {
   const TzDt = dt.split("-");
-  return `${TzDt[2]}/${TzDt[1]}/${TzDt[0]}`
+  return `${TzDt[2]}/${TzDt[1]}/${TzDt[0]}`;
 }
 
 //função olha quantos meses algo tem atualmente
-export function filterMonths(date) { 
+export function filterMonths(date) {
   if (date === "") {
     return 100;
   } else {
@@ -49,7 +49,7 @@ export function filterMonths(date) {
 }
 export function formatDateToDefault(dt) {
   const TzDt = new Date(dt).getTime();
-  const newDt = new Date(TzDt)
+  const newDt = new Date(TzDt);
   return `${newDt.getFullYear()}-${
     newDt.getMonth() + 1 < 10
       ? `0${newDt.getMonth() + 1}`
@@ -61,7 +61,7 @@ export function calculateMonths(initialDate, finalDate) {
     return "sem dados de nascimento";
   } else {
     let dob = new Date(initialDate);
-    let sob = new Date (finalDate)
+    let sob = new Date(finalDate);
     let month_diff = sob.getTime() - dob.getTime();
     let age_dt = new Date(month_diff);
     let year = Math.abs(age_dt.getUTCFullYear() - 1970);
@@ -77,8 +77,8 @@ export function calculateMonths(initialDate, finalDate) {
   }
 }
 
-export function getLastUpdate(){
-  return new Date(Date.now()).getTime()
+export function getLastUpdate() {
+  return new Date(Date.now()).getTime();
 }
 
 export function calculateDifMonths(initialDate, finalDate) {
@@ -86,12 +86,23 @@ export function calculateDifMonths(initialDate, finalDate) {
     return "sem dados de nascimento";
   } else {
     let dob = new Date(initialDate);
-    let sob = new Date (finalDate)
+    let sob = new Date(finalDate);
     let month_diff = sob.getTime() - dob.getTime();
     let age_dt = new Date(month_diff);
     let year = Math.abs(age_dt.getUTCFullYear() - 1970);
     let month = age_dt.getUTCMonth();
     let months = year * 12 + month;
     return months;
+  }
+}
+
+export function calculateBirthDate(initialDate) {
+  if (initialDate === "") {
+    return "sem dados de nascimento";
+  } else {
+    let dob = new Date(initialDate);
+    let birthTime = dob.getTime() + 283 * 24 * 60 * 60 * 1000;
+    let birthDay = formatDateToDefault(new Date(birthTime));
+    return birthDay;
   }
 }

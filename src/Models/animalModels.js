@@ -10,6 +10,10 @@ export const animalSchema = {
     valorCompra: "",
     vendedor: "",
   },
+  dadosObservação: {
+    animalObservado: false,
+    motivo: "",
+  },
   dadosCruzamentos: [],
   dadosVacinas: [],
   dadosMorte: {
