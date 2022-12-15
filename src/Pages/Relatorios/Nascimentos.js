@@ -19,7 +19,8 @@ export default function Nascimentos() {
       (cow) =>
         !cow.dadosServidor.deletado &&
         cow.sexo === "FEMEA" &&
-        cow.dadosCruzamentos.length > 0
+        cow.dadosCruzamentos.length > 0 &&
+        !(cow.dadosMorte.morreu || cow.dadosVenda.vendida)
     );
     const sortedNascimentos = () => {
       const nascimentosData = [];

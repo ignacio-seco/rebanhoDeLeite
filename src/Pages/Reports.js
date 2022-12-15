@@ -7,6 +7,7 @@ import vendas from "../assets/Lucro.jpg";
 import bezerros from "../assets/bezerros.jpg";
 import pastos from "../assets/Pasto.jpg";
 import nascimentos from "../assets/Nascimentos.jpg";
+import observados from "../assets/animais em observacao.png";
 import { Link } from "react-router-dom";
 
 function Reports() {
@@ -21,6 +22,74 @@ function Reports() {
         xl={4}
         className="presentation-page g-4"
       >
+        <Col>
+          <Link to="/relatorios/observados">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={observados}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Observados</h1>
+                </Card.Title>
+                <Card.Text>Animais que estão sob observação especial</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/relatorios/nascimentos">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={nascimentos}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Gestação</h1>
+                </Card.Title>
+                <Card.Text>Ver próximos nascimentos na propriedade</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/relatorios/bezerros">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={bezerros}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Bezerros</h1>
+                </Card.Title>
+                <Card.Text>Filtrar animais pela idade</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/relatorios/pastos">
+            <Card>
+              <Card.Img
+                style={cardImageStyle}
+                variant="top"
+                src={pastos}
+              />
+              <Card.Body>
+                <Card.Title>
+                  <h1>Pastos</h1>
+                </Card.Title>
+                <Card.Text>Ver animais por pasto</Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        </Col>
         <Col>
           <Link to={`/relatorios/rebanhodetalhado`}>
             <Card>
@@ -70,57 +139,6 @@ function Reports() {
                   <h1>Vendas</h1>
                 </Card.Title>
                 <Card.Text>Animais vendidos</Card.Text>
-              </Card.Body>
-            </Card>
-          </Link>
-        </Col>
-        <Col>
-          <Link to="/relatorios/bezerros">
-            <Card>
-              <Card.Img
-                style={cardImageStyle}
-                variant="top"
-                src={bezerros}
-              />
-              <Card.Body>
-                <Card.Title>
-                  <h1>Bezerros</h1>
-                </Card.Title>
-                <Card.Text>Filtrar animais pela idade</Card.Text>
-              </Card.Body>
-            </Card>
-          </Link>
-        </Col>
-        <Col>
-          <Link to="/relatorios/pastos">
-            <Card>
-              <Card.Img
-                style={cardImageStyle}
-                variant="top"
-                src={pastos}
-              />
-              <Card.Body>
-                <Card.Title>
-                  <h1>Pastos</h1>
-                </Card.Title>
-                <Card.Text>Ver animais por pasto</Card.Text>
-              </Card.Body>
-            </Card>
-          </Link>
-        </Col>
-        <Col>
-          <Link to="/relatorios/nascimentos">
-            <Card>
-              <Card.Img
-                style={cardImageStyle}
-                variant="top"
-                src={nascimentos}
-              />
-              <Card.Body>
-                <Card.Title>
-                  <h1>Gestação</h1>
-                </Card.Title>
-                <Card.Text>Ver próximos nascimentos na propriedade</Card.Text>
               </Card.Body>
             </Card>
           </Link>

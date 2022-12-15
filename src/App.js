@@ -26,6 +26,7 @@ import GraficoFinanceiro from "./Pages/graficoFInanceiro";
 import LandingPage2 from "./Pages/LandingPage2";
 import Tarefas from "./Pages/Tarefas";
 import Nascimentos from "./Pages/Relatorios/Nascimentos";
+import Observacoes from "./Pages/Relatorios/Observacoes";
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -100,6 +101,10 @@ function App() {
             <Route
               path="/relatorios/nascimentos"
               element={<Nascimentos />}
+            />
+              <Route
+              path="/relatorios/observados"
+              element={<Observacoes />}
             />
             <Route
               path="/monitoramento"

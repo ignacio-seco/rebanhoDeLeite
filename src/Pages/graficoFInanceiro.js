@@ -204,7 +204,7 @@ export default function GraficoFinanceiro() {
       <Container>
         <Row className="mt-3 gy-2 gx-3">
           <hr />
-          <Card.Subtitle>Lançamentos do período</Card.Subtitle>
+          <Card.Subtitle className="text-center" style={{fontSize:"2em"}}>Lançamentos do período</Card.Subtitle>
           <Col xs={12}>
             <Table
               bordered
