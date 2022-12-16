@@ -307,7 +307,7 @@ export default function LandingPage2(props) {
                 onHide={handleCloseLogin}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Faça seu cadastro</Modal.Title>
+                    <Modal.Title>Faça seu login</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
