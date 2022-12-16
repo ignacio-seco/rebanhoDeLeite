@@ -20,8 +20,16 @@ export default function Observacoes() {
         cow.dadosObservacao.animalObservado &&
         !(cow.dadosMorte.morreu || cow.dadosVenda.vendida)
     );
-    const dataToRender = cattle.map(cow => {return {...cow, pesagem: cow.pesagem.sort((a,b)=>new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime())}})
-    const sortedObservacoes = () => { 
+    const dataToRender = cattle.map((cow) => {
+      return {
+        ...cow,
+        pesagem: cow.pesagem.sort(
+          (a, b) =>
+            new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
+        ),
+      };
+    });
+    const sortedObservacoes = () => {
       return dataToRender.sort(
         (a, b) =>
           new Date(b.dtNascimento).getTime() -
@@ -32,7 +40,7 @@ export default function Observacoes() {
     return (
       <div style={{ width: "100%", height: "90vh", overflow: "auto" }}>
         <Container>
-          <h2 style={{ textAlign: "center" }}>Próximos Nascimentos</h2>
+          <h2 style={{ textAlign: "center" }}>Animais em observação</h2>
         </Container>
         <Container>
           <Table
@@ -63,14 +71,18 @@ export default function Observacoes() {
                     </td>
                     <td>{calculateAge(cow.dtNascimento)}</td>
                     <td>{cow.dadosObservacao.motivo}</td>
-                    <td>{cow.pesagem.length > 0
-                    ? cow.pesagem[cow.pesagem.length - 1].peso
-                    : `-`}</td>
                     <td>
-                  {cow.pesagem.length > 0
-                    ? formatDate(cow.pesagem[cow.pesagem.length - 1].dtPesagem)
-                    : `-`}
-                </td>
+                      {cow.pesagem.length > 0
+                        ? cow.pesagem[cow.pesagem.length - 1].peso
+                        : `-`}
+                    </td>
+                    <td>
+                      {cow.pesagem.length > 0
+                        ? formatDate(
+                            cow.pesagem[cow.pesagem.length - 1].dtPesagem
+                          )
+                        : `-`}
+                    </td>
                   </tr>
                 );
               })}
