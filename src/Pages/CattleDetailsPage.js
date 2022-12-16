@@ -896,10 +896,11 @@ export default function CattleDetailsPage() {
                       }}
                     />
                   </Col>
+                
                   {oneAnimal.dadosObservacao.animalObservado && (
                     <Col
                       className="d-flex align-content-center"
-                      xs={7}
+                      xs={12}
                     >
                       <Form.Group style={{ width: "95%" }}>
                         <FloatingLabel
@@ -929,7 +930,7 @@ export default function CattleDetailsPage() {
                     <Col className="d-flex align-content-center justify-content-end">
                       <fieldset
                         disabled={!formState.btnEditarDetalhes.show}
-                        className="d-flex align-content-center"
+                        className="d-flex align-content-center mt-4"
                       >
                         <Button
                           variant="outline-success"
