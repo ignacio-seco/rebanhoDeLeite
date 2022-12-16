@@ -7,6 +7,7 @@ import api from "../api/api";
 import {useContext, useState} from "react";
 import "./NavBar.css"
 import BackIcon from "../assets/pngfind.com-arrow-png-transparent-162137.png";
+import ArrowBack from "../assets/white-arrow-back.png"
 import {Button} from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Notification from "./Notification";
@@ -91,7 +92,7 @@ function MainNavBar() {
                     <img
                         onClick={() => navigate(-1)}
                         className="homePageIcon d-inline-block d-sm-none me-auto"
-                        src={BackIcon}
+                        src={ArrowBack}
                         alt="return"
                     />
                     <Button
