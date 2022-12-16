@@ -1058,10 +1058,10 @@ export default function CattleDetailsPage() {
                       </Button>
                     </Container>
                   </Container>
-                  <Card.Subtitle>Dados do animal</Card.Subtitle>
+                  <Card.Subtitle className = "mt-1">Dados do animal</Card.Subtitle>
                 </Col>
               </Row>
-              <Row className="gy-2 gx-3">
+              <Row className="gy-2 gx-3 mt-1">
                 <Col
                   xs={{ span: 12, order: 1 }}
                   md={6}
