@@ -16,14 +16,25 @@ export default function Perdas() {
     return <h3>loading...</h3>;
   } else {
     const sortedCattle = () => {
-      return cattle
+      const initialfilter= cattle
         .filter((cow) => cow.dadosMorte.morreu)
         .sort(
           (a, b) =>
             filterMonths(a.dadosMorte.dtMorte) -
             filterMonths(b.dadosMorte.dtMorte)
         );
-    };
+
+       return initialfilter.map((cow) => {
+          return {
+            ...cow,
+            pesagem: cow.pesagem.sort(
+              (a, b) =>
+                new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
+            ),
+          };
+        });
+    
+      };
 
     return (
       <div style={{ width: "100%", height: "90vh", overflow: "auto" }}>
