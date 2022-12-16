@@ -27,3 +27,10 @@
 .contributor{
     font-size: 0.6rem;
 }
+
+.cattle-list-title-info {
+    border-radius: 3px;
+    width: fit-content;
+    background: #78909c;
+    color: white;
+}

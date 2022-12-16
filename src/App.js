@@ -26,6 +26,7 @@ import LandingPage2 from "./Pages/LandingPage2";
 import Tarefas from "./Pages/Tarefas";
 import Nascimentos from "./Pages/Relatorios/Nascimentos";
 import Observacoes from "./Pages/Relatorios/Observacoes";
+import NavBar from "./Components/NavBar";
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -48,10 +49,12 @@ function App() {
   } else {
     return (
       <div className="App">
-        <div className="sticky-top">
-          <NavigationBar />
-        </div>
-        <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
+        
+        {/*<div className="sticky-top">*/}
+        {/*  <NavigationBar />*/}
+        {/*</div>*/}
+        <NavBar/>
+        <div className="my-4 bg-light" style={{ width: "100%", height: "92vh", overflow: "auto" }}>
           <Routes>
             <Route
               path="/"
