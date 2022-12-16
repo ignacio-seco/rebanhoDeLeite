@@ -2,7 +2,6 @@
 import "./LandingPage.css"
 import Card from "react-bootstrap/Card";
 import feature1Rebanho from "../assets/AllCattlePhoto.jpg"
-import feature2Curral from "../assets/curral.jpg"
 import feature3NewAnimal from "../assets/newAnimal.jpg"
 import feature4Relatorios from "../assets/relatorio.jpg"
 import feature5Monitoramento from "../assets/monitoramento.jpeg"

@@ -16,7 +16,6 @@ import Pastos from "./Pages/Relatorios/Pastos";
 import MilkMonitoring from "./Pages/Monitoramentos/MilkMonitoring";
 import Monitoring from "./Pages/Monitoring";
 import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
-import Notification from "./Components/Notification";
 import { AuthContext } from "./contexts/authContext";
 import CadastrarPastos from "./Pages/CadastroPastos";
 import Ganhos from "./Pages/Ganhos";
