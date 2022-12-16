@@ -832,11 +832,10 @@ export default function CattleDetailsPage() {
                   </fieldset>
                 </Col>
               </Row>
-              <Row className="mb-2 mt-3 d-flex align-content-center">
+              <Row className="mb-2 mt-3">
                 <hr />
-                <Container className="d-flex align-content-center">
+                <Container>
                   <Col
-                    className="d-flex align-content-center"
                     xs={3}
                   >
                     <Form.Check
