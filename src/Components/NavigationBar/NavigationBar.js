@@ -99,6 +99,9 @@ function NavigationBar() {
             Sincronizar dados
           </Button>
         )}
+        {!navigator.onLine && !syncLoading && (
+          <Button variant="outline-dark">Você está offline...</Button>
+        )}
         {syncLoading && <Button variant="success">Sincronizando...</Button>}
 
         <Link to="/">

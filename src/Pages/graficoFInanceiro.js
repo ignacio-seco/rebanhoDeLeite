@@ -1,24 +1,14 @@
-import {
-  formatDate,
-  formatDateToDefault,
-  getLastUpdate,
-} from '../helpers/CalculateAge';
-import { AuthContext } from '../contexts/authContext';
-import { useContext, useEffect, useState } from 'react';
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  Table,
-  Form,
-} from 'react-bootstrap';
-import { Charts } from '../Components/Charts/Chart';
+import { formatDate, formatDateToDefault } from "../helpers/CalculateAge";
+import { AuthContext } from "../contexts/authContext";
+import { useContext, useState } from "react";
+import { Card, Col, Container, Row, Table, Form } from "react-bootstrap";
+import { Charts } from "../Components/Charts/Chart";
 
 export default function GraficoFinanceiro() {
-  const { data, loading, getData, user, setData } = useContext(AuthContext);
-  const [dateMin, setDateMin] = useState(formatDateToDefault(new Date(Date.now() -31* 24 * 60 * 60 * 1000)));
+  const { data } = useContext(AuthContext);
+  const [dateMin, setDateMin] = useState(
+    formatDateToDefault(new Date(Date.now() - 31 * 24 * 60 * 60 * 1000))
+  );
   const [dateMax, setDateMax] = useState(
     formatDateToDefault(new Date(Date.now() + 24 * 60 * 60 * 1000))
   );
@@ -65,7 +55,7 @@ export default function GraficoFinanceiro() {
         ),
       },
     ];
-    let pureResult=[...result]
+    let pureResult = [...result];
     for (let i = 0; i < sortedData.length; i++) {
       let newObj = {
         valor: result[i].valor + Number(sortedData[i].valor),
@@ -73,19 +63,20 @@ export default function GraficoFinanceiro() {
           ? sortedData[i].dtGanho
           : sortedData[i].dtGasto,
       };
-      let newPureObj={        
+      let newPureObj = {
         valor: Number(sortedData[i].valor),
         data: sortedData[i].dtGanho
           ? sortedData[i].dtGanho
           : sortedData[i].dtGasto,
-      }
+      };
       pureResult.push(newPureObj);
       result.push(newObj);
     }
     let dtDif = new Date(dateMax).getTime() - new Date(dateMin).getTime();
     let initialDate = new Date(dateMin).getTime();
     let daysDif = dtDif / (24 * 60 * 60 * 1000);
-    if (daysDif < 366) { console.log(daysDif)//Aqui que seto quantos dias o grafico gera a linha detalhada
+    if (daysDif < 366) {
+      console.log(daysDif); //Aqui que seto quantos dias o grafico gera a linha detalhada
       for (let i = 0; i < daysDif; i++) {
         pureResult.push({
           valor: 0,
@@ -97,10 +88,13 @@ export default function GraficoFinanceiro() {
       let newResult = pureResult.sort(
         (a, b) => new Date(a.data).getTime() - new Date(b.data).getTime()
       );
-      console.log("this is the new result",newResult)
-      let consolidateArray = [{...newResult[0]}];
+      console.log("this is the new result", newResult);
+      let consolidateArray = [{ ...newResult[0] }];
       for (let i = 1; i < newResult.length; i++) {
-        console.log("this is the data",consolidateArray[consolidateArray.length - 1])
+        console.log(
+          "this is the data",
+          consolidateArray[consolidateArray.length - 1]
+        );
         if (
           newResult[i].data ===
           consolidateArray[consolidateArray.length - 1].data
@@ -108,13 +102,16 @@ export default function GraficoFinanceiro() {
           consolidateArray[consolidateArray.length - 1].valor +=
             newResult[i].valor;
         } else {
-          consolidateArray.push({data:newResult[i].data,
-        valor:consolidateArray[consolidateArray.length - 1].valor +
-        newResult[i].valor});
+          consolidateArray.push({
+            data: newResult[i].data,
+            valor:
+              consolidateArray[consolidateArray.length - 1].valor +
+              newResult[i].valor,
+          });
         }
       }
-      console.log(consolidateArray)
-      return consolidateArray
+      console.log(consolidateArray);
+      return consolidateArray;
     } else {
       console.log(result);
       return result;
@@ -141,13 +138,15 @@ export default function GraficoFinanceiro() {
           {filteredData.map((elemento, index) => (
             <tr
               key={index}
-              style={elemento.valor > 0 ? { color: 'green' } : { color: 'red' }}
+              style={elemento.valor > 0 ? { color: "green" } : { color: "red" }}
             >
               <td>{filteredData.indexOf(elemento) + 1}</td>
               <td>
-                {formatDate(elemento.dtGasto ? elemento.dtGasto : elemento.dtGanho)}
+                {formatDate(
+                  elemento.dtGasto ? elemento.dtGasto : elemento.dtGanho
+                )}
               </td>
-              <td>{`R$ ${Number(elemento.valor).toLocaleString('pt-BR')}`}</td>
+              <td>{`R$ ${Number(elemento.valor).toLocaleString("pt-BR")}`}</td>
               <td>{elemento.descricao}</td>
             </tr>
           ))}
@@ -166,7 +165,7 @@ export default function GraficoFinanceiro() {
   return (
     <div>
       <Container>
-        <h2 style={{ textAlign: 'center' }}>Filtrar período</h2>
+        <h2 style={{ textAlign: "center" }}>Filtrar período</h2>
         <Row>
           <Col>
             <Form.Group className="mb-3">
@@ -204,7 +203,12 @@ export default function GraficoFinanceiro() {
       <Container>
         <Row className="mt-3 gy-2 gx-3">
           <hr />
-          <Card.Subtitle className="text-center" style={{fontSize:"2em"}}>Lançamentos do período</Card.Subtitle>
+          <Card.Subtitle
+            className="text-center"
+            style={{ fontSize: "2em" }}
+          >
+            Lançamentos do período
+          </Card.Subtitle>
           <Col xs={12}>
             <Table
               bordered
@@ -212,7 +216,7 @@ export default function GraficoFinanceiro() {
             >
               <thead
                 className="sticky-top"
-                style={{ backgroundColor: 'white' }}
+                style={{ backgroundColor: "white" }}
               >
                 <tr>
                   <th>#</th>
@@ -229,11 +233,11 @@ export default function GraficoFinanceiro() {
                   <td
                     style={
                       calculateTotal() < 0
-                        ? { color: 'red' }
-                        : { color: 'green' }
+                        ? { color: "red" }
+                        : { color: "green" }
                     }
                   >
-                    R$ {calculateTotal().toLocaleString('pt-BR')}
+                    R$ {calculateTotal().toLocaleString("pt-BR")}
                   </td>
                 </tr>
               </tfoot>

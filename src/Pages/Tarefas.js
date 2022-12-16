@@ -22,7 +22,6 @@ import urgente from "../assets/urgente.png";
 import naoUrgente from "../assets/naourgente.png";
 import tarefaSchema from "../Models/tarefa.models";
 import Modal from "react-bootstrap/Modal";
-import searchIcon from "../assets/search.png";
 
 export default function Tarefas() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
