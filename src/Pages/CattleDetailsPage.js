@@ -798,31 +798,31 @@ export default function CattleDetailsPage() {
                 <Col className="ps-xl-4 align-self-center">
                   <fieldset disabled={!formState.btnEditarDetalhes.show}>
                     <Row>
-                      <Col>
+                      <Col className="text-nowrap">
+                      <FloatingLabel>No Curral?</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="sold-switch"
                           disabled
-                          label="No Curral"
                           checked={oneAnimal.noCurral}
                           className="text-nowrap"
                         />
                       </Col>
                       <Col>
+                      <FloatingLabel>Morreu</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="dead-switch"
-                          label="Morreu"
                           checked={oneAnimal.dadosMorte.morreu}
                           className="text-nowrap"
                           onChange={handleMorreuCheckButtonChange}
                         />
                       </Col>
                       <Col>
+                      <FloatingLabel>Vendido</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="sold-switch"
-                          label="Vendido"
                           checked={oneAnimal.dadosVenda.vendida}
                           className="text-nowrap"
                           onChange={handleVendaCheckButtonChange}
@@ -1945,15 +1945,8 @@ export default function CattleDetailsPage() {
                     </Col>
                   )}
                 </Row>
-              )}
-              <Row
-                className="mt-3 gy-2 gx-3"
-                xs={1}
-                md={1}
-                lg={2}
-                xl={2}
-              >
-                <Col>
+              )}              
+                <Row className="mt-3 gy-2 gx-3">
                   <Charts
                     chartTitle="Evolução do peso"
                     dataTitle={oneAnimal.nome}
@@ -1963,9 +1956,9 @@ export default function CattleDetailsPage() {
                     barColor="rgba(255, 99, 132, 0.5)"
                     type="line"
                   />
-                </Col>
+                </Row>
                 {oneAnimal.sexo === "FEMEA" && (
-                  <Col>
+                  <Row className="mt-3 gy-2 gx-3">
                     <Charts
                       chartTitle="Produção de leite"
                       dataTitle={oneAnimal.nome}
@@ -1975,9 +1968,8 @@ export default function CattleDetailsPage() {
                       barColor="rgba(106, 121, 247, 0.5)"
                       type="bar"
                     />
-                  </Col>
+                  </Row>
                 )}
-              </Row>
               {/*Formulário de observações*/}
               <Row className="mt-3 gy-2 gx-3">
                 <hr />
