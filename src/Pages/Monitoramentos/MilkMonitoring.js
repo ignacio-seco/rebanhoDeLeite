@@ -43,8 +43,9 @@ export default function MilkMonitoring() {
     }
 
     function renderTable() {
-      console.log(cattle)
-      let filteredData = cattle.filter(
+      console.log(cattle);
+      let initialfilter = cattle
+        .filter(
           (cow) =>
             !(cow.dadosMorte.morreu || cow.dadosVenda.vendida) &&
             cow.noCurral &&
@@ -59,24 +60,29 @@ export default function MilkMonitoring() {
             filterMonths(cow.dtNascimento) > 11
         )
         .sort((a, b) => Number(a.brinco) - Number(b.brinco));
+      let filteredData = initialfilter.map((cow) => {
+        return {
+          ...cow,
+          estadaCurral: cow.estadaCurral.sort(
+            (a, b) =>
+              new Date(a.dtEntradaCurral).getTime() -
+              new Date(b.dtEntradaCurral).getTime()
+          ),
+        };
+      });
       search &&
         (filteredData = filteredData.filter(
           (cow) =>
             cow.brinco.indexOf(search) !== -1 ||
             stringEqualizer(cow.nome).indexOf(stringEqualizer(search)) !== -1
         ));
-        console.log(filteredData)
+      console.log(filteredData);
       return filteredData.map((cow, i) => {
         return (
           <tr key={i}>
             <td>{cow.brinco}</td>
             <td>{cow.nome}</td>
             <td>{calculateAge(cow.dtNascimento)}</td>
-            <td>
-              {formatDate(
-                cow.estadaCurral[cow.estadaCurral.length - 1].dtEntradaCurral
-              )}
-            </td>
             <td>
               {calculateAge(
                 cow.estadaCurral[cow.estadaCurral.length - 1].dtEntradaCurral
@@ -123,17 +129,19 @@ export default function MilkMonitoring() {
                   console.log(filteredData);
                 }}
               >
-                <Row>
-                  <Col style={{ width: "80%" }}>
+                <Row className="flex-nowrap">
+                  <Col xs={8}>
                     <Form.Control
                       type="number"
+                      style={{ minWidth: "140px" }}
+                      placeholder="litros de leite"
                       min="0"
                       step=".01"
                       name="qtdLitros"
                     />
                   </Col>
                   <Col>
-                    <Button type="submit">Registrar litragem</Button>
+                    <Button type="submit">Salvar</Button>
                   </Col>
                 </Row>
               </Form>
@@ -169,7 +177,6 @@ export default function MilkMonitoring() {
                 <th>Brinco</th>
                 <th>Nome</th>
                 <th>Idade</th>
-                <th>Entrada no curral</th>
                 <th>Tempo no curral</th>
                 <th>Litros monitoramento</th>
               </tr>

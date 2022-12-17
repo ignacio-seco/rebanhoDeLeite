@@ -43,7 +43,7 @@ export default function MilkMonitoring() {
     }
 
     function renderTable() {
-      let filteredData = cattle
+      let initialfilter = cattle
         .filter(
           (cow) =>
             !(cow.morreu || cow.vendida) &&
@@ -54,6 +54,15 @@ export default function MilkMonitoring() {
               : true)
         )
         .sort((a, b) => Number(a.brinco) - Number(b.brinco));
+      let filteredData = initialfilter.map((cow) => {
+        return {
+          ...cow,
+          pesagem: cow.pesagem.sort(
+            (a, b) =>
+              new Date(a.dtPesagem).getTime() - new Date(b.dtPesagem).getTime()
+          ),
+        };
+      });
       search &&
         (filteredData = filteredData.filter(
           (cow) =>
@@ -65,7 +74,6 @@ export default function MilkMonitoring() {
           <tr key={i}>
             <td>{cow.brinco}</td>
             <td>{cow.nome}</td>
-            <td>{calculateAge(cow.dtNascimento)}</td>
             <td>
               {cow.pesagem.length > 0
                 ? formatDate(cow.pesagem[cow.pesagem.length - 1].dtPesagem)
@@ -76,7 +84,7 @@ export default function MilkMonitoring() {
                 ? cow.pesagem[cow.pesagem.length - 1].peso
                 : ""}
             </td>
-            <td>
+            <td >
               <Form
                 onSubmit={(e) => {
                   if (e.target[0].value === "" || e.target[0].value === "0") {
@@ -115,17 +123,19 @@ export default function MilkMonitoring() {
                   console.log(filteredData);
                 }}
               >
-                <Row>
-                  <Col style={{ width: "80%" }}>
+                <Row className="flex-nowrap">
+                  <Col xs={8}>
                     <Form.Control
                       type="number"
+                      style={{minWidth:"140px"}}
+                      placeholder="Peso do animal"
                       min="0"
                       step=".01"
                       name="peso"
                     />
                   </Col>
                   <Col>
-                    <Button type="submit">Registrar pesagem</Button>
+                    <Button type="submit">Salvar</Button>
                   </Col>
                 </Row>
               </Form>
@@ -160,7 +170,6 @@ export default function MilkMonitoring() {
               <tr>
                 <th>Brinco</th>
                 <th>Nome</th>
-                <th>Idade</th>
                 <th>Última Pesagem</th>
                 <th>Último Peso</th>
                 <th>Registrar novo peso</th>
