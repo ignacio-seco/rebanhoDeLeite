@@ -799,7 +799,7 @@ export default function CattleDetailsPage() {
                   <fieldset disabled={!formState.btnEditarDetalhes.show}>
                     <Row>
                       <Col className="text-nowrap">
-                      <FloatingLabel>No Curral?</FloatingLabel>
+                        <FloatingLabel>No Curral?</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="sold-switch"
@@ -809,7 +809,7 @@ export default function CattleDetailsPage() {
                         />
                       </Col>
                       <Col>
-                      <FloatingLabel>Morreu</FloatingLabel>
+                        <FloatingLabel>Morreu</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="dead-switch"
@@ -819,7 +819,7 @@ export default function CattleDetailsPage() {
                         />
                       </Col>
                       <Col>
-                      <FloatingLabel>Vendido</FloatingLabel>
+                        <FloatingLabel>Vendido</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="sold-switch"
@@ -835,9 +835,7 @@ export default function CattleDetailsPage() {
               <Row className="mb-2 mt-3">
                 <hr />
                 <Container>
-                  <Col
-                    xs={3}
-                  >
+                  <Col xs={3}>
                     <Form.Check
                       type="switch"
                       id="sold-switch"
@@ -896,7 +894,7 @@ export default function CattleDetailsPage() {
                       }}
                     />
                   </Col>
-                
+
                   {oneAnimal.dadosObservacao.animalObservado && (
                     <Col
                       className="d-flex align-content-center"
@@ -1058,7 +1056,9 @@ export default function CattleDetailsPage() {
                       </Button>
                     </Container>
                   </Container>
-                  <Card.Subtitle className = "mt-1">Dados do animal</Card.Subtitle>
+                  <h6 className="mt-1" >
+                    Dados do animal
+                  </h6>
                 </Col>
               </Row>
               <Row className="gy-2 gx-3 mt-1">
@@ -1465,19 +1465,22 @@ export default function CattleDetailsPage() {
                     </Col>
                   </Row>
                   <Row>
+                  <Col>
                     <Button
-                      className="mt-2"
+                      className="mt-4"
+                      variant="outline-success"
                       onClick={handleBtnSalvarAlteracoesClick}
                     >
                       Salvar informação
                     </Button>
+                    </Col>
                   </Row>
                 </div>
               )}
               <Row className="mt-3 gy-2 gx-3">
                 <hr />
 
-                <Card.Subtitle>Estada no Curral</Card.Subtitle>
+                <h5>Entrada e saída do Curral</h5>
                 <Col xs={12}>
                   <fieldset disabled={formState.btnEditarDetalhes.show}>
                     <Table>
@@ -1628,7 +1631,7 @@ export default function CattleDetailsPage() {
               {/*Formulário da pesagem*/}
               <Row className="mt-3 gy-2 gx-3">
                 <hr />
-                <Card.Subtitle>Peso</Card.Subtitle>
+                <h5>Registro de peso</h5>
                 <Col xs={12}>
                   <fieldset disabled={formState.btnEditarDetalhes.show}>
                     <Table>
@@ -1781,12 +1784,23 @@ export default function CattleDetailsPage() {
                   </Col>
                 )}
               </Row>
+              <Row className="mt-3 gy-2 gx-3">
+                <Charts
+                  chartTitle="Evolução do peso"
+                  dataTitle={oneAnimal.nome}
+                  chartLabels={createWeightChartData().map((e) => e.idade)}
+                  chartData={createWeightChartData().map((e) => e.peso)}
+                  lineColor="red"
+                  barColor="rgba(255, 99, 132, 0.5)"
+                  type="line"
+                />
+              </Row>
               {/*Formulário de Litragem*/}
 
               {oneAnimal.sexo === "FEMEA" && (
                 <Row className="mt-3 gy-2 gx-3">
                   <hr />
-                  <Card.Subtitle>Produção de leite</Card.Subtitle>
+                  <h5>Produção de leite</h5>
                   <Col xs={12}>
                     <fieldset disabled={formState.btnEditarDetalhes.show}>
                       <Table>
@@ -1945,35 +1959,24 @@ export default function CattleDetailsPage() {
                     </Col>
                   )}
                 </Row>
-              )}              
+              )}
+              {oneAnimal.sexo === "FEMEA" && (
                 <Row className="mt-3 gy-2 gx-3">
                   <Charts
-                    chartTitle="Evolução do peso"
+                    chartTitle="Produção de leite"
                     dataTitle={oneAnimal.nome}
-                    chartLabels={createWeightChartData().map((e) => e.idade)}
-                    chartData={createWeightChartData().map((e) => e.peso)}
-                    lineColor="red"
-                    barColor="rgba(255, 99, 132, 0.5)"
-                    type="line"
+                    chartLabels={activeLitragens.map((e) => e.dtVerificacao)}
+                    chartData={activeLitragens.map((e) => e.qtdLitros)}
+                    lineColor="black"
+                    barColor="rgba(106, 121, 247, 0.5)"
+                    type="bar"
                   />
                 </Row>
-                {oneAnimal.sexo === "FEMEA" && (
-                  <Row className="mt-3 gy-2 gx-3">
-                    <Charts
-                      chartTitle="Produção de leite"
-                      dataTitle={oneAnimal.nome}
-                      chartLabels={activeLitragens.map((e) => e.dtVerificacao)}
-                      chartData={activeLitragens.map((e) => e.qtdLitros)}
-                      lineColor="black"
-                      barColor="rgba(106, 121, 247, 0.5)"
-                      type="bar"
-                    />
-                  </Row>
-                )}
+              )}
               {/*Formulário de observações*/}
               <Row className="mt-3 gy-2 gx-3">
                 <hr />
-                <Card.Subtitle>Observações do animal</Card.Subtitle>
+                <h5>Observações do animal</h5>
                 <Col xs={12}>
                   <fieldset disabled={formState.btnEditarDetalhes.show}>
                     <Table>
