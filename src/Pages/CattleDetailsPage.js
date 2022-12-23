@@ -102,13 +102,13 @@ export default function CattleDetailsPage() {
         }
       });
 
-      console.log(treatedData);
+      //console.log(treatedData);
       let completeArray = [];
       let lastOriginUsedIndex = 0;
       for (let i = 0; i < monthsDif + 1; i++) {
         completeArray.push({ peso: 0, idade: initialDate + i });
       }
-      console.log("this is the completeArray", completeArray);
+      //console.log("this is the completeArray", completeArray);
       let result = [];
       completeArray.forEach((element, ind) => {
         let dataIndex = treatedData.findIndex(
@@ -124,7 +124,7 @@ export default function CattleDetailsPage() {
           let indexToDif = completeArray.findIndex(
             (elem) => elem.idade === treatedData[lastOriginUsedIndex + 1].idade
           );
-          console.log("this is the index to dif", indexToDif);
+          //console.log("this is the index to dif", indexToDif);
           let newPeso =
             Number(result[ind - 1].peso) +
             (Number(treatedData[lastOriginUsedIndex + 1].peso) -
@@ -133,7 +133,7 @@ export default function CattleDetailsPage() {
           result.push({ peso: newPeso, idade: element.idade });
         }
       });
-      console.log(result);
+      //console.log(result);
       return result;
     } else {
       return activePesagens;
@@ -295,7 +295,7 @@ export default function CattleDetailsPage() {
           (cow) => cow.uuid === id
         );
         newData.rebanho[cowIndex] = changeAnimal;
-        console.log(newData.rebanho[cowIndex]);
+        //console.log(newData.rebanho[cowIndex]);
         await user.update(property.uuid, newData);
         setNotification({
           type: "success",
@@ -349,7 +349,7 @@ export default function CattleDetailsPage() {
           (cow) => cow.uuid === id
         );
         newData.rebanho[cowIndex] = changeAnimal;
-        console.log(newData.rebanho[cowIndex]);
+        //console.log(newData.rebanho[cowIndex]);
         await user.update(property.uuid, newData);
         setNotification({
           type: "success",
@@ -664,10 +664,10 @@ export default function CattleDetailsPage() {
             lastUpdate: new Date(Date.now()).getTime(),
           },
         };
-        console.log(`data before update`, property.rebanho[cowIndex]);
+        //console.log(`data before update`, property.rebanho[cowIndex]);
         oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
         newData.rebanho[cowIndex] = oneAnimal;
-        console.log(`data after update`, newData.rebanho[cowIndex]);
+        //console.log(`data after update`, newData.rebanho[cowIndex]);
 
         await user.update(property.uuid, newData);
         setNotification({
@@ -717,10 +717,10 @@ export default function CattleDetailsPage() {
             lastUpdate: getLastUpdate(),
           },
         };
-        console.log(`data before update`, newData.rebanho.length);
+        //console.log(`data before update`, newData.rebanho.length);
         newData.rebanho[cowIndex].dadosServidor.deletado = true;
         newData.rebanho[cowIndex].dadosServidor.lastUpdate = getLastUpdate();
-        console.log(`data after update`, newData.rebanho.length);
+        //console.log(`data after update`, newData.rebanho.length);
 
         await user.update(property.uuid, newData);
         setNotification({
@@ -865,15 +865,15 @@ export default function CattleDetailsPage() {
                               lastUpdate: getLastUpdate(),
                             },
                           };
-                          console.log(
-                            `data before update`,
-                            property.rebanho[cowIndex]
-                          );
+                          // console.log(
+                          //   `data before update`,
+                          //   property.rebanho[cowIndex]
+                          // );
                           newData.rebanho[cowIndex] = newAnimal;
-                          console.log(
-                            `data after update`,
-                            newData.rebanho[cowIndex]
-                          );
+                          // console.log(
+                          //   `data after update`,
+                          //   newData.rebanho[cowIndex]
+                          // );
                           await user.update(property.uuid, newData);
                           setNotification({
                             type: "success",
@@ -954,15 +954,15 @@ export default function CattleDetailsPage() {
                                   lastUpdate: getLastUpdate(),
                                 },
                               };
-                              console.log(
-                                `data before update`,
-                                property.rebanho[cowIndex]
-                              );
+                              // console.log(
+                              //   `data before update`,
+                              //   property.rebanho[cowIndex]
+                              // );
                               newData.rebanho[cowIndex] = newAnimal;
-                              console.log(
-                                `data after update`,
-                                newData.rebanho[cowIndex]
-                              );
+                              // console.log(
+                              //   `data after update`,
+                              //   newData.rebanho[cowIndex]
+                              // );
                               await user.update(property.uuid, newData);
                               setNotification({
                                 type: "success",
@@ -1225,17 +1225,17 @@ export default function CattleDetailsPage() {
                             let cowIndex = await newData.rebanho.findIndex(
                               (cow) => cow.uuid === id
                             );
-                            console.log(
-                              `data before update`,
-                              newData.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data before update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
                             newData.rebanho[cowIndex].pasto = e.target.value;
                             newData.rebanho[cowIndex].dadosServidor.lastUpdate =
                               getLastUpdate();
-                            console.log(
-                              `data after update`,
-                              newData.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data after update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
                             await user.update(property.uuid, newData);
                             setNotification({
                               type: "success",

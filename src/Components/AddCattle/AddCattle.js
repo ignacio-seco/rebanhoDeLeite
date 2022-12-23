@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -7,13 +7,13 @@ import {
   Form,
   Row,
   ToggleButton,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { filterMonths, formatDateToDefault } from "../../helpers/CalculateAge";
-import { animalSchema } from "../../Models/animalModels";
-import Notification from "../Notification";
-import { v4 as uuidv4 } from "uuid";
-import { AuthContext } from "../../contexts/authContext";
+} from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { filterMonths, formatDateToDefault } from '../../helpers/CalculateAge';
+import { animalSchema } from '../../Models/animalModels';
+import Notification from '../Notification';
+import { v4 as uuidv4 } from 'uuid';
+import { AuthContext } from '../../contexts/authContext';
 
 function AddCattle() {
   const navigate = useNavigate();
@@ -22,12 +22,12 @@ function AddCattle() {
   let getCattle = getData;
   const [newAnimal, setNewAnimal] = useState({ ...animalSchema });
 
-  const [radioValue, setRadioValue] = useState("");
+  const [radioValue, setRadioValue] = useState('');
   const [notification, setNotification] = useState({
     show: false,
-    type: "",
-    title: "",
-    text: "",
+    type: '',
+    title: '',
+    text: '',
     delay: 2000,
   });
   const setNotificationShow = (value) =>
@@ -59,16 +59,16 @@ function AddCattle() {
             rebanho: [...property.rebanho, animalUuid],
           });
           setNewAnimal(cleanForm);
-          setRadioValue("");
+          setRadioValue('');
           await getCattle();
           console.log(property);
           navigate(`/gado/${newUuid}`);
         } else {
           setNotification({
             show: true,
-            type: "danger",
-            title: "Erro",
-            text: "É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal",
+            type: 'danger',
+            title: 'Erro',
+            text: 'É necessário fornecer um nome, um sexo e uma data de nascimento para cadastrar um novo animal',
             delay: 7000,
           });
         }
@@ -101,35 +101,38 @@ function AddCattle() {
           </Col>
           <Col
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Form.Check
-              type="checkbox"
+              type="switch"
+              className="mb-4 text-nowrap"
               id="comprado-checkbox"
               size="lg"
               name="comprado"
-              className="text-nowrap"
-              checked={newAnimal.comprado}
+              checked={newAnimal.dadosCompra.comprado}
               label={`Animal comprado`}
               onChange={(_) => {
                 setNewAnimal((prevState) => ({
                   ...prevState,
-                  comprado: !prevState.comprado,
-                  dtCompra: !newAnimal.comprado
-                    ? formatDateToDefault(new Date(Date.now()))
-                    : "",
-                  valorCompra: "",
-                  vendedor: "",
+                  dadosCompra: {
+                    ...prevState.dadosCompra,
+                    comprado: !prevState.dadosCompra.comprado,
+                    dtCompra: !newAnimal.dadosCompra.comprado
+                      ? formatDateToDefault(new Date(Date.now()))
+                      : '',
+                    valorCompra: '',
+                    vendedor: '',
+                  },
                 }));
                 console.log(newAnimal);
               }}
             />
           </Col>
         </Row>
-        {newAnimal.comprado && (
+        {newAnimal.dadosCompra.comprado && (
           <Row
             xs={1}
             md={3}
@@ -184,10 +187,10 @@ function AddCattle() {
           <ToggleButton
             id={`radio-0`}
             type="radio"
-            variant={0 % 2 ? "outline-success" : "outline-danger"}
+            variant={0 % 2 ? 'outline-success' : 'outline-danger'}
             name="sexo"
             value="MACHO"
-            checked={radioValue === "MACHO"}
+            checked={radioValue === 'MACHO'}
             onChange={(e) => {
               setRadioValue(e.currentTarget.value);
             }}
@@ -197,10 +200,10 @@ function AddCattle() {
           <ToggleButton
             id={`radio-1`}
             type="radio"
-            variant={1 % 2 ? "outline-success" : "outline-danger"}
+            variant={1 % 2 ? 'outline-success' : 'outline-danger'}
             name="sexo"
             value="FEMEA"
-            checked={radioValue === "FEMEA"}
+            checked={radioValue === 'FEMEA'}
             onChange={(e) => {
               setRadioValue(e.currentTarget.value);
             }}
@@ -228,7 +231,7 @@ function AddCattle() {
                 value={
                   newAnimal.dtNascimento
                     ? filterMonths(newAnimal.dtNascimento)
-                    : ""
+                    : ''
                 }
                 onChange={(e) => {
                   let now = new Date(Date.now() - 24 * 60 * 60 * 1000);

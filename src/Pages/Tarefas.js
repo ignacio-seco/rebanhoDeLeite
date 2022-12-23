@@ -48,7 +48,7 @@ export default function Tarefas() {
     function putNewData() {
       setNewData({ ...data });
       setFindedData(true);
-      console.log(newData);
+      //console.log(newData);
     }
     !findedData && putNewData();
 
@@ -102,7 +102,7 @@ export default function Tarefas() {
                           let index = data.tarefas.findIndex(
                             (tarefas) => tarefas.uuid === elemento.uuid
                           );
-                          console.log(index);
+                          //console.log(index);
                           let dataToChange = { ...data };
                           dataToChange.tarefas[index].urgente =
                             !dataToChange.tarefas[index].urgente;
@@ -128,7 +128,7 @@ export default function Tarefas() {
                             let index = data.tarefas.findIndex(
                               (tarefas) => tarefas.uuid === elemento.uuid
                             );
-                            console.log("this is the index", index);
+                            //console.log("this is the index", index);
                             let dataToChange = {
                               ...data,
                               dadosServidor: {
@@ -161,7 +161,7 @@ export default function Tarefas() {
                         let index = data.tarefas.findIndex(
                           (tarefas) => tarefas.uuid === elemento.uuid
                         );
-                        console.log(index);
+                        //console.log(index);
                         let dataToChange = { ...data };
                         dataToChange.tarefas[
                           index
@@ -219,7 +219,7 @@ export default function Tarefas() {
                           let index = data.tarefas.findIndex(
                             (tarefas) => tarefas.uuid === elemento.uuid
                           );
-                          console.log(index);
+                          //console.log(index);
                           let dataToChange = { ...data };
                           dataToChange.tarefas[index].urgente =
                             !dataToChange.tarefas[index].urgente;
@@ -244,7 +244,7 @@ export default function Tarefas() {
                           let index = data.tarefas.findIndex(
                             (tarefas) => tarefas.uuid === elemento.uuid
                           );
-                          console.log("this is the index", index);
+                          //console.log("this is the index", index);
                           let dataToChange = {
                             ...data,
                             dadosServidor: {
@@ -271,7 +271,7 @@ export default function Tarefas() {
                         let index = data.tarefas.findIndex(
                           (tarefas) => tarefas.uuid === elemento.uuid
                         );
-                        console.log(index);
+                        //console.log(index);
                         let dataToChange = { ...data };
                         dataToChange.tarefas[
                           index
@@ -396,7 +396,7 @@ export default function Tarefas() {
                     variant="success"
                     onClick={async () => {
                       try {
-                        console.log(newData);
+                        //console.log(newData);
                         setData(newData);
                         await user.update(data.uuid, data);
                         getData();

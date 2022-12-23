@@ -26,7 +26,7 @@ export default function MilkMonitoring() {
   } else {
     async function postIt(id, object) {
       let cowIndex = await property.rebanho.findIndex((cow) => cow.uuid === id);
-      console.log(property.rebanho[cowIndex]);
+      //console.log(property.rebanho[cowIndex]);
       let newData = {
         ...property,
         dadosServidor: {
@@ -43,7 +43,7 @@ export default function MilkMonitoring() {
     }
 
     function renderTable() {
-      console.log(cattle);
+      //console.log(cattle);
       let initialfilter = cattle
         .filter(
           (cow) =>
@@ -76,7 +76,7 @@ export default function MilkMonitoring() {
             cow.brinco.indexOf(search) !== -1 ||
             stringEqualizer(cow.nome).indexOf(stringEqualizer(search)) !== -1
         ));
-      console.log(filteredData);
+      //console.log(filteredData);
       return filteredData.map((cow, i) => {
         return (
           <tr key={i}>
@@ -126,7 +126,7 @@ export default function MilkMonitoring() {
                     let uuid = newAnimal.uuid;
                     postIt(uuid, newAnimal);
                   }
-                  console.log(filteredData);
+                  //console.log(filteredData);
                 }}
               >
                 <Row className="flex-nowrap">

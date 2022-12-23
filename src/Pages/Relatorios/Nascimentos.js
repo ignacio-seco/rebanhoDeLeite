@@ -1,9 +1,9 @@
 //todo
-import { useContext, useEffect } from "react";
-import { Container, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../../contexts/authContext";
-import { formatDate } from "../../helpers/CalculateAge";
+import { useContext, useEffect } from 'react';
+import { Container, Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/authContext';
+import { formatDate } from '../../helpers/CalculateAge';
 
 export default function Nascimentos() {
   const { data, getData, loading } = useContext(AuthContext);
@@ -18,7 +18,7 @@ export default function Nascimentos() {
     let cattle = data.rebanho.filter(
       (cow) =>
         !cow.dadosServidor.deletado &&
-        cow.sexo === "FEMEA" &&
+        cow.sexo === 'FEMEA' &&
         cow.dadosCruzamentos.length > 0 &&
         !(cow.dadosMorte.morreu || cow.dadosVenda.vendida)
     );
@@ -42,7 +42,7 @@ export default function Nascimentos() {
           }
         });
       });
-      console.log(nascimentosData);
+      //console.log(nascimentosData);
       return nascimentosData.sort(
         (a, b) =>
           new Date(a.dtCruzamento).getTime() -
@@ -51,9 +51,9 @@ export default function Nascimentos() {
     };
 
     return (
-      <div style={{ width: "100%", height: "90vh", overflow: "auto" }}>
+      <div style={{ width: '100%', height: '90vh', overflow: 'auto' }}>
         <Container>
-          <h2 style={{ textAlign: "center" }}>Próximos Nascimentos</h2>
+          <h2 style={{ textAlign: 'center' }}>Próximos Nascimentos</h2>
         </Container>
         <Container>
           <Table
@@ -63,7 +63,7 @@ export default function Nascimentos() {
           >
             <thead
               className="sticky-top"
-              style={{ backgroundColor: "white" }}
+              style={{ backgroundColor: 'white' }}
             >
               <tr>
                 <th>Brinco</th>

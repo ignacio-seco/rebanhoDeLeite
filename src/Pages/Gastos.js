@@ -40,14 +40,14 @@ export default function Gastos() {
   useEffect(() => {
     getData();
   }, []);
-  console.log("this is the data", data);
+  //console.log("this is the data", data);
   if (loading) {
     return <h1>Loading</h1>;
   } else {
     function putNewData() {
       setNewData({ ...data });
       setFindedData(true);
-      console.log(newData);
+      //console.log(newData);
     }
     !findedData && putNewData();
 
@@ -98,7 +98,7 @@ export default function Gastos() {
                       let index = data.gastos.findIndex(
                         (gastos) => gastos.uuid === elemento.uuid
                       );
-                      console.log(index);
+                      //console.log(index);
                       let dataToChange = { ...data };
                       dataToChange.gastos[index].dadosServidor.deletado = true;
                       dataToChange.gastos[index].dadosServidor.lastUpdate =
@@ -132,7 +132,7 @@ export default function Gastos() {
         ) {
           let changeData = { ...financasForm };
           changeData.valor = (changeData.valor * -1).toFixed(2);
-          console.log("formulario a ser adicionado", changeData);
+          //console.log("formulario a ser adicionado", changeData);
           let dataToAdd = {
             ...data,
             dadosServidor: {
@@ -242,7 +242,7 @@ export default function Gastos() {
                 variant="success"
                 onClick={async () => {
                   try {
-                    console.log(newData);
+                    //console.log(newData);
                     setData(newData);
                     await user.update(data.uuid, data);
                     getData();

@@ -44,9 +44,9 @@ function NavigationBar() {
       //let userData = await user.get(id);
       //console.log(userData)
       const updatedData = await api.put("/sincronizar", data);
-      console.log("this is the updated Data", updatedData.data);
+      //console.log("this is the updated Data", updatedData.data);
       await user.delete(id);
-      console.log("the user data was deleted");
+      //console.log("the user data was deleted");
       await getData();
       setSyncLoading(false);
       setNotification({

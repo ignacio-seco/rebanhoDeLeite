@@ -19,21 +19,21 @@ export default function CadastrarPastos() {
   useEffect(() => {
     getData();
   }, []);
-  console.log('this is the data', data);
+  //console.log('this is the data', data);
   if (loading) {
     return <h1>Loading</h1>;
   } else {
     function putNewData() {
       setNewData({ ...data });
       setFindedData(true);
-      console.log(newData);
+      //console.log(newData);
     }
     !findedData && putNewData();
     const renderTable = () => {
       let filteredData = newData.pastos.filter(
         (element) => element !== 'sem pasto definido'
       );
-      console.log(filteredData);
+      //console.log(filteredData);
       if (filteredData.length === 0) {
         return (
           <tbody>

@@ -14,6 +14,7 @@ function AuthContextComponente(props) {
     ganhos: [],
     tarefas: [],
     nome: '',
+    lotes:[]
   });
   const [loading, setLoading] = useState(true);
   const [syncLoading, setSyncLoading] =useState(false)
@@ -30,7 +31,7 @@ function AuthContextComponente(props) {
       const parsedLoggedInUser = JSON.parse(loggedInUserJson || '""');
       let id = parsedLoggedInUser.user.uuid;
       let userData = await user.get(id);
-      console.log(userData);
+      //console.log(userData);
       if (!userData) {
         api
           .get('/user/perfil')
@@ -43,7 +44,7 @@ function AuthContextComponente(props) {
               console.log(err);
             }
           })
-          .then(() => console.log('this is the data', data))
+          //.then(() => console.log('this is the data', data))
           .then(() => setLoading(false))
           .catch((err) => console.log('Something went wrong', err));
       } else {

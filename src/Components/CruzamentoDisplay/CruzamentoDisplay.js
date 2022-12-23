@@ -148,15 +148,9 @@ export default function CruzamentoDisplay({
                                 lastUpdate: new Date(Date.now()).getTime(),
                               },
                             };
-                            console.log(
-                              `data before update`,
-                              property.rebanho[cowIndex]
-                            );
+                            //console.log(`data before update`,property.rebanho[cowIndex]);
                             newData.rebanho[cowIndex] = newAnimal;
-                            console.log(
-                              `data after update`,
-                              newData.rebanho[cowIndex]
-                            );
+                            //console.log(`data after update`,newData.rebanho[cowIndex]);
 
                             await user.update(property.uuid, newData);
                             setNotification({
@@ -255,15 +249,15 @@ export default function CruzamentoDisplay({
                                 lastUpdate: new Date(Date.now()).getTime(),
                               },
                             };
-                            console.log(
-                              `data before update`,
-                              property.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data before update`,
+                            //   property.rebanho[cowIndex]
+                            // );
                             newData.rebanho[cowIndex] = newAnimal;
-                            console.log(
-                              `data after update`,
-                              newData.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data after update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
                             await user.update(property.uuid, newData);
                             setNotification({
                               type: "success",
@@ -314,15 +308,15 @@ export default function CruzamentoDisplay({
                                 lastUpdate: new Date(Date.now()).getTime(),
                               },
                             };
-                            console.log(
-                              `data before update`,
-                              property.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data before update`,
+                            //   property.rebanho[cowIndex]
+                            // );
                             newData.rebanho[cowIndex] = newAnimal;
-                            console.log(
-                              `data after update`,
-                              newData.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data after update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
                             await user.update(property.uuid, newData);
                             setNotification({
                               type: "success",
@@ -416,15 +410,15 @@ export default function CruzamentoDisplay({
                                 lastUpdate: new Date(Date.now()).getTime(),
                               },
                             };
-                            console.log(
-                              `data before update`,
-                              property.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data before update`,
+                            //   property.rebanho[cowIndex]
+                            // );
                             newData.rebanho[cowIndex] = newAnimal;
-                            console.log(
-                              `data after update`,
-                              newData.rebanho[cowIndex]
-                            );
+                            // console.log(
+                            //   `data after update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
                             await user.update(property.uuid, newData);
                             setNotification({
                               type: "success",
@@ -509,9 +503,9 @@ export default function CruzamentoDisplay({
                       lastUpdate: getLastUpdate(),
                     },
                   };
-                  console.log(`data before update`, property.rebanho[cowIndex]);
+                  //console.log(`data before update`, property.rebanho[cowIndex]);
                   newData.rebanho[cowIndex] = newAnimal;
-                  console.log(`data after update`, newData.rebanho[cowIndex]);
+                  // console.log(`data after update`, newData.rebanho[cowIndex]);
                   await user.update(property.uuid, newData);
                   setNotification({
                     type: "success",
