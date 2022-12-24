@@ -1,17 +1,17 @@
-import "./HomePage.css";
-import { Col, Container, Row } from "react-bootstrap";
-import Card from "react-bootstrap/Card";
-import rebanhoDetalhado from "../assets/detalhes.jpg";
-import perdas from "../assets/dead.jpg";
-import vendas from "../assets/Lucro.jpg";
-import bezerros from "../assets/bezerros.jpg";
-import pastos from "../assets/Pasto.jpg";
-import nascimentos from "../assets/Nascimentos.jpg";
-import observados from "../assets/animais em observacao.png";
-import { Link } from "react-router-dom";
+import './HomePage.css';
+import { Col, Container, Row } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import rebanhoDetalhado from '../assets/detalhes.jpg';
+import perdas from '../assets/dead.jpg';
+import vendas from '../assets/Lucro.jpg';
+import bezerros from '../assets/bezerros.jpg';
+import pastos from '../assets/Pasto.jpg';
+import nascimentos from '../assets/Nascimentos.jpg';
+import observados from '../assets/animais em observacao.png';
+import { Link } from 'react-router-dom';
 
 function Reports() {
-  const cardImageStyle = { width: "auto" };
+  const cardImageStyle = { width: 'auto' };
 
   return (
     <Container className="mt-4">
@@ -66,9 +66,9 @@ function Reports() {
               />
               <Card.Body>
                 <Card.Title>
-                  <h1>Bezerros</h1>
+                  <h1>Filtro Avançado</h1>
                 </Card.Title>
-                <Card.Text>Filtrar animais pela idade</Card.Text>
+                <Card.Text>Filtre animais por sexo, peso e idade</Card.Text>
               </Card.Body>
             </Card>
           </Link>

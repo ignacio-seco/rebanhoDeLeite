@@ -1,31 +1,32 @@
-import { useContext } from "react";
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import AddCattle from "./Components/AddCattle/AddCattle";
-import NavigationBar from "./Components/NavigationBar/NavigationBar";
-import HomePage from "./Pages/HomePage";
-import CattleHerdPage from "./Pages/CattleHerdPage";
-import CattleShedPage from "./Pages/CattleShedPage";
-import Reports from "./Pages/Reports";
-import RebanhoDetalhado from "./Pages/Relatorios/RebanhoDetalhado";
-import Perdas from "./Pages/Relatorios/Perdas";
-import Vendas from "./Pages/Relatorios/Vendas";
-import CattleDetailsPage from "./Pages/CattleDetailsPage";
-import Bezerros from "./Pages/Relatorios/Bezerros.js";
-import Pastos from "./Pages/Relatorios/Pastos";
-import MilkMonitoring from "./Pages/Monitoramentos/MilkMonitoring";
-import Monitoring from "./Pages/Monitoring";
-import WeightMonitor from "./Pages/Monitoramentos/WeightMonitor";
-import { AuthContext } from "./contexts/authContext";
-import CadastrarPastos from "./Pages/CadastroPastos";
-import Ganhos from "./Pages/Ganhos";
-import Gastos from "./Pages/Gastos";
-import Finances from "./Pages/FinancasMainPage";
-import GraficoFinanceiro from "./Pages/graficoFInanceiro";
-import LandingPage2 from "./Pages/LandingPage2";
-import Tarefas from "./Pages/Tarefas";
-import Nascimentos from "./Pages/Relatorios/Nascimentos";
-import Observacoes from "./Pages/Relatorios/Observacoes";
+import { useContext } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import AddCattle from './Components/AddCattle/AddCattle';
+import NavigationBar from './Components/NavigationBar/NavigationBar';
+import HomePage from './Pages/HomePage';
+import CattleHerdPage from './Pages/CattleHerdPage';
+import CattleShedPage from './Pages/CattleShedPage';
+import Reports from './Pages/Reports';
+import RebanhoDetalhado from './Pages/Relatorios/RebanhoDetalhado';
+import Perdas from './Pages/Relatorios/Perdas';
+import Vendas from './Pages/Relatorios/Vendas';
+import CattleDetailsPage from './Pages/CattleDetailsPage';
+import Bezerros from './Pages/Relatorios/Bezerros.js';
+import Pastos from './Pages/Relatorios/Pastos';
+import MilkMonitoring from './Pages/Monitoramentos/MilkMonitoring';
+import Monitoring from './Pages/Monitoring';
+import WeightMonitor from './Pages/Monitoramentos/WeightMonitor';
+import { AuthContext } from './contexts/authContext';
+import CadastrarPastos from './Pages/CadastroPastos';
+import Ganhos from './Pages/Ganhos';
+import Gastos from './Pages/Gastos';
+import Finances from './Pages/FinancasMainPage';
+import GraficoFinanceiro from './Pages/graficoFInanceiro';
+import LandingPage2 from './Pages/LandingPage2';
+import Tarefas from './Pages/Tarefas';
+import Nascimentos from './Pages/Relatorios/Nascimentos';
+import Observacoes from './Pages/Relatorios/Observacoes';
+import CadastrarLotes from './Pages/CadastroLotes';
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -51,7 +52,7 @@ function App() {
         <div className="sticky-top">
           <NavigationBar />
         </div>
-        <div style={{ width: "100%", height: "92vh", overflow: "auto" }}>
+        <div style={{ width: '100%', height: '92vh', overflow: 'auto' }}>
           <Routes>
             <Route
               path="/"
@@ -101,7 +102,7 @@ function App() {
               path="/relatorios/nascimentos"
               element={<Nascimentos />}
             />
-              <Route
+            <Route
               path="/relatorios/observados"
               element={<Observacoes />}
             />
@@ -120,6 +121,10 @@ function App() {
             <Route
               path="/cadastropasto"
               element={<CadastrarPastos />}
+            />
+            <Route
+              path="/cadastrolotes"
+              element={<CadastrarLotes />}
             />
             <Route
               path="/financas"

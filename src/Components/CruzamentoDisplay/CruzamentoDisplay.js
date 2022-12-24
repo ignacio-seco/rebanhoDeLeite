@@ -65,7 +65,7 @@ export default function CruzamentoDisplay({
             return (
               <Col
                 xs={12}
-                key={index}
+                key={elemento.uuid}
                 style={{
                   borderStyle: "solid",
                   borderColor: "rgba(0, 0, 0, 0.1 )",
@@ -370,7 +370,7 @@ export default function CruzamentoDisplay({
             );
           } else {
             return (
-              <Table>
+              <Table key={elemento.uuid}>
                 <thead>
                   <tr>
                     <th>{activeCruzamentos.indexOf(elemento) + 1}</th>
