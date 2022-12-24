@@ -799,19 +799,41 @@ export default function CattleDetailsPage() {
                   </Container>
                 </Col>
                 <Col className="ps-xl-4 align-self-center">
-                  <fieldset disabled={!formState.btnEditarDetalhes.show}>
-                    <Row>
-                      <Col className="text-nowrap">
-                        <FloatingLabel>No Curral?</FloatingLabel>
+                  <Row>
+                    <Col className="text-nowrap">
+                      <FloatingLabel>No Curral?</FloatingLabel>
+                      <Form.Check
+                        type="switch"
+                        id="sold-switch"
+                        disabled
+                        checked={oneAnimal.noCurral}
+                        className="text-nowrap"
+                      />
+                    </Col>
+                    <Col className="text-nowrap">
+                      <fieldset disabled={formState.btnEditarDetalhes.show}>
+                        <FloatingLabel>Comprado</FloatingLabel>
                         <Form.Check
                           type="switch"
                           id="sold-switch"
-                          disabled
-                          checked={oneAnimal.noCurral}
+                          checked={oneAnimal.dadosCompra.comprado}
                           className="text-nowrap"
+                          onChange={() =>
+                            setOneAnimal({
+                              ...oneAnimal,
+                              dadosCompra: {
+                                comprado: !oneAnimal.dadosCompra.comprado,
+                                dtCompra: '',
+                                valorCompra: '',
+                                vendedor: '',
+                              },
+                            })
+                          }
                         />
-                      </Col>
-                      <Col>
+                      </fieldset>
+                    </Col>
+                    <Col>
+                      <fieldset disabled={!formState.btnEditarDetalhes.show}>
                         <FloatingLabel>Morreu</FloatingLabel>
                         <Form.Check
                           type="switch"
@@ -820,8 +842,10 @@ export default function CattleDetailsPage() {
                           className="text-nowrap"
                           onChange={handleMorreuCheckButtonChange}
                         />
-                      </Col>
-                      <Col>
+                      </fieldset>
+                    </Col>
+                    <Col>
+                      <fieldset disabled={!formState.btnEditarDetalhes.show}>
                         <FloatingLabel>Vendido</FloatingLabel>
                         <Form.Check
                           type="switch"
@@ -830,9 +854,9 @@ export default function CattleDetailsPage() {
                           className="text-nowrap"
                           onChange={handleVendaCheckButtonChange}
                         />
-                      </Col>
-                    </Row>
-                  </fieldset>
+                      </fieldset>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
               <Row className="mb-2 mt-3">
@@ -1329,21 +1353,23 @@ export default function CattleDetailsPage() {
                     </Col>
                   </Form.Group>
                 </Col>
-              </Row>
-              {!formState.btnEditarDetalhes.show && (
+                {!formState.btnEditarDetalhes.show && (
+                  <Col
+                  xs={{ span: 12, order: 5 }}
+                  md={6}
+                >
                 <Form.Group
                   as={Row}
-                  className="mt-3"
+                  className="mt-1"
                 >
                   <Form.Label
                     column
                     xs={4}
-                    md={3}
                     htmlFor="nome"
                   >
                     Nome:
                   </Form.Label>
-                  <Col>
+                  <Col xs={8}>
                     <Form.Control
                       id="nome"
                       type="text"
@@ -1357,7 +1383,9 @@ export default function CattleDetailsPage() {
                     />
                   </Col>
                 </Form.Group>
+                </Col>
               )}
+              </Row>
               {oneAnimal.dadosMorte.morreu && (
                 <Form.Group className="mt-3">
                   <Row className="mb-2">
@@ -1425,6 +1453,118 @@ export default function CattleDetailsPage() {
                     </Col>
                   </Row>
                 </Form.Group>
+              )}
+              {oneAnimal.dadosCompra.comprado && (
+                <fieldset disabled={formState.btnEditarDetalhes.show}>
+                  <Row className="mt-3 gy-2 gx-3">
+                    <hr />
+                    <Card.Subtitle>Dados da Compra</Card.Subtitle>
+                    <Col
+                      xs={12}
+                      md={6}
+                      lg={4}
+                    >
+                      <Form.Group as={Row}>
+                        <Form.Label
+                          column
+                          xs={3}
+                          htmlFor="dt-compra"
+                        >
+                          Data:
+                        </Form.Label>
+                        <Col xs={9}>
+                          <Form.Control
+                            id="dt-venda"
+                            type="date"
+                            defaultValue={oneAnimal.dadosCompra.dtCompra}
+                            onChange={(e) =>
+                              setOneAnimal((prevState) => ({
+                                ...prevState,
+                                dadosCompra: {
+                                  ...prevState.dadosCompra,
+                                  dtCompra: e.target.value,
+                                },
+                              }))
+                            }
+                          />
+                        </Col>
+                      </Form.Group>
+                    </Col>
+                    <Col
+                      xs={12}
+                      md={6}
+                      lg={4}
+                    >
+                      <Form.Group as={Row}>
+                        <Form.Label
+                          column
+                          xs={3}
+                          htmlFor="valor-Compra"
+                        >
+                          Preço:
+                        </Form.Label>
+                        <Col xs={9}>
+                          <InputGroup>
+                            <InputGroup.Text>R$</InputGroup.Text>
+                            <Form.Control
+                              id="valor-Compra"
+                              type="number"
+                              value={
+                                oneAnimal.dadosCompra.valorCompra
+                                  ? oneAnimal.dadosCompra.valorCompra
+                                  : ''
+                              }
+                              onChange={(e) =>
+                                setOneAnimal((prevState) => ({
+                                  ...prevState,
+                                  dadosCompra: {
+                                    ...prevState.dadosCompra,
+                                    valorCompra: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </InputGroup>
+                        </Col>
+                      </Form.Group>
+                    </Col>
+                    <Col
+                      xs={12}
+                      lg={4}
+                    >
+                      <Form.Group as={Row}>
+                        <Form.Label
+                          column
+                          xs={3}
+                          lg={5}
+                          htmlFor="comprador"
+                        >
+                          Vendedor:
+                        </Form.Label>
+                        <Col
+                          xs={9}
+                          lg={7}
+                        >
+                          <Form.Control
+                            id="vendedor"
+                            type="text"
+                            placeholder="Não informado"
+                            value={oneAnimal.dadosCompra.vendedor}
+                            onChange={(e) =>
+                              setOneAnimal((prevState) => ({
+                                ...prevState,
+                                dadosCompra: {
+                                  ...prevState.dadosCompra,
+                                  vendedor: e.target.value,
+                                },
+                              }))
+                            }
+                          />
+                        </Col>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </fieldset>
               )}
               {oneAnimal.dadosVenda.vendida && (
                 <div>
