@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
-import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -11,26 +11,26 @@ import {
   InputGroup,
   Modal,
   Row,
-} from "react-bootstrap";
-import imgPlaceholder from "../assets/cow2.png";
-import "../Pages/CattleDetailsPage.css";
-import Table from "react-bootstrap/Table";
-import moment from "moment";
-import Notification from "../Components/Notification";
-import { Charts } from "../Components/Charts/Chart";
+} from 'react-bootstrap';
+import imgPlaceholder from '../assets/cow2.png';
+import '../Pages/CattleDetailsPage.css';
+import Table from 'react-bootstrap/Table';
+import moment from 'moment';
+import Notification from '../Components/Notification';
+import { Charts } from '../Components/Charts/Chart';
 import {
   calculateDifMonths,
   calculateMonths,
   formatDateToDefault,
   getLastUpdate,
-} from "../helpers/CalculateAge";
-import { animalSchema } from "../Models/animalModels";
-import { AuthContext } from "../contexts/authContext.js";
-import curralPermanenciaSchema from "../Models/curralPermanencia.models";
-import pesagemSchema from "../Models/pesagem.models";
-import litragemSchema from "../Models/litragem.models";
-import historicoSchema from "../Models/historico.models";
-import CruzamentoDisplay from "../Components/CruzamentoDisplay/CruzamentoDisplay";
+} from '../helpers/CalculateAge';
+import { animalSchema } from '../Models/animalModels';
+import { AuthContext } from '../contexts/authContext.js';
+import curralPermanenciaSchema from '../Models/curralPermanencia.models';
+import pesagemSchema from '../Models/pesagem.models';
+import litragemSchema from '../Models/litragem.models';
+import historicoSchema from '../Models/historico.models';
+import CruzamentoDisplay from '../Components/CruzamentoDisplay/CruzamentoDisplay';
 
 export default function CattleDetailsPage() {
   const { id } = useParams();
@@ -157,18 +157,18 @@ export default function CattleDetailsPage() {
       lastOccurrence?.dtSaidaCurral || !animal.estadaCurral.length
     );
 
-    let txtBtnAdicionarEstada = result ? "Nova Entrada" : "Nova Saída";
+    let txtBtnAdicionarEstada = result ? 'Nova Entrada' : 'Nova Saída';
 
     let txtLabelEstadaDatePicker = result
-      ? "Data da nova entrada"
-      : "Data da nova saída";
+      ? 'Data da nova entrada'
+      : 'Data da nova saída';
 
     setFormState((prevState) => ({
       ...prevState,
       labelEstadaDatePicker: txtLabelEstadaDatePicker,
       btnAdicionarEstada: {
         text: txtBtnAdicionarEstada,
-        variant: "outline-primary",
+        variant: 'outline-primary',
       },
     }));
 
@@ -180,50 +180,50 @@ export default function CattleDetailsPage() {
 
   const [formState, setFormState] = useState({
     ocorrenciaHistoricoToAdd: {
-      descricao: "",
+      descricao: '',
       dtHistorico: formatDateToDefault(new Date(Date.now())),
     },
     btnAdicionarHistorico: {
       clicked: false,
       disabled: false,
-      text: "Nova observação",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: 'Nova observação',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    ocorrenciaLeiteToAdd: { qtdLitros: "", dtVerificacao: "" },
+    ocorrenciaLeiteToAdd: { qtdLitros: '', dtVerificacao: '' },
     btnAdicionarLitragem: {
       clicked: false,
       disabled: false,
-      text: "Nova Litragem",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: 'Nova Litragem',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    ocorrenciaPesoToAdd: { dtPesagem: "", peso: "" },
+    ocorrenciaPesoToAdd: { dtPesagem: '', peso: '' },
     btnAdicionarPesagem: {
       clicked: false,
       disabled: false,
-      text: "Nova Pesagem",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: 'Nova Pesagem',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    ocorrenciaPastoToAdd: "",
+    ocorrenciaPastoToAdd: '',
     btnAdicionarEstada: {
       clicked: false,
       disabled: false,
-      text: "",
-      variant: "outline-primary",
-      marginRightClass: "",
+      text: '',
+      variant: 'outline-primary',
+      marginRightClass: '',
     },
-    labelEstadaDatePicker: "",
+    labelEstadaDatePicker: '',
     btnEditarDetalhes: {
       show: true,
     },
     btnSalvarDetalhes: {
       loading: false,
-      text: "Salvar Alterações",
+      text: 'Salvar Alterações',
     },
     btnCancelarAlteracoes: {
-      text: "Cancelar",
+      text: 'Cancelar',
       disabled: false,
     },
   });
@@ -232,15 +232,15 @@ export default function CattleDetailsPage() {
     show: false,
     btnConfirmar: {
       loading: false,
-      text: "Confirmar",
+      text: 'Confirmar',
     },
   });
 
   const [notification, setNotification] = useState({
     show: false,
-    type: "",
-    title: "",
-    text: "",
+    type: '',
+    title: '',
+    text: '',
     delay: 2000,
   });
 
@@ -270,14 +270,14 @@ export default function CattleDetailsPage() {
         changeAnimal.dadosMorte = {
           ...oneAnimal.dadosMorte,
           morreu: false,
-          causaMorte: "",
-          dtMorte: "",
+          causaMorte: '',
+          dtMorte: '',
         };
       } else {
         changeAnimal.dadosMorte = {
           ...oneAnimal.dadosMorte,
           morreu: true,
-          causaMorte: "",
+          causaMorte: '',
           dtMorte: formatDateToDefault(new Date(Date.now())),
         };
       }
@@ -298,16 +298,16 @@ export default function CattleDetailsPage() {
         //console.log(newData.rebanho[cowIndex]);
         await user.update(property.uuid, newData);
         setNotification({
-          type: "success",
-          title: "Sucesso",
-          text: "Suas alterações foram salvas!",
+          type: 'success',
+          title: 'Sucesso',
+          text: 'Suas alterações foram salvas!',
           show: true,
         });
       } catch (e) {
         setOneAnimal(property.rebanho[animalIndex]);
         setNotification({
-          type: "danger",
-          title: "Erro",
+          type: 'danger',
+          title: 'Erro',
           text: `Não foi possível registrar as alterações. Tente mais tarde.`,
           show: true,
         });
@@ -317,9 +317,9 @@ export default function CattleDetailsPage() {
 
     async function handleVendaCheckButtonChange(_) {
       let vendida = !oneAnimal.dadosVenda.vendida;
-      const dtVenda = vendida ? oneAnimal.dadosVenda.dtVenda : "";
-      const valorVenda = vendida ? oneAnimal.dadosVenda.valorVenda : "";
-      const comprador = vendida ? oneAnimal.dadosVenda.comprador : "";
+      const dtVenda = vendida ? oneAnimal.dadosVenda.dtVenda : '';
+      const valorVenda = vendida ? oneAnimal.dadosVenda.valorVenda : '';
+      const comprador = vendida ? oneAnimal.dadosVenda.comprador : '';
 
       let changeAnimal = {
         ...oneAnimal,
@@ -352,16 +352,16 @@ export default function CattleDetailsPage() {
         //console.log(newData.rebanho[cowIndex]);
         await user.update(property.uuid, newData);
         setNotification({
-          type: "success",
-          title: "Sucesso",
-          text: "Suas alterações foram salvas!",
+          type: 'success',
+          title: 'Sucesso',
+          text: 'Suas alterações foram salvas!',
           show: true,
         });
       } catch (e) {
         setOneAnimal(property.rebanho[animalIndex]);
         setNotification({
-          type: "danger",
-          title: "Erro",
+          type: 'danger',
+          title: 'Erro',
           text: `Não foi possível registrar as alterações. Tente mais tarde.`,
           show: true,
         });
@@ -377,12 +377,12 @@ export default function CattleDetailsPage() {
       if (!clicked) {
         clicked = true;
         disabled = true;
-        variant = "outline-success";
-        text = "Confirmar";
-        marginRightClass = "me-2";
+        variant = 'outline-success';
+        text = 'Confirmar';
+        marginRightClass = 'me-2';
       } else {
         if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
-          text = "Nova Entrada";
+          text = 'Nova Entrada';
           if (formState.ocorrenciaPastoToAdd) {
             if (!cancelBtn) {
               let thisOcurrance =
@@ -395,9 +395,9 @@ export default function CattleDetailsPage() {
               oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
             }
             handleBtnSalvarAlteracoesClick();
-            text = "Nova Entrada";
+            text = 'Nova Entrada';
           } else {
-            text = "Nova Saída";
+            text = 'Nova Saída';
             disabled = false;
           }
         } else {
@@ -416,15 +416,15 @@ export default function CattleDetailsPage() {
             oneAnimal.noCurral = true;
             oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
             handleBtnSalvarAlteracoesClick();
-            text = "Nova Saída";
+            text = 'Nova Saída';
           } else {
-            text = "Nova Entrada";
+            text = 'Nova Entrada';
             disabled = false;
           }
         }
         clicked = false;
-        variant = "outline-primary";
-        marginRightClass = "";
+        variant = 'outline-primary';
+        marginRightClass = '';
       }
 
       setOneAnimal((prevState) => ({
@@ -438,7 +438,7 @@ export default function CattleDetailsPage() {
 
       setFormState((prevState) => ({
         ...prevState,
-        ocorrenciaPastoToAdd: "",
+        ocorrenciaPastoToAdd: '',
         btnAdicionarEstada: {
           clicked,
           disabled,
@@ -455,9 +455,9 @@ export default function CattleDetailsPage() {
       if (!clicked) {
         clicked = true;
         disabled = true;
-        variant = "outline-success";
-        text = "Confirmar";
-        marginRightClass = "me-2";
+        variant = 'outline-success';
+        text = 'Confirmar';
+        marginRightClass = 'me-2';
       } else {
         if (
           !cancelBtn &&
@@ -484,22 +484,22 @@ export default function CattleDetailsPage() {
             ),
           });
           handleBtnSalvarAlteracoesClick();
-          text = "Nova pesagem";
+          text = 'Nova pesagem';
         } else if (!cancelBtn) {
           alert(
-            "É necessário preencher o peso e a data da pesagem para cadastrar novo registro"
+            'É necessário preencher o peso e a data da pesagem para cadastrar novo registro'
           );
         } else {
-          text = "Nova pesagem";
+          text = 'Nova pesagem';
           disabled = false;
         }
         clicked = false;
-        variant = "outline-primary";
-        marginRightClass = "";
+        variant = 'outline-primary';
+        marginRightClass = '';
       }
       setFormState((prevState) => ({
         ...prevState,
-        ocorrenciaPesoToAdd: { dtPesagem: "", peso: "" },
+        ocorrenciaPesoToAdd: { dtPesagem: '', peso: '' },
         btnAdicionarPesagem: {
           clicked,
           disabled,
@@ -517,9 +517,9 @@ export default function CattleDetailsPage() {
       if (!clicked) {
         clicked = true;
         disabled = true;
-        variant = "outline-success";
-        text = "Confirmar";
-        marginRightClass = "me-2";
+        variant = 'outline-success';
+        text = 'Confirmar';
+        marginRightClass = 'me-2';
       } else {
         if (
           !cancelBtn &&
@@ -546,22 +546,22 @@ export default function CattleDetailsPage() {
             ),
           });
           handleBtnSalvarAlteracoesClick();
-          text = "Nova litragem";
+          text = 'Nova litragem';
         } else if (!cancelBtn) {
           alert(
-            "É necessário preencher os litros e a data da monitoração para cadastrar novo registro"
+            'É necessário preencher os litros e a data da monitoração para cadastrar novo registro'
           );
         } else {
-          text = "Nova litragem";
+          text = 'Nova litragem';
           disabled = false;
         }
         clicked = false;
-        variant = "outline-primary";
-        marginRightClass = "";
+        variant = 'outline-primary';
+        marginRightClass = '';
       }
       setFormState((prevState) => ({
         ...prevState,
-        ocorrenciaLeiteToAdd: { dtVerificacao: "", qtdLitros: "" },
+        ocorrenciaLeiteToAdd: { dtVerificacao: '', qtdLitros: '' },
         btnAdicionarLitragem: {
           clicked,
           disabled,
@@ -579,9 +579,9 @@ export default function CattleDetailsPage() {
       if (!clicked) {
         clicked = true;
         disabled = true;
-        variant = "outline-success";
-        text = "Confirmar";
-        marginRightClass = "me-2";
+        variant = 'outline-success';
+        text = 'Confirmar';
+        marginRightClass = 'me-2';
       } else {
         if (
           !cancelBtn &&
@@ -608,24 +608,24 @@ export default function CattleDetailsPage() {
             ),
           });
           handleBtnSalvarAlteracoesClick();
-          text = "Nova observação";
+          text = 'Nova observação';
         } else if (!cancelBtn) {
           alert(
-            "É necessário preencher a descrição e a data da observação para cadastrar novo registro"
+            'É necessário preencher a descrição e a data da observação para cadastrar novo registro'
           );
         } else {
-          text = "Nova observação";
+          text = 'Nova observação';
           disabled = false;
         }
         clicked = false;
-        variant = "outline-primary";
-        marginRightClass = "";
+        variant = 'outline-primary';
+        marginRightClass = '';
       }
       setFormState((prevState) => ({
         ...prevState,
         ocorrenciaHistoricoToAdd: {
           dtHistorico: formatDateToDefault(new Date(Date.now())),
-          descricao: "",
+          descricao: '',
         },
         btnAdicionarHistorico: {
           clicked,
@@ -648,7 +648,7 @@ export default function CattleDetailsPage() {
       setFormState((prevState) => ({
         ...prevState,
         btnSalvarDetalhes: {
-          text: "Salvando...",
+          text: 'Salvando...',
           loading: true,
         },
       }));
@@ -671,16 +671,16 @@ export default function CattleDetailsPage() {
 
         await user.update(property.uuid, newData);
         setNotification({
-          type: "success",
-          title: "Sucesso",
-          text: "Suas alterações foram salvas!",
+          type: 'success',
+          title: 'Sucesso',
+          text: 'Suas alterações foram salvas!',
           show: true,
         });
       } catch (e) {
         setAnimalFinded(false);
         setNotification({
-          type: "danger",
-          title: "Erro",
+          type: 'danger',
+          title: 'Erro',
           text: `Não foi possível salvar as alterações. Tente mais tarde.`,
           show: true,
         });
@@ -690,7 +690,7 @@ export default function CattleDetailsPage() {
           ...prevState,
           btnEditarDetalhes: { show: true },
           btnSalvarDetalhes: {
-            text: "Salvar Alterações",
+            text: 'Salvar Alterações',
             loading: false,
           },
         }));
@@ -703,7 +703,7 @@ export default function CattleDetailsPage() {
         ...prevState,
         btnConfirmar: {
           loading: true,
-          text: "Excluindo...",
+          text: 'Excluindo...',
         },
       }));
       try {
@@ -724,16 +724,16 @@ export default function CattleDetailsPage() {
 
         await user.update(property.uuid, newData);
         setNotification({
-          type: "success",
-          title: "Sucesso",
-          text: "Suas alterações foram salvas!",
+          type: 'success',
+          title: 'Sucesso',
+          text: 'Suas alterações foram salvas!',
           show: true,
         });
         navigate(-1);
       } catch (e) {
         setNotification({
-          type: "danger",
-          title: "Erro",
+          type: 'danger',
+          title: 'Erro',
           text: `Não foi possível remover o animal. Tente mais tarde.`,
           show: true,
         });
@@ -744,7 +744,7 @@ export default function CattleDetailsPage() {
           show: false,
           btnConfirmar: {
             loading: false,
-            text: "Confirmar",
+            text: 'Confirmar',
           },
         }));
       }
@@ -756,7 +756,10 @@ export default function CattleDetailsPage() {
     return (
       <Container>
         {oneAnimal.dadosServidor.deletado && (
-          <h1 style={{ color: "red" }}>ANIMAL DELETADO</h1>
+          <>
+            <h1 style={{ color: 'red' }}>ANIMAL DELETADO</h1>
+            <h3>será retirado do banco de dados na próxima sincronização</h3>
+          </>
         )}
         <Card className="my-5">
           <Card.Header className="cattle-details-header">
@@ -854,7 +857,7 @@ export default function CattleDetailsPage() {
                           newAnimal.dadosObservacao.animalObservado =
                             !newAnimal.dadosObservacao.animalObservado;
                           setOneAnimal(newAnimal);
-                          newAnimal.dadosObservacao.motivo = "";
+                          newAnimal.dadosObservacao.motivo = '';
                           let cowIndex = await property.rebanho.findIndex(
                             (cow) => cow.uuid === newAnimal.uuid
                           );
@@ -876,16 +879,16 @@ export default function CattleDetailsPage() {
                           // );
                           await user.update(property.uuid, newData);
                           setNotification({
-                            type: "success",
-                            title: "Sucesso",
-                            text: "Suas alterações foram salvas!",
+                            type: 'success',
+                            title: 'Sucesso',
+                            text: 'Suas alterações foram salvas!',
                             show: true,
                           });
                         } catch (err) {
                           setAnimalFinded(false);
                           setNotification({
-                            type: "danger",
-                            title: "Erro",
+                            type: 'danger',
+                            title: 'Erro',
                             text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                             show: true,
                           });
@@ -900,7 +903,7 @@ export default function CattleDetailsPage() {
                       className="d-flex align-content-center"
                       xs={12}
                     >
-                      <Form.Group style={{ width: "95%" }}>
+                      <Form.Group style={{ width: '95%' }}>
                         <FloatingLabel
                           className="text-nowrap"
                           htmlFor="motivoObservação"
@@ -965,16 +968,16 @@ export default function CattleDetailsPage() {
                               // );
                               await user.update(property.uuid, newData);
                               setNotification({
-                                type: "success",
-                                title: "Sucesso",
-                                text: "Suas alterações foram salvas!",
+                                type: 'success',
+                                title: 'Sucesso',
+                                text: 'Suas alterações foram salvas!',
                                 show: true,
                               });
                             } catch (err) {
                               setAnimalFinded(false);
                               setNotification({
-                                type: "danger",
-                                title: "Erro",
+                                type: 'danger',
+                                title: 'Erro',
                                 text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                                 show: true,
                               });
@@ -999,7 +1002,7 @@ export default function CattleDetailsPage() {
                     <Button
                       variant="primary"
                       className={`${
-                        !formState.btnEditarDetalhes.show ? "d-none" : ""
+                        !formState.btnEditarDetalhes.show ? 'd-none' : ''
                       }`}
                       onClick={handleBtnEditarDetalhesClick}
                     >
@@ -1008,8 +1011,8 @@ export default function CattleDetailsPage() {
                     <Container
                       className={`${
                         formState.btnEditarDetalhes.show
-                          ? "d-none"
-                          : "d-flex justify-content-end"
+                          ? 'd-none'
+                          : 'd-flex justify-content-end'
                       }`}
                     >
                       <Button
@@ -1026,7 +1029,7 @@ export default function CattleDetailsPage() {
                           setFormState((prev) => ({
                             ...prev,
                             btnCancelarAlteracoes: {
-                              text: "Cancelando...",
+                              text: 'Cancelando...',
                               disabled: true,
                             },
                           }));
@@ -1045,7 +1048,7 @@ export default function CattleDetailsPage() {
                                 show: true,
                               },
                               btnCancelarAlteracoes: {
-                                text: "Cancelar",
+                                text: 'Cancelar',
                                 disabled: false,
                               },
                             }));
@@ -1056,9 +1059,7 @@ export default function CattleDetailsPage() {
                       </Button>
                     </Container>
                   </Container>
-                  <h6 className="mt-1" >
-                    Dados do animal
-                  </h6>
+                  <h6 className="mt-1">Dados do animal</h6>
                 </Col>
               </Row>
               <Row className="gy-2 gx-3 mt-1">
@@ -1076,11 +1077,11 @@ export default function CattleDetailsPage() {
                         name="genderGroup"
                         type="radio"
                         id={`inline-radio-gender-1`}
-                        checked={oneAnimal.sexo === "MACHO"}
+                        checked={oneAnimal.sexo === 'MACHO'}
                         onChange={(_) =>
                           setOneAnimal((prevState) => ({
                             ...prevState,
-                            sexo: "MACHO",
+                            sexo: 'MACHO',
                           }))
                         }
                       />
@@ -1090,11 +1091,11 @@ export default function CattleDetailsPage() {
                         name="genderGroup"
                         type="radio"
                         id={`inline-radio-gender-2`}
-                        checked={oneAnimal.sexo === "FEMEA"}
+                        checked={oneAnimal.sexo === 'FEMEA'}
                         onChange={(_) =>
                           setOneAnimal((prevState) => ({
                             ...prevState,
-                            sexo: "FEMEA",
+                            sexo: 'FEMEA',
                           }))
                         }
                       />
@@ -1238,15 +1239,15 @@ export default function CattleDetailsPage() {
                             // );
                             await user.update(property.uuid, newData);
                             setNotification({
-                              type: "success",
-                              title: "Sucesso",
-                              text: "Suas alterações foram salvas!",
+                              type: 'success',
+                              title: 'Sucesso',
+                              text: 'Suas alterações foram salvas!',
                               show: true,
                             });
                           } catch (e) {
                             setNotification({
-                              type: "danger",
-                              title: "Erro",
+                              type: 'danger',
+                              title: 'Erro',
                               text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                               show: true,
                             });
@@ -1255,6 +1256,73 @@ export default function CattleDetailsPage() {
                         value={oneAnimal.pasto}
                       >
                         {pasturesArray.map((p, i) => (
+                          <option key={i}>{p}</option>
+                        ))}
+                      </Form.Select>
+                    </Col>
+                  </Form.Group>
+                </Col>
+                <Col
+                  xs={{ span: 12, order: 5 }}
+                  md={6}
+                >
+                  <Form.Group as={Row}>
+                    <Form.Label
+                      column
+                      xs={4}
+                      htmlFor="pasto"
+                    >
+                      Lote para venda:
+                    </Form.Label>
+                    <Col xs={8}>
+                      <Form.Select
+                        aria-label="Lotes de venda"
+                        onChange={async (e) => {
+                          try {
+                            setOneAnimal({
+                              ...oneAnimal,
+                              lote: e.target.value,
+                            });
+                            let newData = {
+                              ...property,
+                              dadosServidor: {
+                                ...property.dadosServidor,
+                                lastUpdate: getLastUpdate(),
+                              },
+                            };
+                            let cowIndex = await newData.rebanho.findIndex(
+                              (cow) => cow.uuid === id
+                            );
+                            // console.log(
+                            //   `data before update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
+                            newData.rebanho[cowIndex].lote = e.target.value;
+                            newData.rebanho[cowIndex].dadosServidor.lastUpdate =
+                              getLastUpdate();
+                            // console.log(
+                            //   `data after update`,
+                            //   newData.rebanho[cowIndex]
+                            // );
+                            await user.update(property.uuid, newData);
+                            setNotification({
+                              type: 'success',
+                              title: 'Sucesso',
+                              text: 'Suas alterações foram salvas!',
+                              show: true,
+                            });
+                          } catch (e) {
+                            setNotification({
+                              type: 'danger',
+                              title: 'Erro',
+                              text: `Não foi possível salvar as alterações. Tente mais tarde.`,
+                              show: true,
+                            });
+                          }
+                        }}
+                        value={oneAnimal.lote}
+                      >
+                        {property.lotes.map((p, i) => (
                           <option key={i}>{p}</option>
                         ))}
                       </Form.Select>
@@ -1465,14 +1533,14 @@ export default function CattleDetailsPage() {
                     </Col>
                   </Row>
                   <Row>
-                  <Col>
-                    <Button
-                      className="mt-4"
-                      variant="outline-success"
-                      onClick={handleBtnSalvarAlteracoesClick}
-                    >
-                      Salvar informação
-                    </Button>
+                    <Col>
+                      <Button
+                        className="mt-4"
+                        variant="outline-success"
+                        onClick={handleBtnSalvarAlteracoesClick}
+                      >
+                        Salvar informação
+                      </Button>
                     </Col>
                   </Row>
                 </div>
@@ -1510,18 +1578,18 @@ export default function CattleDetailsPage() {
                               <td>
                                 {estada.dtEntradaCurral &&
                                   moment(estada.dtEntradaCurral).format(
-                                    "DD/MM/yyyy"
+                                    'DD/MM/yyyy'
                                   )}
                               </td>
                               <td>
                                 {estada.dtSaidaCurral &&
                                   moment(estada.dtSaidaCurral).format(
-                                    "DD/MM/yyyy"
+                                    'DD/MM/yyyy'
                                   )}
                               </td>
                               <td>
                                 <Button
-                                  variant={"danger"}
+                                  variant={'danger'}
                                   size="sm"
                                   onClick={() => {
                                     let newAnimal = { ...oneAnimal };
@@ -1619,7 +1687,7 @@ export default function CattleDetailsPage() {
                   </Col>
                 )}
               </Row>
-              {oneAnimal.sexo === "FEMEA" && (
+              {oneAnimal.sexo === 'FEMEA' && (
                 <CruzamentoDisplay
                   oneAnimal={oneAnimal}
                   setOneAnimal={setOneAnimal}
@@ -1637,11 +1705,11 @@ export default function CattleDetailsPage() {
                     <Table>
                       <thead>
                         <tr>
-                          <th style={{ width: "10%" }}>#</th>
-                          <th style={{ width: "14%" }}>Peso</th>
-                          <th style={{ width: "28%" }}>Data da pesagem</th>
-                          <th style={{ width: "28%" }}>Meses na pesagem</th>
-                          <th style={{ width: "20%" }}></th>
+                          <th style={{ width: '10%' }}>#</th>
+                          <th style={{ width: '14%' }}>Peso</th>
+                          <th style={{ width: '28%' }}>Data da pesagem</th>
+                          <th style={{ width: '28%' }}>Meses na pesagem</th>
+                          <th style={{ width: '20%' }}></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1662,7 +1730,7 @@ export default function CattleDetailsPage() {
                               <td>{elemento.peso}</td>
                               <td>
                                 {moment(elemento.dtPesagem).format(
-                                  "DD/MM/yyyy"
+                                  'DD/MM/yyyy'
                                 )}
                               </td>
                               <td>
@@ -1725,7 +1793,7 @@ export default function CattleDetailsPage() {
                   >
                     <FloatingLabel
                       controlId="floating-entrada-curral"
-                      label={"Data da Pesagem"}
+                      label={'Data da Pesagem'}
                     >
                       <Form.Control
                         type="date"
@@ -1757,7 +1825,7 @@ export default function CattleDetailsPage() {
                   >
                     <FloatingLabel
                       controlId="floating-entrada-curral"
-                      label={"Peso"}
+                      label={'Peso'}
                     >
                       <Form.Control
                         type="number"
@@ -1797,7 +1865,7 @@ export default function CattleDetailsPage() {
               </Row>
               {/*Formulário de Litragem*/}
 
-              {oneAnimal.sexo === "FEMEA" && (
+              {oneAnimal.sexo === 'FEMEA' && (
                 <Row className="mt-3 gy-2 gx-3">
                   <hr />
                   <h5>Produção de leite</h5>
@@ -1831,7 +1899,7 @@ export default function CattleDetailsPage() {
                                 <td>{elemento.qtdLitros}</td>
                                 <td>
                                   {moment(elemento.dtVerificacao).format(
-                                    "DD/MM/yyyy"
+                                    'DD/MM/yyyy'
                                   )}
                                 </td>
                                 <td>
@@ -1900,7 +1968,7 @@ export default function CattleDetailsPage() {
                     >
                       <FloatingLabel
                         controlId="floating-Data-Litragem"
-                        label={"Data da Verificação"}
+                        label={'Data da Verificação'}
                       >
                         <Form.Control
                           type="date"
@@ -1932,7 +2000,7 @@ export default function CattleDetailsPage() {
                     >
                       <FloatingLabel
                         controlId="floating-qtd-Litros"
-                        label={"Litros"}
+                        label={'Litros'}
                       >
                         <Form.Control
                           type="number"
@@ -1960,7 +2028,7 @@ export default function CattleDetailsPage() {
                   )}
                 </Row>
               )}
-              {oneAnimal.sexo === "FEMEA" && (
+              {oneAnimal.sexo === 'FEMEA' && (
                 <Row className="mt-3 gy-2 gx-3">
                   <Charts
                     chartTitle="Produção de leite"
@@ -1982,10 +2050,10 @@ export default function CattleDetailsPage() {
                     <Table>
                       <thead>
                         <tr>
-                          <th style={{ width: "10%" }}>#</th>
-                          <th style={{ width: "20%" }}>Data da observação</th>
-                          <th style={{ width: "50%" }}>Relato</th>
-                          <th style={{ width: "20%" }}></th>
+                          <th style={{ width: '10%' }}>#</th>
+                          <th style={{ width: '20%' }}>Data da observação</th>
+                          <th style={{ width: '50%' }}>Relato</th>
+                          <th style={{ width: '20%' }}></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -2005,7 +2073,7 @@ export default function CattleDetailsPage() {
                               <td>{activeHistoricos.indexOf(elemento) + 1}</td>
                               <td>
                                 {moment(elemento.dtHistorico).format(
-                                  "DD/MM/yyyy"
+                                  'DD/MM/yyyy'
                                 )}
                               </td>
                               <td>{elemento.descricao}</td>
@@ -2063,7 +2131,7 @@ export default function CattleDetailsPage() {
                   >
                     <FloatingLabel
                       controlId="floating-entrada-curral"
-                      label={"Data da Observação"}
+                      label={'Data da Observação'}
                     >
                       <Form.Control
                         type="date"
@@ -2094,7 +2162,7 @@ export default function CattleDetailsPage() {
                   <Col>
                     <FloatingLabel
                       controlId="floating-entrada-curral"
-                      label={"Observação"}
+                      label={'Observação'}
                     >
                       <Form.Control
                         type="textarea"

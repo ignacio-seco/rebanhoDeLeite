@@ -17,7 +17,7 @@ export default function Bezerros() {
   const [filterWeight, setFilterWeight] = useState(false);
   const [mesesMax, setMesesMax] = useState(120);
   const [mesesMin, setMesesMin] = useState(0);
-  const [pesoMax, setPesoMax] = useState(1200);
+  const [pesoMax, setPesoMax] = useState(2500);
   const [pesoMin, setPesoMin] = useState(0);
   const [sexToFilter, setSexToFilter] = useState('');
   const { data, getData, loading } = useContext(AuthContext);
@@ -55,8 +55,9 @@ export default function Bezerros() {
           .filter(
             (cow) =>
               cow.pesagem.length > 0 &&
-              Number(cow.pesagem[cow.pesagem.length - 1].peso) > pesoMin - 1 &&
-              Number(cow.pesagem[cow.pesagem.length - 1].peso) < pesoMax + 1
+              Number(cow.pesagem[cow.pesagem.length - 1].peso) >
+                pesoMin - 0.01 &&
+              Number(cow.pesagem[cow.pesagem.length - 1].peso) < pesoMax + 0.01
           ));
       filterSex &&
         (cattle = cattle.filter((cow) => cow.sexo.indexOf(sexToFilter) !== -1));
