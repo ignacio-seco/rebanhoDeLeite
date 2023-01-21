@@ -1355,36 +1355,36 @@ export default function CattleDetailsPage() {
                 </Col>
                 {!formState.btnEditarDetalhes.show && (
                   <Col
-                  xs={{ span: 12, order: 5 }}
-                  md={6}
-                >
-                <Form.Group
-                  as={Row}
-                  className="mt-1"
-                >
-                  <Form.Label
-                    column
-                    xs={4}
-                    htmlFor="nome"
+                    xs={{ span: 12, order: 5 }}
+                    md={6}
                   >
-                    Nome:
-                  </Form.Label>
-                  <Col xs={8}>
-                    <Form.Control
-                      id="nome"
-                      type="text"
-                      value={oneAnimal.nome}
-                      onChange={(e) =>
-                        setOneAnimal((prevState) => ({
-                          ...prevState,
-                          nome: e.target.value,
-                        }))
-                      }
-                    />
+                    <Form.Group
+                      as={Row}
+                      className="mt-1"
+                    >
+                      <Form.Label
+                        column
+                        xs={4}
+                        htmlFor="nome"
+                      >
+                        Nome:
+                      </Form.Label>
+                      <Col xs={8}>
+                        <Form.Control
+                          id="nome"
+                          type="text"
+                          value={oneAnimal.nome}
+                          onChange={(e) =>
+                            setOneAnimal((prevState) => ({
+                              ...prevState,
+                              nome: e.target.value,
+                            }))
+                          }
+                        />
+                      </Col>
+                    </Form.Group>
                   </Col>
-                </Form.Group>
-                </Col>
-              )}
+                )}
               </Row>
               {oneAnimal.dadosMorte.morreu && (
                 <Form.Group className="mt-3">

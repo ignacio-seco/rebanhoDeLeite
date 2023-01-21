@@ -1,14 +1,15 @@
-import { useContext, useEffect, useState } from "react";
-import { Col, Container, Form, Row } from "react-bootstrap";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../../contexts/authContext";
-import { calculateAge, stringEqualizer } from "../../helpers/CalculateAge";
-import "./CattleList.css";
+import { useContext, useEffect, useState } from 'react';
+import { Col, Container, Form, Row } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/authContext';
+import { calculateAge, stringEqualizer } from '../../helpers/CalculateAge';
+import cattlePhoto from '../../assets/cow_PNG50576.png';
+import './CattleList.css';
 
 function CattleList({ cowFilterFn }) {
-  let [search, setSearch] = useState("");
+  let [search, setSearch] = useState('');
   const { data, getData, loading } = useContext(AuthContext);
   let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
   let getCattle = getData;
@@ -52,12 +53,12 @@ function CattleList({ cowFilterFn }) {
               <div className="imageHolder">
                 <Link to={`/gado/${cow.uuid}`}>
                   <img
-                    src={cow.imagem_url}
+                    src={cattlePhoto}
                     alt={cow.nome}
                   />
                 </Link>
               </div>
-              <Card style={{ width: "18rem", marginLeft: "0px" }}>
+              <Card style={{ width: '18rem', marginLeft: '0px' }}>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
                     <span className="BoldStyle">Brinco: </span> {cow.brinco}
@@ -89,7 +90,7 @@ function CattleList({ cowFilterFn }) {
             onChange={(e) => setSearch(e.currentTarget.value)}
           />
         </Container>
-        <h3 style={{ textAlign: "center" }}>
+        <h3 style={{ textAlign: 'center' }}>
           {cowFilterFn
             ? `${cattleSize()} animais no curral`
             : `Seu rebanho de ${cattleSize()} Animais`}
