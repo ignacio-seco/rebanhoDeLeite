@@ -1,16 +1,16 @@
-import { useContext, useState } from "react";
-import { Button, Card, Col, FloatingLabel, Form, Row } from "react-bootstrap";
-import "../../Pages/CattleDetailsPage.css";
-import Table from "react-bootstrap/Table";
+import { useContext, useState } from 'react';
+import { Button, Card, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
+import '../../Pages/CattleDetailsPage.css';
+import Table from 'react-bootstrap/Table';
 import {
   formatDateToDefault,
   getLastUpdate,
   formatDate,
   calculateBirthDate,
-} from "../../helpers/CalculateAge";
-import { AuthContext } from "../../contexts/authContext";
-import cruzamentoSchema from "../../Models/cruzamento.models";
-import { v4 } from "uuid";
+} from '../../helpers/CalculateAge';
+import { AuthContext } from '../../contexts/authContext';
+import cruzamentoSchema from '../../Models/cruzamento.models';
+import { v4 } from 'uuid';
 
 export default function CruzamentoDisplay({
   oneAnimal,
@@ -67,8 +67,8 @@ export default function CruzamentoDisplay({
                 xs={12}
                 key={elemento.uuid}
                 style={{
-                  borderStyle: "solid",
-                  borderColor: "rgba(0, 0, 0, 0.1 )",
+                  borderStyle: 'solid',
+                  borderColor: 'rgba(0, 0, 0, 0.1 )',
                 }}
               >
                 <Row
@@ -78,7 +78,11 @@ export default function CruzamentoDisplay({
                   xl={3}
                 >
                   <Col className="mt-3">
-                    <FloatingLabel><span style={{fontWeight:"700"}}>Data cruzamento / inseminação</span></FloatingLabel>
+                    <FloatingLabel>
+                      <span style={{ fontWeight: '700' }}>
+                        Data cruzamento / inseminação
+                      </span>
+                    </FloatingLabel>
                     <fieldset disabled={formState.btnEditarDetalhes.show}>
                       <Form.Control
                         type="date"
@@ -95,13 +99,18 @@ export default function CruzamentoDisplay({
                           ].dtProvavelNascimento = calculateBirthDate(
                             e.target.value
                           );
+                          newAnimal.dadosCruzamentos[
+                            newAnimal.dadosCruzamentos.indexOf(elemento)
+                          ].dadosServidor.lastUpdate = getLastUpdate();
                           setOneAnimal(newAnimal);
                         }}
                       />
                     </fieldset>
                   </Col>
                   <Col className="mt-3">
-                    <FloatingLabel><span style={{fontWeight:"700"}}>Animal prenhe?</span></FloatingLabel>
+                    <FloatingLabel>
+                      <span style={{ fontWeight: '700' }}>Animal prenhe?</span>
+                    </FloatingLabel>
                     <fieldset
                       className="text-nowrap d-flex align-content-center align-items-center justify-content-center"
                       disabled={!formState.btnEditarDetalhes.show}
@@ -137,6 +146,9 @@ export default function CruzamentoDisplay({
                                 newAnimal.dadosCruzamentos.indexOf(elemento)
                               ].esconderCampo = false;
                             }
+                            newAnimal.dadosCruzamentos[
+                              newAnimal.dadosCruzamentos.indexOf(elemento)
+                            ].dadosServidor.lastUpdate = getLastUpdate();
                             setOneAnimal(newAnimal);
                             let cowIndex = await property.rebanho.findIndex(
                               (cow) => cow.uuid === newAnimal.uuid
@@ -154,16 +166,16 @@ export default function CruzamentoDisplay({
 
                             await user.update(property.uuid, newData);
                             setNotification({
-                              type: "success",
-                              title: "Sucesso",
-                              text: "Suas alterações foram salvas!",
+                              type: 'success',
+                              title: 'Sucesso',
+                              text: 'Suas alterações foram salvas!',
                               show: true,
                             });
                           } catch (err) {
                             setAnimalFinded(false);
                             setNotification({
-                              type: "danger",
-                              title: "Erro",
+                              type: 'danger',
+                              title: 'Erro',
                               text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                               show: true,
                             });
@@ -174,17 +186,24 @@ export default function CruzamentoDisplay({
                     </fieldset>
                   </Col>
                   <Col className="mt-3">
-                    <FloatingLabel><span style={{fontWeight:"700"}}>Previsão do Nascimento</span></FloatingLabel>
+                    <FloatingLabel>
+                      <span style={{ fontWeight: '700' }}>
+                        Previsão do Nascimento
+                      </span>
+                    </FloatingLabel>
                     <span>{formatDate(elemento.dtProvavelNascimento)}</span>
                   </Col>
                 </Row>
                 <Row
-                xs={1}
+                  xs={1}
                   md={3}
                   lg={3}
-                  xl={3}>
+                  xl={3}
+                >
                   <Col className="mt-3">
-                    <FloatingLabel><span style={{fontWeight:"700"}}>Semem/Touro</span></FloatingLabel>
+                    <FloatingLabel>
+                      <span style={{ fontWeight: '700' }}>Semem/Touro</span>
+                    </FloatingLabel>
                     <fieldset disabled={formState.btnEditarDetalhes.show}>
                       <Form.Control
                         type="text"
@@ -195,14 +214,21 @@ export default function CruzamentoDisplay({
                           let newAnimal = { ...oneAnimal };
                           newAnimal.dadosCruzamentos[
                             newAnimal.dadosCruzamentos.indexOf(elemento)
-                          ].semem = e.target.value;
+                          ].semen = e.target.value;
+                          newAnimal.dadosCruzamentos[
+                            newAnimal.dadosCruzamentos.indexOf(elemento)
+                          ].dadosServidor.lastUpdate = getLastUpdate();
                           setOneAnimal(newAnimal);
                         }}
                       />
                     </fieldset>
                   </Col>
                   <Col className="mt-3">
-                    <FloatingLabel><span style={{fontWeight:"700"}}>Nascimento confirmado</span></FloatingLabel>
+                    <FloatingLabel>
+                      <span style={{ fontWeight: '700' }}>
+                        Nascimento confirmado
+                      </span>
+                    </FloatingLabel>
                     <fieldset
                       className="text-nowrap d-flex align-content-center align-items-center justify-content-center"
                       disabled={!formState.btnEditarDetalhes.show}
@@ -238,6 +264,9 @@ export default function CruzamentoDisplay({
                                 newAnimal.dadosCruzamentos.indexOf(elemento)
                               ].esconderCampo = false;
                             }
+                            newAnimal.dadosCruzamentos[
+                              newAnimal.dadosCruzamentos.indexOf(elemento)
+                            ].dadosServidor.lastUpdate = getLastUpdate();
                             setOneAnimal(newAnimal);
                             let cowIndex = await property.rebanho.findIndex(
                               (cow) => cow.uuid === newAnimal.uuid
@@ -260,16 +289,16 @@ export default function CruzamentoDisplay({
                             // );
                             await user.update(property.uuid, newData);
                             setNotification({
-                              type: "success",
-                              title: "Sucesso",
-                              text: "Suas alterações foram salvas!",
+                              type: 'success',
+                              title: 'Sucesso',
+                              text: 'Suas alterações foram salvas!',
                               show: true,
                             });
                           } catch (err) {
                             setAnimalFinded(false);
                             setNotification({
-                              type: "danger",
-                              title: "Erro",
+                              type: 'danger',
+                              title: 'Erro',
                               text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                               show: true,
                             });
@@ -280,7 +309,11 @@ export default function CruzamentoDisplay({
                     </fieldset>
                   </Col>
                   <Col className="mt-3">
-                    <FloatingLabel><span style={{fontWeight:"700"}}>Esconder informação</span></FloatingLabel>
+                    <FloatingLabel>
+                      <span style={{ fontWeight: '700' }}>
+                        Esconder informação
+                      </span>
+                    </FloatingLabel>
                     <div
                       className="text-nowrap d-flex align-content-center align-items-center justify-content-center"
                       disabled={!formState.btnEditarDetalhes.show}
@@ -319,16 +352,16 @@ export default function CruzamentoDisplay({
                             // );
                             await user.update(property.uuid, newData);
                             setNotification({
-                              type: "success",
-                              title: "Sucesso",
-                              text: "Suas alterações foram salvas!",
+                              type: 'success',
+                              title: 'Sucesso',
+                              text: 'Suas alterações foram salvas!',
                               show: true,
                             });
                           } catch (err) {
                             setAnimalFinded(false);
                             setNotification({
-                              type: "danger",
-                              title: "Erro",
+                              type: 'danger',
+                              title: 'Erro',
                               text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                               show: true,
                             });
@@ -376,10 +409,10 @@ export default function CruzamentoDisplay({
                     <th>{activeCruzamentos.indexOf(elemento) + 1}</th>
                     <th>
                       {!elemento.confirmacaoPrenhez ? (
-                        <span style={{ color: "red" }}>Prenhez não vingou</span>
+                        <span style={{ color: 'red' }}>Prenhez não vingou</span>
                       ) : elemento.confirmacaoNascimento ? (
-                        <span style={{ color: "green" }}>
-                          {" "}
+                        <span style={{ color: 'green' }}>
+                          {' '}
                           Bezerro já nasceu!
                         </span>
                       ) : (
@@ -421,16 +454,16 @@ export default function CruzamentoDisplay({
                             // );
                             await user.update(property.uuid, newData);
                             setNotification({
-                              type: "success",
-                              title: "Sucesso",
-                              text: "Suas alterações foram salvas!",
+                              type: 'success',
+                              title: 'Sucesso',
+                              text: 'Suas alterações foram salvas!',
                               show: true,
                             });
                           } catch (err) {
                             setAnimalFinded(false);
                             setNotification({
-                              type: "danger",
-                              title: "Erro",
+                              type: 'danger',
+                              title: 'Erro',
                               text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                               show: true,
                             });
@@ -488,7 +521,7 @@ export default function CruzamentoDisplay({
                     },
                   };
                   if (!dataToAdd.semen) {
-                    dataToAdd.semen = "não informado";
+                    dataToAdd.semen = 'não informado';
                   }
                   let newAnimal = { ...oneAnimal };
                   newAnimal.dadosCruzamentos.push(dataToAdd);
@@ -508,22 +541,22 @@ export default function CruzamentoDisplay({
                   // console.log(`data after update`, newData.rebanho[cowIndex]);
                   await user.update(property.uuid, newData);
                   setNotification({
-                    type: "success",
-                    title: "Sucesso",
-                    text: "Suas alterações foram salvas!",
+                    type: 'success',
+                    title: 'Sucesso',
+                    text: 'Suas alterações foram salvas!',
                     show: true,
                   });
                   setCruzamentoForm({ ...cruzamentoSchema });
                 } else {
                   alert(
-                    "é necessário indicar, ao menos, uma data de inseminação/cruzamento"
+                    'é necessário indicar, ao menos, uma data de inseminação/cruzamento'
                   );
                 }
               } catch (err) {
                 setAnimalFinded(false);
                 setNotification({
-                  type: "danger",
-                  title: "Erro",
+                  type: 'danger',
+                  title: 'Erro',
                   text: `Não foi possível salvar as alterações. Tente mais tarde.`,
                   show: true,
                 });
@@ -552,7 +585,7 @@ export default function CruzamentoDisplay({
         >
           <FloatingLabel
             controlId="floating-Data-do-ato"
-            label={"Data da inseminação / cruzamento"}
+            label={'Data da inseminação / cruzamento'}
           >
             <Form.Control
               type="date"
@@ -574,7 +607,7 @@ export default function CruzamentoDisplay({
         >
           <FloatingLabel
             controlId="floating-Pai"
-            label={"Semem ou Touro"}
+            label={'Semem ou Touro'}
           >
             <Form.Control
               type="text"
