@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiURLs = {
-  development: 'http://localhost:8080',
+  development: 'https://controlegadoapp.cyclic.app',
   production: 'https://controlegadoapp.cyclic.app',
 };
 

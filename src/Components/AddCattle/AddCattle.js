@@ -147,10 +147,19 @@ function AddCattle() {
                   min="0"
                   step=".01"
                   value={(
-                    Math.round(newAnimal.valorCompra * 100) / 100
+                    Math.round(newAnimal.dadosCompra.valorCompra * 100) / 100
                   ).toFixed(2)}
                   name="valorCompra"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                setNewAnimal((prevState) => ({
+                  ...prevState,
+                  dadosCompra: {
+                    ...prevState.dadosCompra,
+                    [e.target.name]: e.target.value,
+                  },
+                }));
+                console.log(newAnimal);
+              }}
                 />
               </Form.Group>
             </Col>
@@ -159,9 +168,18 @@ function AddCattle() {
                 <Form.Label>Vendedor</Form.Label>
                 <Form.Control
                   type="text"
-                  value={newAnimal.vendedor}
+                  value={newAnimal.dadosCompra.vendedor}
                   name="vendedor"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                setNewAnimal((prevState) => ({
+                  ...prevState,
+                  dadosCompra: {
+                    ...prevState.dadosCompra,
+                    [e.target.name]: e.target.value,
+                  },
+                }));
+                console.log(newAnimal);
+              }}
                 />
               </Form.Group>
             </Col>
@@ -170,9 +188,18 @@ function AddCattle() {
                 <Form.Label>Data da compra</Form.Label>
                 <Form.Control
                   type="date"
-                  value={newAnimal.dtCompra}
+                  value={newAnimal.dadosCompra.dtCompra}
                   name="dtCompra"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                setNewAnimal((prevState) => ({
+                  ...prevState,
+                  dadosCompra: {
+                    ...prevState.dadosCompra,
+                    [e.target.name]: e.target.value,
+                  },
+                }));
+                console.log(newAnimal);
+              }}
                 />
               </Form.Group>
             </Col>
