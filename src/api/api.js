@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiURLs = {
-  development: 'https://controlegadoapp.cyclic.app',
-  production: 'https://controlegadoapp.cyclic.app',
+  development: 'https://rebanho.onrender.com',
+  production: 'https://rebanho.onrender.com',
 };
 
 const api = axios.create({ baseURL: apiURLs[process.env.NODE_ENV] });
