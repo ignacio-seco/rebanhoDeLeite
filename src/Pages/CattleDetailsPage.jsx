@@ -25,7 +25,7 @@ import {
   getLastUpdate,
 } from '../helpers/CalculateAge';
 import { animalSchema } from '../Models/animalModels';
-import { AuthContext } from '../contexts/authContext.js';
+import { AuthContext } from '../contexts/authContext.jsx';
 import curralPermanenciaSchema from '../Models/curralPermanencia.models';
 import pesagemSchema from '../Models/pesagem.models';
 import litragemSchema from '../Models/litragem.models';
@@ -249,507 +249,506 @@ export default function CattleDetailsPage() {
 
   const navigate = useNavigate();
 
+  async function handleMorreuCheckButtonChange(_) {
+    let morreu = !oneAnimal.dadosMorte.morreu;
+
+    let changeAnimal = {
+      ...oneAnimal,
+      dadosServidor: {
+        ...oneAnimal.dadosServidor,
+        lastUpdate: getLastUpdate(),
+      },
+    };
+
+    if (!morreu) {
+      changeAnimal.dadosMorte = {
+        ...oneAnimal.dadosMorte,
+        morreu: false,
+        causaMorte: '',
+        dtMorte: '',
+      };
+    } else {
+      changeAnimal.dadosMorte = {
+        ...oneAnimal.dadosMorte,
+        morreu: true,
+        causaMorte: '',
+        dtMorte: formatDateToDefault(new Date(Date.now())),
+      };
+    }
+
+    setOneAnimal(changeAnimal);
+    try {
+      let newData = {
+        ...property,
+        dadosServidor: {
+          ...property.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
+      let cowIndex = await newData.rebanho.findIndex(
+        (cow) => cow.uuid === id
+      );
+      newData.rebanho[cowIndex] = changeAnimal;
+      //console.log(newData.rebanho[cowIndex]);
+      await user.update(property.uuid, newData);
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
+    } catch (e) {
+      setOneAnimal(property.rebanho[animalIndex]);
+      setNotification({
+        type: 'danger',
+        title: 'Erro',
+        text: `Não foi possível registrar as alterações. Tente mais tarde.`,
+        show: true,
+      });
+      console.error(e);
+    }
+  }
+
+  async function handleVendaCheckButtonChange(_) {
+    let vendida = !oneAnimal.dadosVenda.vendida;
+    const dtVenda = vendida ? oneAnimal.dadosVenda.dtVenda : '';
+    const valorVenda = vendida ? oneAnimal.dadosVenda.valorVenda : '';
+    const comprador = vendida ? oneAnimal.dadosVenda.comprador : '';
+
+    let changeAnimal = {
+      ...oneAnimal,
+      dadosServidor: {
+        ...oneAnimal.dadosServidor,
+        lastUpdate: getLastUpdate(),
+      },
+    };
+    changeAnimal.dadosVenda = {
+      ...oneAnimal.dadosVenda,
+      dtVenda,
+      valorVenda,
+      comprador,
+      vendida,
+    };
+
+    setOneAnimal(changeAnimal);
+    try {
+      let newData = {
+        ...property,
+        dadosServidor: {
+          ...property.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
+      let cowIndex = await newData.rebanho.findIndex(
+        (cow) => cow.uuid === id
+      );
+      newData.rebanho[cowIndex] = changeAnimal;
+      //console.log(newData.rebanho[cowIndex]);
+      await user.update(property.uuid, newData);
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
+    } catch (e) {
+      setOneAnimal(property.rebanho[animalIndex]);
+      setNotification({
+        type: 'danger',
+        title: 'Erro',
+        text: `Não foi possível registrar as alterações. Tente mais tarde.`,
+        show: true,
+      });
+      console.error(e);
+    }
+  }
+
+  function handleAddEstadaBtnClick(cancelBtn = false) {
+    let { clicked, disabled, variant, text, marginRightClass } =
+      formState.btnAdicionarEstada;
+    const { lastOccurrence } = ehUltimaOcorrenciaPastoSaida(oneAnimal);
+
+    if (!clicked) {
+      clicked = true;
+      disabled = true;
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
+    } else {
+      if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
+        text = 'Nova Entrada';
+        if (formState.ocorrenciaPastoToAdd) {
+          if (!cancelBtn) {
+            let thisOcurrance =
+              oneAnimal.estadaCurral[
+                oneAnimal.estadaCurral.indexOf(lastOccurrence)
+              ];
+            thisOcurrance.dtSaidaCurral = formState.ocorrenciaPastoToAdd;
+            thisOcurrance.dadosServidor.lastUpdate = getLastUpdate();
+            oneAnimal.noCurral = false;
+            oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
+          }
+          handleBtnSalvarAlteracoesClick();
+          text = 'Nova Entrada';
+        } else {
+          text = 'Nova Saída';
+          disabled = false;
+        }
+      } else {
+        if (!cancelBtn && formState.ocorrenciaPastoToAdd) {
+          oneAnimal.estadaCurral.push({
+            ...curralPermanenciaSchema,
+            dtEntradaCurral: formState.ocorrenciaPastoToAdd,
+            creator: property._id,
+            animaluuid: oneAnimal.uuid,
+            uuid: uuidv4(),
+            dadosServidor: {
+              ...curralPermanenciaSchema.dadosServidor,
+              lastUpdate: getLastUpdate(),
+            },
+          });
+          oneAnimal.noCurral = true;
+          oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
+          handleBtnSalvarAlteracoesClick();
+          text = 'Nova Saída';
+        } else {
+          text = 'Nova Entrada';
+          disabled = false;
+        }
+      }
+      clicked = false;
+      variant = 'outline-primary';
+      marginRightClass = '';
+    }
+
+    setOneAnimal((prevState) => ({
+      ...prevState,
+      noCurral: Boolean(
+        oneAnimal.estadaCurral.length &&
+          !oneAnimal.estadaCurral[oneAnimal.estadaCurral.length - 1]
+            .dtSaidaCurral
+      ),
+    }));
+
+    setFormState((prevState) => ({
+      ...prevState,
+      ocorrenciaPastoToAdd: '',
+      btnAdicionarEstada: {
+        clicked,
+        disabled,
+        variant,
+        text,
+        marginRightClass,
+      },
+    }));
+  }
+  function handleAddPesagemBtnClick(cancelBtn = false) {
+    let { clicked, disabled, variant, text, marginRightClass } =
+      formState.btnAdicionarPesagem;
+
+    if (!clicked) {
+      clicked = true;
+      disabled = true;
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
+    } else {
+      if (
+        !cancelBtn &&
+        formState.ocorrenciaPesoToAdd.dtPesagem &&
+        formState.ocorrenciaPesoToAdd.peso
+      ) {
+        oneAnimal.pesagem.push({
+          ...pesagemSchema,
+          ...formState.ocorrenciaPesoToAdd,
+          uuid: uuidv4(),
+          creator: property._id,
+          animaluuid: oneAnimal.uuid,
+          dadosServidor: {
+            ...pesagemSchema.dadosServidor,
+            lastUpdate: getLastUpdate(),
+          },
+        });
+        setOneAnimal({
+          ...oneAnimal,
+          pesagem: oneAnimal.pesagem.sort(
+            (a, b) =>
+              new Date(a.dtPesagem).getTime() -
+              new Date(b.dtPesagem).getTime()
+          ),
+        });
+        handleBtnSalvarAlteracoesClick();
+        text = 'Nova pesagem';
+      } else if (!cancelBtn) {
+        alert(
+          'É necessário preencher o peso e a data da pesagem para cadastrar novo registro'
+        );
+      } else {
+        text = 'Nova pesagem';
+        disabled = false;
+      }
+      clicked = false;
+      variant = 'outline-primary';
+      marginRightClass = '';
+    }
+    setFormState((prevState) => ({
+      ...prevState,
+      ocorrenciaPesoToAdd: { dtPesagem: '', peso: '' },
+      btnAdicionarPesagem: {
+        clicked,
+        disabled,
+        variant,
+        text,
+        marginRightClass,
+      },
+    }));
+  }
+
+  function handleAddLitragemBtnClick(cancelBtn = false) {
+    let { clicked, disabled, variant, text, marginRightClass } =
+      formState.btnAdicionarLitragem;
+
+    if (!clicked) {
+      clicked = true;
+      disabled = true;
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
+    } else {
+      if (
+        !cancelBtn &&
+        formState.ocorrenciaLeiteToAdd.dtVerificacao &&
+        formState.ocorrenciaLeiteToAdd.qtdLitros
+      ) {
+        oneAnimal.producaoLeite.push({
+          ...litragemSchema,
+          ...formState.ocorrenciaLeiteToAdd,
+          uuid: uuidv4(),
+          creator: property._id,
+          animaluuid: oneAnimal.uuid,
+          dadosServidor: {
+            ...litragemSchema.dadosServidor,
+            lastUpdate: getLastUpdate(),
+          },
+        });
+        setOneAnimal({
+          ...oneAnimal,
+          producaoLeite: oneAnimal.producaoLeite.sort(
+            (a, b) =>
+              new Date(a.dtVerificacao).getTime() -
+              new Date(b.dtVerificacao).getTime()
+          ),
+        });
+        handleBtnSalvarAlteracoesClick();
+        text = 'Nova litragem';
+      } else if (!cancelBtn) {
+        alert(
+          'É necessário preencher os litros e a data da monitoração para cadastrar novo registro'
+        );
+      } else {
+        text = 'Nova litragem';
+        disabled = false;
+      }
+      clicked = false;
+      variant = 'outline-primary';
+      marginRightClass = '';
+    }
+    setFormState((prevState) => ({
+      ...prevState,
+      ocorrenciaLeiteToAdd: { dtVerificacao: '', qtdLitros: '' },
+      btnAdicionarLitragem: {
+        clicked,
+        disabled,
+        variant,
+        text,
+        marginRightClass,
+      },
+    }));
+  }
+
+  function handleAddHistoricoBtnClick(cancelBtn = false) {
+    let { clicked, disabled, variant, text, marginRightClass } =
+      formState.btnAdicionarHistorico;
+
+    if (!clicked) {
+      clicked = true;
+      disabled = true;
+      variant = 'outline-success';
+      text = 'Confirmar';
+      marginRightClass = 'me-2';
+    } else {
+      if (
+        !cancelBtn &&
+        formState.ocorrenciaHistoricoToAdd.dtHistorico &&
+        formState.ocorrenciaHistoricoToAdd.descricao
+      ) {
+        oneAnimal.historico.push({
+          ...historicoSchema,
+          ...formState.ocorrenciaHistoricoToAdd,
+          uuid: uuidv4(),
+          creator: property._id,
+          animaluuid: oneAnimal.uuid,
+          dadosServidor: {
+            ...historicoSchema.dadosServidor,
+            lastUpdate: getLastUpdate(),
+          },
+        });
+        setOneAnimal({
+          ...oneAnimal,
+          historico: oneAnimal.historico.sort(
+            (a, b) =>
+              new Date(a.dtHistorico).getTime() -
+              new Date(b.dtHistorico).getTime()
+          ),
+        });
+        handleBtnSalvarAlteracoesClick();
+        text = 'Nova observação';
+      } else if (!cancelBtn) {
+        alert(
+          'É necessário preencher a descrição e a data da observação para cadastrar novo registro'
+        );
+      } else {
+        text = 'Nova observação';
+        disabled = false;
+      }
+      clicked = false;
+      variant = 'outline-primary';
+      marginRightClass = '';
+    }
+    setFormState((prevState) => ({
+      ...prevState,
+      ocorrenciaHistoricoToAdd: {
+        dtHistorico: formatDateToDefault(new Date(Date.now())),
+        descricao: '',
+      },
+      btnAdicionarHistorico: {
+        clicked,
+        disabled,
+        variant,
+        text,
+        marginRightClass,
+      },
+    }));
+  }
+  function handleBtnEditarDetalhesClick(e) {
+    e.preventDefault();
+    setFormState((prevState) => ({
+      ...prevState,
+      btnEditarDetalhes: { show: false },
+    }));
+  }
+
+  async function handleBtnSalvarAlteracoesClick() {
+    setFormState((prevState) => ({
+      ...prevState,
+      btnSalvarDetalhes: {
+        text: 'Salvando...',
+        loading: true,
+      },
+    }));
+
+    try {
+      let cowIndex = await property.rebanho.findIndex(
+        (cow) => cow.uuid === id
+      );
+      let newData = {
+        ...property,
+        dadosServidor: {
+          ...property.dadosServidor,
+          lastUpdate: new Date(Date.now()).getTime(),
+        },
+      };
+      //console.log(`data before update`, property.rebanho[cowIndex]);
+      oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
+      newData.rebanho[cowIndex] = oneAnimal;
+      //console.log(`data after update`, newData.rebanho[cowIndex]);
+
+      await user.update(property.uuid, newData);
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
+    } catch (e) {
+      setAnimalFinded(false);
+      setNotification({
+        type: 'danger',
+        title: 'Erro',
+        text: `Não foi possível salvar as alterações. Tente mais tarde.`,
+        show: true,
+      });
+      console.error(e);
+    } finally {
+      setFormState((prevState) => ({
+        ...prevState,
+        btnEditarDetalhes: { show: true },
+        btnSalvarDetalhes: {
+          text: 'Salvar Alterações',
+          loading: false,
+        },
+      }));
+    }
+  }
+
+  async function handleBtnModalConfirmarExclusao(e) {
+    e.preventDefault();
+    setModalConfirmaExclusao((prevState) => ({
+      ...prevState,
+      btnConfirmar: {
+        loading: true,
+        text: 'Excluindo...',
+      },
+    }));
+    try {
+      let cowIndex = await property.rebanho.findIndex(
+        (cow) => cow.uuid === id
+      );
+      let newData = {
+        ...property,
+        dadosServidor: {
+          ...property.dadosServidor,
+          lastUpdate: getLastUpdate(),
+        },
+      };
+      //console.log(`data before update`, newData.rebanho.length);
+      newData.rebanho[cowIndex].dadosServidor.deletado = true;
+      newData.rebanho[cowIndex].dadosServidor.lastUpdate = getLastUpdate();
+      //console.log(`data after update`, newData.rebanho.length);
+
+      await user.update(property.uuid, newData);
+      setNotification({
+        type: 'success',
+        title: 'Sucesso',
+        text: 'Suas alterações foram salvas!',
+        show: true,
+      });
+      navigate(-1);
+    } catch (e) {
+      setNotification({
+        type: 'danger',
+        title: 'Erro',
+        text: `Não foi possível remover o animal. Tente mais tarde.`,
+        show: true,
+      });
+      console.error(e);
+    } finally {
+      setModalConfirmaExclusao((prevState) => ({
+        ...prevState,
+        show: false,
+        btnConfirmar: {
+          loading: false,
+          text: 'Confirmar',
+        },
+      }));
+    }
+  }
+
   if (loading) {
     return <h3>Loading...</h3>;
   } else {
     !loading && !animalFinded && findAnimal(); //a função de pegar dados já é feita pelo app.js,
     //essa linha acima com circuit break garante que o animal vai ser setado após o cattle ter sido carregado e que a função só vai ser chamada uma vez.
-
-    async function handleMorreuCheckButtonChange(_) {
-      let morreu = !oneAnimal.dadosMorte.morreu;
-
-      let changeAnimal = {
-        ...oneAnimal,
-        dadosServidor: {
-          ...oneAnimal.dadosServidor,
-          lastUpdate: getLastUpdate(),
-        },
-      };
-
-      if (!morreu) {
-        changeAnimal.dadosMorte = {
-          ...oneAnimal.dadosMorte,
-          morreu: false,
-          causaMorte: '',
-          dtMorte: '',
-        };
-      } else {
-        changeAnimal.dadosMorte = {
-          ...oneAnimal.dadosMorte,
-          morreu: true,
-          causaMorte: '',
-          dtMorte: formatDateToDefault(new Date(Date.now())),
-        };
-      }
-
-      setOneAnimal(changeAnimal);
-      try {
-        let newData = {
-          ...property,
-          dadosServidor: {
-            ...property.dadosServidor,
-            lastUpdate: getLastUpdate(),
-          },
-        };
-        let cowIndex = await newData.rebanho.findIndex(
-          (cow) => cow.uuid === id
-        );
-        newData.rebanho[cowIndex] = changeAnimal;
-        //console.log(newData.rebanho[cowIndex]);
-        await user.update(property.uuid, newData);
-        setNotification({
-          type: 'success',
-          title: 'Sucesso',
-          text: 'Suas alterações foram salvas!',
-          show: true,
-        });
-      } catch (e) {
-        setOneAnimal(property.rebanho[animalIndex]);
-        setNotification({
-          type: 'danger',
-          title: 'Erro',
-          text: `Não foi possível registrar as alterações. Tente mais tarde.`,
-          show: true,
-        });
-        console.error(e);
-      }
-    }
-
-    async function handleVendaCheckButtonChange(_) {
-      let vendida = !oneAnimal.dadosVenda.vendida;
-      const dtVenda = vendida ? oneAnimal.dadosVenda.dtVenda : '';
-      const valorVenda = vendida ? oneAnimal.dadosVenda.valorVenda : '';
-      const comprador = vendida ? oneAnimal.dadosVenda.comprador : '';
-
-      let changeAnimal = {
-        ...oneAnimal,
-        dadosServidor: {
-          ...oneAnimal.dadosServidor,
-          lastUpdate: getLastUpdate(),
-        },
-      };
-      changeAnimal.dadosVenda = {
-        ...oneAnimal.dadosVenda,
-        dtVenda,
-        valorVenda,
-        comprador,
-        vendida,
-      };
-
-      setOneAnimal(changeAnimal);
-      try {
-        let newData = {
-          ...property,
-          dadosServidor: {
-            ...property.dadosServidor,
-            lastUpdate: getLastUpdate(),
-          },
-        };
-        let cowIndex = await newData.rebanho.findIndex(
-          (cow) => cow.uuid === id
-        );
-        newData.rebanho[cowIndex] = changeAnimal;
-        //console.log(newData.rebanho[cowIndex]);
-        await user.update(property.uuid, newData);
-        setNotification({
-          type: 'success',
-          title: 'Sucesso',
-          text: 'Suas alterações foram salvas!',
-          show: true,
-        });
-      } catch (e) {
-        setOneAnimal(property.rebanho[animalIndex]);
-        setNotification({
-          type: 'danger',
-          title: 'Erro',
-          text: `Não foi possível registrar as alterações. Tente mais tarde.`,
-          show: true,
-        });
-        console.error(e);
-      }
-    }
-
-    function handleAddEstadaBtnClick(cancelBtn = false) {
-      let { clicked, disabled, variant, text, marginRightClass } =
-        formState.btnAdicionarEstada;
-      const { lastOccurrence } = ehUltimaOcorrenciaPastoSaida(oneAnimal);
-
-      if (!clicked) {
-        clicked = true;
-        disabled = true;
-        variant = 'outline-success';
-        text = 'Confirmar';
-        marginRightClass = 'me-2';
-      } else {
-        if (oneAnimal.estadaCurral.length && !lastOccurrence.dtSaidaCurral) {
-          text = 'Nova Entrada';
-          if (formState.ocorrenciaPastoToAdd) {
-            if (!cancelBtn) {
-              let thisOcurrance =
-                oneAnimal.estadaCurral[
-                  oneAnimal.estadaCurral.indexOf(lastOccurrence)
-                ];
-              thisOcurrance.dtSaidaCurral = formState.ocorrenciaPastoToAdd;
-              thisOcurrance.dadosServidor.lastUpdate = getLastUpdate();
-              oneAnimal.noCurral = false;
-              oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
-            }
-            handleBtnSalvarAlteracoesClick();
-            text = 'Nova Entrada';
-          } else {
-            text = 'Nova Saída';
-            disabled = false;
-          }
-        } else {
-          if (!cancelBtn && formState.ocorrenciaPastoToAdd) {
-            oneAnimal.estadaCurral.push({
-              ...curralPermanenciaSchema,
-              dtEntradaCurral: formState.ocorrenciaPastoToAdd,
-              creator: property._id,
-              animaluuid: oneAnimal.uuid,
-              uuid: uuidv4(),
-              dadosServidor: {
-                ...curralPermanenciaSchema.dadosServidor,
-                lastUpdate: getLastUpdate(),
-              },
-            });
-            oneAnimal.noCurral = true;
-            oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
-            handleBtnSalvarAlteracoesClick();
-            text = 'Nova Saída';
-          } else {
-            text = 'Nova Entrada';
-            disabled = false;
-          }
-        }
-        clicked = false;
-        variant = 'outline-primary';
-        marginRightClass = '';
-      }
-
-      setOneAnimal((prevState) => ({
-        ...prevState,
-        noCurral: Boolean(
-          oneAnimal.estadaCurral.length &&
-            !oneAnimal.estadaCurral[oneAnimal.estadaCurral.length - 1]
-              .dtSaidaCurral
-        ),
-      }));
-
-      setFormState((prevState) => ({
-        ...prevState,
-        ocorrenciaPastoToAdd: '',
-        btnAdicionarEstada: {
-          clicked,
-          disabled,
-          variant,
-          text,
-          marginRightClass,
-        },
-      }));
-    }
-    function handleAddPesagemBtnClick(cancelBtn = false) {
-      let { clicked, disabled, variant, text, marginRightClass } =
-        formState.btnAdicionarPesagem;
-
-      if (!clicked) {
-        clicked = true;
-        disabled = true;
-        variant = 'outline-success';
-        text = 'Confirmar';
-        marginRightClass = 'me-2';
-      } else {
-        if (
-          !cancelBtn &&
-          formState.ocorrenciaPesoToAdd.dtPesagem &&
-          formState.ocorrenciaPesoToAdd.peso
-        ) {
-          oneAnimal.pesagem.push({
-            ...pesagemSchema,
-            ...formState.ocorrenciaPesoToAdd,
-            uuid: uuidv4(),
-            creator: property._id,
-            animaluuid: oneAnimal.uuid,
-            dadosServidor: {
-              ...pesagemSchema.dadosServidor,
-              lastUpdate: getLastUpdate(),
-            },
-          });
-          setOneAnimal({
-            ...oneAnimal,
-            pesagem: oneAnimal.pesagem.sort(
-              (a, b) =>
-                new Date(a.dtPesagem).getTime() -
-                new Date(b.dtPesagem).getTime()
-            ),
-          });
-          handleBtnSalvarAlteracoesClick();
-          text = 'Nova pesagem';
-        } else if (!cancelBtn) {
-          alert(
-            'É necessário preencher o peso e a data da pesagem para cadastrar novo registro'
-          );
-        } else {
-          text = 'Nova pesagem';
-          disabled = false;
-        }
-        clicked = false;
-        variant = 'outline-primary';
-        marginRightClass = '';
-      }
-      setFormState((prevState) => ({
-        ...prevState,
-        ocorrenciaPesoToAdd: { dtPesagem: '', peso: '' },
-        btnAdicionarPesagem: {
-          clicked,
-          disabled,
-          variant,
-          text,
-          marginRightClass,
-        },
-      }));
-    }
-
-    function handleAddLitragemBtnClick(cancelBtn = false) {
-      let { clicked, disabled, variant, text, marginRightClass } =
-        formState.btnAdicionarLitragem;
-
-      if (!clicked) {
-        clicked = true;
-        disabled = true;
-        variant = 'outline-success';
-        text = 'Confirmar';
-        marginRightClass = 'me-2';
-      } else {
-        if (
-          !cancelBtn &&
-          formState.ocorrenciaLeiteToAdd.dtVerificacao &&
-          formState.ocorrenciaLeiteToAdd.qtdLitros
-        ) {
-          oneAnimal.producaoLeite.push({
-            ...litragemSchema,
-            ...formState.ocorrenciaLeiteToAdd,
-            uuid: uuidv4(),
-            creator: property._id,
-            animaluuid: oneAnimal.uuid,
-            dadosServidor: {
-              ...litragemSchema.dadosServidor,
-              lastUpdate: getLastUpdate(),
-            },
-          });
-          setOneAnimal({
-            ...oneAnimal,
-            producaoLeite: oneAnimal.producaoLeite.sort(
-              (a, b) =>
-                new Date(a.dtVerificacao).getTime() -
-                new Date(b.dtVerificacao).getTime()
-            ),
-          });
-          handleBtnSalvarAlteracoesClick();
-          text = 'Nova litragem';
-        } else if (!cancelBtn) {
-          alert(
-            'É necessário preencher os litros e a data da monitoração para cadastrar novo registro'
-          );
-        } else {
-          text = 'Nova litragem';
-          disabled = false;
-        }
-        clicked = false;
-        variant = 'outline-primary';
-        marginRightClass = '';
-      }
-      setFormState((prevState) => ({
-        ...prevState,
-        ocorrenciaLeiteToAdd: { dtVerificacao: '', qtdLitros: '' },
-        btnAdicionarLitragem: {
-          clicked,
-          disabled,
-          variant,
-          text,
-          marginRightClass,
-        },
-      }));
-    }
-
-    function handleAddHistoricoBtnClick(cancelBtn = false) {
-      let { clicked, disabled, variant, text, marginRightClass } =
-        formState.btnAdicionarHistorico;
-
-      if (!clicked) {
-        clicked = true;
-        disabled = true;
-        variant = 'outline-success';
-        text = 'Confirmar';
-        marginRightClass = 'me-2';
-      } else {
-        if (
-          !cancelBtn &&
-          formState.ocorrenciaHistoricoToAdd.dtHistorico &&
-          formState.ocorrenciaHistoricoToAdd.descricao
-        ) {
-          oneAnimal.historico.push({
-            ...historicoSchema,
-            ...formState.ocorrenciaHistoricoToAdd,
-            uuid: uuidv4(),
-            creator: property._id,
-            animaluuid: oneAnimal.uuid,
-            dadosServidor: {
-              ...historicoSchema.dadosServidor,
-              lastUpdate: getLastUpdate(),
-            },
-          });
-          setOneAnimal({
-            ...oneAnimal,
-            historico: oneAnimal.historico.sort(
-              (a, b) =>
-                new Date(a.dtHistorico).getTime() -
-                new Date(b.dtHistorico).getTime()
-            ),
-          });
-          handleBtnSalvarAlteracoesClick();
-          text = 'Nova observação';
-        } else if (!cancelBtn) {
-          alert(
-            'É necessário preencher a descrição e a data da observação para cadastrar novo registro'
-          );
-        } else {
-          text = 'Nova observação';
-          disabled = false;
-        }
-        clicked = false;
-        variant = 'outline-primary';
-        marginRightClass = '';
-      }
-      setFormState((prevState) => ({
-        ...prevState,
-        ocorrenciaHistoricoToAdd: {
-          dtHistorico: formatDateToDefault(new Date(Date.now())),
-          descricao: '',
-        },
-        btnAdicionarHistorico: {
-          clicked,
-          disabled,
-          variant,
-          text,
-          marginRightClass,
-        },
-      }));
-    }
-    function handleBtnEditarDetalhesClick(e) {
-      e.preventDefault();
-      setFormState((prevState) => ({
-        ...prevState,
-        btnEditarDetalhes: { show: false },
-      }));
-    }
-
-    async function handleBtnSalvarAlteracoesClick() {
-      setFormState((prevState) => ({
-        ...prevState,
-        btnSalvarDetalhes: {
-          text: 'Salvando...',
-          loading: true,
-        },
-      }));
-
-      try {
-        let cowIndex = await property.rebanho.findIndex(
-          (cow) => cow.uuid === id
-        );
-        let newData = {
-          ...property,
-          dadosServidor: {
-            ...property.dadosServidor,
-            lastUpdate: new Date(Date.now()).getTime(),
-          },
-        };
-        //console.log(`data before update`, property.rebanho[cowIndex]);
-        oneAnimal.dadosServidor.lastUpdate = getLastUpdate();
-        newData.rebanho[cowIndex] = oneAnimal;
-        //console.log(`data after update`, newData.rebanho[cowIndex]);
-
-        await user.update(property.uuid, newData);
-        setNotification({
-          type: 'success',
-          title: 'Sucesso',
-          text: 'Suas alterações foram salvas!',
-          show: true,
-        });
-      } catch (e) {
-        setAnimalFinded(false);
-        setNotification({
-          type: 'danger',
-          title: 'Erro',
-          text: `Não foi possível salvar as alterações. Tente mais tarde.`,
-          show: true,
-        });
-        console.error(e);
-      } finally {
-        setFormState((prevState) => ({
-          ...prevState,
-          btnEditarDetalhes: { show: true },
-          btnSalvarDetalhes: {
-            text: 'Salvar Alterações',
-            loading: false,
-          },
-        }));
-      }
-    }
-
-    async function handleBtnModalConfirmarExclusao(e) {
-      e.preventDefault();
-      setModalConfirmaExclusao((prevState) => ({
-        ...prevState,
-        btnConfirmar: {
-          loading: true,
-          text: 'Excluindo...',
-        },
-      }));
-      try {
-        let cowIndex = await property.rebanho.findIndex(
-          (cow) => cow.uuid === id
-        );
-        let newData = {
-          ...property,
-          dadosServidor: {
-            ...property.dadosServidor,
-            lastUpdate: getLastUpdate(),
-          },
-        };
-        //console.log(`data before update`, newData.rebanho.length);
-        newData.rebanho[cowIndex].dadosServidor.deletado = true;
-        newData.rebanho[cowIndex].dadosServidor.lastUpdate = getLastUpdate();
-        //console.log(`data after update`, newData.rebanho.length);
-
-        await user.update(property.uuid, newData);
-        setNotification({
-          type: 'success',
-          title: 'Sucesso',
-          text: 'Suas alterações foram salvas!',
-          show: true,
-        });
-        navigate(-1);
-      } catch (e) {
-        setNotification({
-          type: 'danger',
-          title: 'Erro',
-          text: `Não foi possível remover o animal. Tente mais tarde.`,
-          show: true,
-        });
-        console.error(e);
-      } finally {
-        setModalConfirmaExclusao((prevState) => ({
-          ...prevState,
-          show: false,
-          btnConfirmar: {
-            loading: false,
-            text: 'Confirmar',
-          },
-        }));
-      }
-    }
-
     if (loading) {
       return <h3>Loading</h3>;
     }
