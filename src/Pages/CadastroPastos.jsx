@@ -109,7 +109,7 @@ export default function CadastrarPastos() {
                   show: true,
         type: 'success',
         title: 'Seu desejo é uma ordem',
-        text: 'Pedido atendido',
+        text: 'Pedido atendido!',
         delay: 5000,
                 })
                   setFindedData(false);
