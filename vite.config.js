@@ -28,6 +28,7 @@ export default defineConfig({
       disabled: false,
       config: true,
     },
+    includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
 
     manifest: {
       theme_color: "#000000",
