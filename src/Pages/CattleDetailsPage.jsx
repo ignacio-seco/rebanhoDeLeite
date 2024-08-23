@@ -787,7 +787,12 @@ export default function CattleDetailsPage() {
               </Button>
             </Container>
             <Form>
-              <Row className="py-3">
+              <Row 
+              xs={1}
+            md={1}
+            lg={2}
+            xl={2}
+              className="py-3">
                 <Col>
                 <div>
                   <Container className="cow-details-img-container me-3 mb-3" style={{minWidth:"250px"}}>
@@ -802,9 +807,9 @@ export default function CattleDetailsPage() {
                   {navigator.onLine && <Button variant="outline-primary" onClick={(e)=>{e.preventDefault(); setImageUploadModal(true)}}>Alterar imagem</Button>}
                   </div>
                 </Col>
-                <Col className="ps-xl-4 align-self-center">
+                <Col className="ps-xl-4 align-self-center mt-4">
                   <Row
-                    xs={1}
+                    xs={2}
             md={2}
             lg={4}
             xl={4}>

@@ -103,7 +103,7 @@ function CattleList({ cowFilterFn }) {
 
         <Row
           xs={1}
-          md={2}
+          md={1}
           lg={3}
           xl={3}
         >

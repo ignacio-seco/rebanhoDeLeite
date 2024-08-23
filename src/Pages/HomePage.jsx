@@ -19,7 +19,7 @@ function HomePage() {
     <Container className="mt-4">
       <Row
         xs={1}
-        md={2}
+        md={1}
         lg={3}
         xl={4}
         className="presentation-page g-4"
