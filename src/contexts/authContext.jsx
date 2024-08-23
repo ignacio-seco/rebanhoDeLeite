@@ -18,6 +18,13 @@ function AuthContextComponente(props) {
   });
   const [loading, setLoading] = useState(true);
   const [syncLoading, setSyncLoading] =useState(false)
+  const [notification, setNotification] = useState({
+    show: false,
+    type: '',
+    title: '',
+    text: '',
+    delay: 5000,
+  });
 
   const db = new Dexie('loggedUser');
   db.version(1).stores({ user: 'uuid' });
@@ -82,7 +89,9 @@ function AuthContextComponente(props) {
         getLoggedInUser,
         user,
         syncLoading,
-        setSyncLoading
+        setSyncLoading,
+        notification,
+        setNotification
       }}
     >
       {props.children}

@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 export default function LandingPage2(props) {
-  const { getLoggedInUser } = useContext(AuthContext);
+  const { getLoggedInUser, setNotification } = useContext(AuthContext);
   let navigate = useNavigate();
 
   const [showSignUp, setShowSignUP] = useState(false);
@@ -60,15 +60,6 @@ export default function LandingPage2(props) {
   };
   const handleShowLogin = () => setShowLogin(true);
 
-  const [notification, setNotification] = useState({
-    show: false,
-    type: "",
-    title: "",
-    text: "",
-    delay: 2000,
-  });
-  const setNotificationShow = (value) =>
-    setNotification({ ...notification, show: value });
   function handleSignUpChange(e) {
     setSignUpForm({ ...signUpForm, [e.target.name]: e.target.value });
   }
@@ -393,14 +384,6 @@ export default function LandingPage2(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Notification
-        show={notification.show}
-        setShow={setNotificationShow}
-        type={notification.type}
-        title={notification.title}
-        delay={notification.delay}
-        text={notification.text}
-      />
     </>
   );
 }

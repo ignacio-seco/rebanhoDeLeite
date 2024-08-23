@@ -6,24 +6,13 @@ import HomeIcon from "../../assets/cow_PNG2139.webp";
 import BackIcon from "../../assets/pngfind.com-arrow-png-transparent-162137.png";
 import Modal from "react-bootstrap/Modal";
 import "./NavigationBar.css";
-import Notification from "../Notification";
 import { AuthContext } from "../../contexts/authContext";
 import api from "../../api/api";
 
 function NavigationBar() {
   let navigate = useNavigate();
-  const { user, getData, data, syncLoading, setSyncLoading } =
+  const { user, getData, data, syncLoading, setSyncLoading, setNotification} =
     useContext(AuthContext);
-
-  const [notification, setNotification] = useState({
-    show: false,
-    type: "",
-    title: "",
-    text: "",
-    delay: 2000,
-  });
-  const setNotificationShow = (value) =>
-    setNotification({ ...notification, show: value });
 
   const [showLogOut, setShowLogOut] = useState(false);
   const handleCloseLogOut = () => setShowLogOut(false);
@@ -36,7 +25,7 @@ function NavigationBar() {
         type: "secondary",
         title: "Sincronizando",
         text: "Aguarde. Sincronizando seus dados agora!",
-        delay: 2000,
+        delay: 4000,
       });
       const loggedInUserJson = localStorage.getItem("loggedInUser");
       const parsedLoggedInUser = JSON.parse(loggedInUserJson || '""');
@@ -62,7 +51,7 @@ function NavigationBar() {
         show: true,
         type: "danger",
         title: "Sincronização falhou",
-        text: "Parece que você - ou nossos servidores - está offline ",
+        text: "Parece que você - ou nosso servidor - está offline ",
         delay: 10000,
       });
       setSyncLoading(false);
@@ -141,14 +130,6 @@ function NavigationBar() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Notification
-        show={notification.show}
-        setShow={setNotificationShow}
-        type={notification.type}
-        title={notification.title}
-        delay={notification.delay}
-        text={notification.text}
-      />
     </>
   );
 }

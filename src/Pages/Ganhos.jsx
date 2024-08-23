@@ -40,15 +40,16 @@ export default function Ganhos() {
   useEffect(() => {
     getData();
   }, []);
+  function putNewData() {
+    setNewData({ ...data });
+    setFindedData(true);
+    //console.log(newData);
+  }
   //console.log("this is the data", data);
   if (loading) {
     return <h1>Loading</h1>;
   } else {
-    function putNewData() {
-      setNewData({ ...data });
-      setFindedData(true);
-      //console.log(newData);
-    }
+    
     !findedData && putNewData();
 
     const filterData = () => {

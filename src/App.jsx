@@ -1,25 +1,26 @@
+import 'react-image-crop/dist/ReactCrop.css'
 import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import AddCattle from './Components/AddCattle/AddCattle';
-import NavigationBar from './Components/NavigationBar/NavigationBar';
-import HomePage from './Pages/HomePage';
-import CattleHerdPage from './Pages/CattleHerdPage';
-import CattleShedPage from './Pages/CattleShedPage';
-import Reports from './Pages/Reports';
-import RebanhoDetalhado from './Pages/Relatorios/RebanhoDetalhado';
-import Perdas from './Pages/Relatorios/Perdas';
-import Vendas from './Pages/Relatorios/Vendas';
-import CattleDetailsPage from './Pages/CattleDetailsPage';
-import Bezerros from './Pages/Relatorios/Bezerros.js';
-import Pastos from './Pages/Relatorios/Pastos';
-import MilkMonitoring from './Pages/Monitoramentos/MilkMonitoring';
-import Monitoring from './Pages/Monitoring';
-import WeightMonitor from './Pages/Monitoramentos/WeightMonitor';
-import { AuthContext } from './contexts/authContext';
-import CadastrarPastos from './Pages/CadastroPastos';
-import Ganhos from './Pages/Ganhos';
-import Gastos from './Pages/Gastos';
+import AddCattle from './Components/AddCattle/AddCattle.jsx';
+import NavigationBar from './Components/NavigationBar/NavigationBar.jsx';
+import HomePage from './Pages/HomePage.jsx';
+import CattleHerdPage from './Pages/CattleHerdPage.jsx';
+import CattleShedPage from './Pages/CattleShedPage.jsx';
+import Reports from './Pages/Reports.jsx';
+import RebanhoDetalhado from './Pages/Relatorios/RebanhoDetalhado.jsx';
+import Perdas from './Pages/Relatorios/Perdas.jsx';
+import Vendas from './Pages/Relatorios/Vendas.jsx';
+import CattleDetailsPage from './Pages/CattleDetailsPage.jsx';
+import Bezerros from './Pages/Relatorios/Bezerros.jsx';
+import Pastos from './Pages/Relatorios/Pastos.jsx';
+import MilkMonitoring from './Pages/Monitoramentos/MilkMonitoring.jsx';
+import Monitoring from './Pages/Monitoring.jsx';
+import WeightMonitor from './Pages/Monitoramentos/WeightMonitor.jsx';
+import { AuthContext } from './contexts/authContext.jsx';
+import CadastrarPastos from './Pages/CadastroPastos.jsx';
+import Ganhos from './Pages/Ganhos.jsx';
+import Gastos from './Pages/Gastos.jsx';
 import Finances from './Pages/FinancasMainPage';
 import GraficoFinanceiro from './Pages/graficoFInanceiro';
 import LandingPage2 from './Pages/LandingPage2';
@@ -27,6 +28,7 @@ import Tarefas from './Pages/Tarefas';
 import Nascimentos from './Pages/Relatorios/Nascimentos';
 import Observacoes from './Pages/Relatorios/Observacoes';
 import CadastrarLotes from './Pages/CadastroLotes';
+import Notification from './Components/Notification.jsx';
 
 function App() {
   const { loggedInUser } = useContext(AuthContext);
@@ -44,6 +46,7 @@ function App() {
             element={<LandingPage2 />}
           />
         </Routes>
+        <Notification/>
       </div>
     );
   } else {
@@ -152,6 +155,7 @@ function App() {
             />
           </Routes>
         </div>
+        <Notification/>
       </div>
     );
   }

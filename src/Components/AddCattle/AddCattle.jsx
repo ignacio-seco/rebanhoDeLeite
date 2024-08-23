@@ -11,27 +11,17 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { filterMonths, formatDateToDefault } from '../../helpers/CalculateAge';
 import { animalSchema } from '../../Models/animalModels';
-import Notification from '../Notification';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from '../../contexts/authContext';
 
 function AddCattle() {
   const navigate = useNavigate();
-  const { data, getData, user } = useContext(AuthContext);
+  const { data, getData, user, setNotification } = useContext(AuthContext);
   let property = data;
   let getCattle = getData;
   const [newAnimal, setNewAnimal] = useState({ ...animalSchema });
 
   const [radioValue, setRadioValue] = useState('');
-  const [notification, setNotification] = useState({
-    show: false,
-    type: '',
-    title: '',
-    text: '',
-    delay: 2000,
-  });
-  const setNotificationShow = (value) =>
-    setNotification({ ...notification, show: value });
 
   function handleChange(e) {
     setNewAnimal({ ...newAnimal, [e.target.name]: e.target.value });
@@ -214,7 +204,7 @@ function AddCattle() {
           <ToggleButton
             id={`radio-0`}
             type="radio"
-            variant={0 % 2 ? 'outline-success' : 'outline-danger'}
+            variant={'outline-danger'}
             name="sexo"
             value="MACHO"
             checked={radioValue === 'MACHO'}
@@ -227,7 +217,7 @@ function AddCattle() {
           <ToggleButton
             id={`radio-1`}
             type="radio"
-            variant={1 % 2 ? 'outline-success' : 'outline-danger'}
+            variant={'outline-success'}
             name="sexo"
             value="FEMEA"
             checked={radioValue === 'FEMEA'}
@@ -304,14 +294,6 @@ function AddCattle() {
           Cadastrar Animal
         </Button>
       </Form>
-      <Notification
-        show={notification.show}
-        setShow={setNotificationShow}
-        type={notification.type}
-        title={notification.title}
-        delay={notification.delay}
-        text={notification.text}
-      />
     </Container>
   );
 }

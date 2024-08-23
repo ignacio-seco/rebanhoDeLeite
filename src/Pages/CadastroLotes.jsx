@@ -11,7 +11,7 @@ import {
   Form,
 } from 'react-bootstrap';
 
-export default function CadastrarPastos() {
+export default function CadastrarLotes() {
   const { data, loading, getData, user, setData } = useContext(AuthContext);
   const [showBTNDetalhes, setShowBTNDetalhes] = useState(true);
   const [findedData, setFindedData] = useState(false);
@@ -20,18 +20,18 @@ export default function CadastrarPastos() {
     getData();
   }, []);
   //console.log('this is the data', data);
+  function putNewData() {
+    setNewData({ ...data });
+    setFindedData(true);
+    //console.log(newData);
+  }
   if (loading) {
     return <h1>Loading</h1>;
   } else {
-    function putNewData() {
-      setNewData({ ...data });
-      setFindedData(true);
-      //console.log(newData);
-    }
     !findedData && putNewData();
     const renderTable = () => {
-      let filteredData = newData.pastos.filter(
-        (element) => element !== 'sem pasto definido'
+      let filteredData = newData.lotes.filter(
+        (element) => element !== 'sem lote definido'
       );
       //console.log(filteredData);
       if (filteredData.length === 0) {
@@ -42,7 +42,7 @@ export default function CadastrarPastos() {
                 colSpan={4}
                 className="text-center"
               >
-                Não existem pastos cadastrados.
+                Não existem lotes de venda cadastrados.
               </td>
             </tr>
           </tbody>
@@ -60,8 +60,8 @@ export default function CadastrarPastos() {
                     size="sm"
                     onClick={async () => {
                       let dataToChange = { ...data };
-                      dataToChange.pastos.splice(
-                        newData.pastos.indexOf(elemento),
+                      dataToChange.lotes.splice(
+                        newData.lotes.indexOf(elemento),
                         1
                       );
                       dataToChange.dadosServidor.lastUpdate = getLastUpdate();
@@ -91,7 +91,7 @@ export default function CadastrarPastos() {
                 }
               }}
             >
-              Apagar pastos
+              Apagar lotes
             </Button>
           </div>
         )}
@@ -129,7 +129,7 @@ export default function CadastrarPastos() {
 
         <Row className="mt-3 gy-2 gx-3">
           <hr />
-          <Card.Subtitle>Pastos da propriedade</Card.Subtitle>
+          <Card.Subtitle>Lotes de animais para venda</Card.Subtitle>
           <Col xs={12}>
             <fieldset disabled={showBTNDetalhes}>
               <Table>
@@ -148,13 +148,11 @@ export default function CadastrarPastos() {
             onSubmit={async (e) => {
               try {
                 if (e.target[0].value === '') {
-                  alert(
-                    'Escreva o nome do pasto que deseja realizar o cadastro'
-                  );
+                  alert('Dê um nome ao lote de animais para venda');
                   e.preventDefault();
                 } else {
                   let dataToChange = { ...data };
-                  dataToChange.pastos.push(e.target[0].value);
+                  dataToChange.lotes.push(e.target[0].value);
                   dataToChange.dadosServidor.lastUpdate = getLastUpdate();
                   await user.update(dataToChange.uuid, dataToChange);
                   setData(dataToChange);
@@ -170,8 +168,8 @@ export default function CadastrarPastos() {
             <Col style={{ width: '80%' }}>
               <Form.Control
                 type="text"
-                name="Nome do pasto"
-                placeholder="Nome do pasto"
+                name="Nome do lote para venda"
+                placeholder="Nome do lote para venda"
               />
             </Col>
             <Col>
@@ -180,7 +178,7 @@ export default function CadastrarPastos() {
                 type="submit"
                 className="mt-3 "
               >
-                Registrar Pasto
+                Registrar lote
               </Button>
             </Col>
           </Form>

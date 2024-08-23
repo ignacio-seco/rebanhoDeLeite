@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/authContext';
 import { calculateAge, stringEqualizer } from '../../helpers/CalculateAge';
 import cattlePhoto from '../../assets/cow_PNG50576.png';
@@ -12,6 +12,7 @@ function CattleList({ cowFilterFn }) {
   let [search, setSearch] = useState('');
   const { data, getData, loading } = useContext(AuthContext);
   let cattle = data.rebanho.filter((cow) => !cow.dadosServidor.deletado);
+  const navigate = useNavigate()
   let getCattle = getData;
   useEffect(() => {
     getCattle();
@@ -46,15 +47,19 @@ function CattleList({ cowFilterFn }) {
         filteredCattle = filteredCattle.filter(cowFilterFn);
       }
 
+
       return filteredCattle.map((cow) => {
+        let imageToUse = (cow.imagem_url === 'https://pngimg.com/uploads/cow/cow_PNG50576.png' || !cow.imagem_url) ? cattlePhoto : cow.imagem_url
         return (
           <Col key={cow.uuid}>
-            <Container className="justify-content-center BeerCard my-3">
+            <Container className="justify-content-center BeerCard my-3" style={{cursor:"pointer"}} onClick={()=>{navigate(`/gado/${cow.uuid}`)}}>
               <div className="imageHolder">
                 <Link to={`/gado/${cow.uuid}`}>
                   <img
-                    src={cattlePhoto}
+                    src={imageToUse}
                     alt={cow.nome}
+                    crossOrigin='anonymous'
+                    style={{width:"180px", height:"120px"}}
                   />
                 </Link>
               </div>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiURLs = {
-  development: 'https://rebanho.onrender.com',
+  development: 'http://localhost:8080',
   production: 'https://rebanho.onrender.com',
 };
 
